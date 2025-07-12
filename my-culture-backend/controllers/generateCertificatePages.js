@@ -3,7 +3,7 @@ import path from "path";
 import { Certificate, CertificateRecipient } from "../db.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
-import { getTemplateById, generateCertificateHTML } from "../utils/certificateTemplates.js";
+import { getTemplateById, generateCertificateContent } from "../utils/certificateTemplates.js";
 
 export const generateCertificatePages = asyncWrapper(async (req, res) => {
   const { id } = req.params;
@@ -49,8 +49,8 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
       organizationName: certificate.issuedFrom
     };
     
-    // Generate the certificate HTML using the template system
-    const certificateBody = generateCertificateHTML(template, certificateData);
+    // Generate the certificate content and styles using the template system
+    const { styles, content } = generateCertificateContent(template, certificateData);
     
     // Create the full HTML with sharing and download functionality
     const certificateHtml = `
@@ -90,6 +90,9 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
           #certificate-wrapper {
             margin-bottom: 40px;
           }
+          
+          /* Certificate Template Styles */
+          ${styles}
           
           .share-buttons, .download-buttons {
             margin: 20px 0;
@@ -131,7 +134,7 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
       </head>
       <body>
         <div id="certificate-wrapper">
-          ${certificateBody.replace('<!DOCTYPE html>', '').replace(/<html[^>]*>/, '').replace('</html>', '').replace(/<head[^>]*>[\s\S]*?<\/head>/, '').replace(/<\/?body[^>]*>/g, '')}
+          ${content}
         </div>
         
         <div class="action-section">

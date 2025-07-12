@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+
+// Load environment variables
+dotenv.config();
 import bodyParser from 'body-parser';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { generalLimiter } from './middlewares/rateLimiter.js';

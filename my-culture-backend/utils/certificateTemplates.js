@@ -600,3 +600,227 @@ export const generateCertificateHTML = (template, certificateData) => {
   
   return html;
 };
+
+// Function to generate certificate content and styles separately for embedding
+export const generateCertificateContent = (template, certificateData) => {
+  const { participant, event, issueDate, signature, organizationName } = certificateData;
+  
+  const createStyleSheet = (style) => {
+    let css = '';
+    
+    // Container styles
+    css += `
+    .certificate-container {
+      ${style.container.background ? `background: ${style.container.background};` : ''}
+      ${style.container.border ? `border: ${style.container.border};` : ''}
+      ${style.container.borderRadius ? `border-radius: ${style.container.borderRadius};` : ''}
+      ${style.container.boxShadow ? `box-shadow: ${style.container.boxShadow};` : ''}
+      ${style.container.padding ? `padding: ${style.container.padding};` : ''}
+      ${style.container.maxWidth ? `max-width: ${style.container.maxWidth};` : ''}
+      ${style.container.minHeight ? `min-height: ${style.container.minHeight};` : ''}
+      ${style.container.position ? `position: ${style.container.position};` : ''}
+      margin: 0 auto;
+      font-family: Arial, sans-serif;
+    }`;
+    
+    // Inner border (for elegant-gold template)
+    if (style.innerBorder) {
+      css += `
+      .certificate-inner-border {
+        ${style.innerBorder.border ? `border: ${style.innerBorder.border};` : ''}
+        ${style.innerBorder.borderStyle ? `border-style: ${style.innerBorder.borderStyle};` : ''}
+        ${style.innerBorder.position ? `position: ${style.innerBorder.position};` : ''}
+        ${style.innerBorder.top ? `top: ${style.innerBorder.top};` : ''}
+        ${style.innerBorder.left ? `left: ${style.innerBorder.left};` : ''}
+        ${style.innerBorder.right ? `right: ${style.innerBorder.right};` : ''}
+        ${style.innerBorder.bottom ? `bottom: ${style.innerBorder.bottom};` : ''}
+      }`;
+    }
+    
+    // Decorations (seals, crests, etc.)
+    if (style.decorations && style.decorations.seal) {
+      const seal = style.decorations.seal;
+      css += `
+      .cert-seal {
+        ${seal.position ? `position: ${seal.position};` : ''}
+        ${seal.bottom ? `bottom: ${seal.bottom};` : ''}
+        ${seal.right ? `right: ${seal.right};` : ''}
+        ${seal.width ? `width: ${seal.width};` : ''}
+        ${seal.height ? `height: ${seal.height};` : ''}
+        ${seal.background ? `background: ${seal.background};` : ''}
+        ${seal.borderRadius ? `border-radius: ${seal.borderRadius};` : ''}
+        ${seal.display ? `display: ${seal.display};` : ''}
+        ${seal.alignItems ? `align-items: ${seal.alignItems};` : ''}
+        ${seal.justifyContent ? `justify-content: ${seal.justifyContent};` : ''}
+        ${seal.color ? `color: ${seal.color};` : ''}
+        ${seal.fontSize ? `font-size: ${seal.fontSize};` : ''}
+        ${seal.fontWeight ? `font-weight: ${seal.fontWeight};` : ''}
+      }`;
+    }
+    
+    if (style.crest) {
+      const crest = style.crest;
+      css += `
+      .cert-crest {
+        ${crest.position ? `position: ${crest.position};` : ''}
+        ${crest.top ? `top: ${crest.top};` : ''}
+        ${crest.left ? `left: ${crest.left};` : ''}
+        ${crest.right ? `right: ${crest.right};` : ''}
+        ${crest.fontSize ? `font-size: ${crest.fontSize};` : ''}
+        ${crest.color ? `color: ${crest.color};` : ''}
+        ${crest.fontWeight ? `font-weight: ${crest.fontWeight};` : ''}
+      }`;
+    }
+    
+    if (style.header) {
+      const header = style.header;
+      css += `
+      .cert-header {
+        ${header.borderBottom ? `border-bottom: ${header.borderBottom};` : ''}
+        ${header.paddingBottom ? `padding-bottom: ${header.paddingBottom};` : ''}
+        ${header.marginBottom ? `margin-bottom: ${header.marginBottom};` : ''}
+      }`;
+    }
+    
+    if (style.sidebar) {
+      const sidebar = style.sidebar;
+      css += `
+      .cert-sidebar {
+        ${sidebar.position ? `position: ${sidebar.position};` : ''}
+        ${sidebar.left ? `left: ${sidebar.left};` : ''}
+        ${sidebar.top ? `top: ${sidebar.top};` : ''}
+        ${sidebar.bottom ? `bottom: ${sidebar.bottom};` : ''}
+        ${sidebar.width ? `width: ${sidebar.width};` : ''}
+        ${sidebar.background ? `background: ${sidebar.background};` : ''}
+        ${sidebar.borderTopLeftRadius ? `border-top-left-radius: ${sidebar.borderTopLeftRadius};` : ''}
+        ${sidebar.borderBottomLeftRadius ? `border-bottom-left-radius: ${sidebar.borderBottomLeftRadius};` : ''}
+      }`;
+    }
+    
+    if (style.decorativeElements) {
+      const deco = style.decorativeElements;
+      if (deco.topLeft) {
+        css += `
+        .cert-deco-tl {
+          ${deco.topLeft.position ? `position: ${deco.topLeft.position};` : ''}
+          ${deco.topLeft.top ? `top: ${deco.topLeft.top};` : ''}
+          ${deco.topLeft.left ? `left: ${deco.topLeft.left};` : ''}
+          ${deco.topLeft.width ? `width: ${deco.topLeft.width};` : ''}
+          ${deco.topLeft.height ? `height: ${deco.topLeft.height};` : ''}
+          ${deco.topLeft.background ? `background: ${deco.topLeft.background};` : ''}
+          ${deco.topLeft.borderRadius ? `border-radius: ${deco.topLeft.borderRadius};` : ''}
+          ${deco.topLeft.opacity ? `opacity: ${deco.topLeft.opacity};` : ''}
+        }`;
+      }
+      if (deco.bottomRight) {
+        css += `
+        .cert-deco-br {
+          ${deco.bottomRight.position ? `position: ${deco.bottomRight.position};` : ''}
+          ${deco.bottomRight.bottom ? `bottom: ${deco.bottomRight.bottom};` : ''}
+          ${deco.bottomRight.right ? `right: ${deco.bottomRight.right};` : ''}
+          ${deco.bottomRight.width ? `width: ${deco.bottomRight.width};` : ''}
+          ${deco.bottomRight.height ? `height: ${deco.bottomRight.height};` : ''}
+          ${deco.bottomRight.background ? `background: ${deco.bottomRight.background};` : ''}
+          ${deco.bottomRight.borderRadius ? `border-radius: ${deco.bottomRight.borderRadius};` : ''}
+          ${deco.bottomRight.opacity ? `opacity: ${deco.bottomRight.opacity};` : ''}
+        }`;
+      }
+    }
+    
+    // Accent line (for modern-minimal)
+    if (style.accent) {
+      css += `
+      .certificate-accent {
+        ${style.accent.position ? `position: ${style.accent.position};` : ''}
+        ${style.accent.top ? `top: ${style.accent.top};` : ''}
+        ${style.accent.left ? `left: ${style.accent.left};` : ''}
+        ${style.accent.right ? `right: ${style.accent.right};` : ''}
+        ${style.accent.height ? `height: ${style.accent.height};` : ''}
+        ${style.accent.background ? `background: ${style.accent.background};` : ''}
+        ${style.accent.borderTopLeftRadius ? `border-top-left-radius: ${style.accent.borderTopLeftRadius};` : ''}
+        ${style.accent.borderTopRightRadius ? `border-top-right-radius: ${style.accent.borderTopRightRadius};` : ''}
+      }`;
+    }
+    
+    // Typography styles
+    const typo = style.typography;
+    css += `
+    .cert-title {
+      ${typo.title.fontFamily ? `font-family: ${typo.title.fontFamily};` : ''}
+      ${typo.title.fontSize ? `font-size: ${typo.title.fontSize};` : ''}
+      ${typo.title.fontWeight ? `font-weight: ${typo.title.fontWeight};` : ''}
+      ${typo.title.color ? `color: ${typo.title.color};` : ''}
+      ${typo.title.textTransform ? `text-transform: ${typo.title.textTransform};` : ''}
+      ${typo.title.letterSpacing ? `letter-spacing: ${typo.title.letterSpacing};` : ''}
+      ${typo.title.marginBottom ? `margin-bottom: ${typo.title.marginBottom};` : ''}
+      ${typo.title.textAlign ? `text-align: ${typo.title.textAlign};` : ''}
+      ${typo.title.marginTop ? `margin-top: ${typo.title.marginTop};` : ''}
+      ${typo.title.background ? `background: ${typo.title.background};` : ''}
+      ${typo.title.backgroundClip ? `background-clip: ${typo.title.backgroundClip};` : ''}
+      ${typo.title.WebkitBackgroundClip ? `-webkit-background-clip: ${typo.title.WebkitBackgroundClip};` : ''}
+    }
+    
+    .cert-subtitle {
+      ${typo.subtitle.fontFamily ? `font-family: ${typo.subtitle.fontFamily};` : ''}
+      ${typo.subtitle.fontSize ? `font-size: ${typo.subtitle.fontSize};` : ''}
+      ${typo.subtitle.color ? `color: ${typo.subtitle.color};` : ''}
+      ${typo.subtitle.fontStyle ? `font-style: ${typo.subtitle.fontStyle};` : ''}
+      ${typo.subtitle.marginBottom ? `margin-bottom: ${typo.subtitle.marginBottom};` : ''}
+      ${typo.subtitle.fontWeight ? `font-weight: ${typo.subtitle.fontWeight};` : ''}
+      ${typo.subtitle.textAlign ? `text-align: ${typo.subtitle.textAlign};` : ''}
+    }
+    
+    .cert-recipient {
+      ${typo.recipient.fontFamily ? `font-family: ${typo.recipient.fontFamily};` : ''}
+      ${typo.recipient.fontSize ? `font-size: ${typo.recipient.fontSize};` : ''}
+      ${typo.recipient.fontWeight ? `font-weight: ${typo.recipient.fontWeight};` : ''}
+      ${typo.recipient.color ? `color: ${typo.recipient.color};` : ''}
+      ${typo.recipient.marginBottom ? `margin-bottom: ${typo.recipient.marginBottom};` : ''}
+      ${typo.recipient.textAlign ? `text-align: ${typo.recipient.textAlign};` : ''}
+      ${typo.recipient.marginTop ? `margin-top: ${typo.recipient.marginTop};` : ''}
+    }
+    
+    .cert-details {
+      ${typo.details.fontFamily ? `font-family: ${typo.details.fontFamily};` : ''}
+      ${typo.details.fontSize ? `font-size: ${typo.details.fontSize};` : ''}
+      ${typo.details.color ? `color: ${typo.details.color};` : ''}
+      ${typo.details.lineHeight ? `line-height: ${typo.details.lineHeight};` : ''}
+      ${typo.details.textAlign ? `text-align: ${typo.details.textAlign};` : ''}
+      ${typo.details.marginTop ? `margin-top: ${typo.details.marginTop};` : ''}
+    }`;
+    
+    return css;
+  };
+  
+  const styles = createStyleSheet(template.style);
+  
+  const content = `
+    <div class="certificate-container">
+      ${template.style.innerBorder ? '<div class="certificate-inner-border"></div>' : ''}
+      ${template.style.accent ? '<div class="certificate-accent"></div>' : ''}
+      ${template.style.crest ? '<div class="cert-crest">★</div>' : ''}
+      ${template.style.sidebar ? '<div class="cert-sidebar"></div>' : ''}
+      ${template.style.decorativeElements?.topLeft ? '<div class="cert-deco-tl"></div>' : ''}
+      ${template.style.decorativeElements?.bottomRight ? '<div class="cert-deco-br"></div>' : ''}
+      
+      <div class="${template.style.header ? 'cert-header' : ''}">
+        <h1 class="cert-title">Certificate of Achievement</h1>
+        <p class="cert-subtitle">This is to certify that</p>
+      </div>
+      
+      <h2 class="cert-recipient">${participant}</h2>
+      
+      <div class="cert-details">
+        <p>has successfully completed</p>
+        <p style="font-weight: bold; margin: 20px 0;">${event}</p>
+        <p>Issued by ${organizationName}</p>
+        <p>Date: ${issueDate}</p>
+        ${signature ? `<p style="margin-top: 40px;">Signature: ${signature}</p>` : ''}
+      </div>
+      
+      ${template.style.decorations?.seal ? '<div class="cert-seal">CERTIFIED</div>' : ''}
+    </div>
+  `;
+  
+  return { styles, content };
+};

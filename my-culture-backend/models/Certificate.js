@@ -44,6 +44,17 @@ export default (sequelize) => {
     certificateUrl: {
       type: DataTypes.STRING,
     },
+    templateId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'elegant-gold',
+      validate: {
+        isIn: {
+          args: [['elegant-gold', 'modern-minimal', 'academic-traditional', 'creative-artistic', 'corporate-professional']],
+          msg: "Template ID must be one of the available templates.",
+        },
+      },
+    },
     published: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

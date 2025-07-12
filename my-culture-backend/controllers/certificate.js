@@ -64,7 +64,7 @@ export const findOneCertificateById = asyncWrapper(async (req, res) => {
 });
 
 export const createCertificate = asyncWrapper(async (req, res) => {
-  const { title, description, issuedDate, issuedFrom, recipients } = req.body;
+  const { title, description, issuedDate, issuedFrom, templateId, recipients } = req.body;
 
   if (!recipients || !Array.isArray(recipients) || recipients.length === 0) {
     throw new ErrorResponse("At least one recipient is required", 400);
@@ -86,6 +86,7 @@ export const createCertificate = asyncWrapper(async (req, res) => {
     description,
     issuedDate,
     issuedFrom,
+    templateId: templateId || 'elegant-gold', // Use provided templateId or default
   });
 
   // Create Recipient Entries
