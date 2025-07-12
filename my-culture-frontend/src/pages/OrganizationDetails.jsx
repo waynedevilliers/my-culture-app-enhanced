@@ -1,0 +1,306 @@
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { 
+  FaGlobe, 
+  FaPhone, 
+  FaEnvelope, 
+  FaLocationDot, 
+  FaArrowLeft,
+  FaCertificate,
+  FaUsers,
+  FaCalendar
+} from "react-icons/fa6";
+import axios from "axios";
+
+const OrganizationDetails = () => {
+  const { id } = useParams();
+  const [organization, setOrganization] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrganization = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND}/api/organizations/${id}`);
+        setOrganization(response.data);
+      } catch (err) {
+        setError(err.response?.data?.message || "Organization not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchOrganization();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">Organization Not Found</h1>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Link 
+            to="/organizations" 
+            className="btn btn-primary"
+          >
+            Back to Organizations
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen pt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Back Button */}
+        <motion.div 
+          className="mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Link 
+            to="/organizations" 
+            className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors duration-300"
+          >
+            <FaArrowLeft />
+            <span>Back to Organizations</span>
+          </Link>
+        </motion.div>
+
+        {/* Hero Section */}
+        <motion.div 
+          className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          {/* Header Image */}
+          <div className="relative h-64 md:h-80 overflow-hidden">
+            <img 
+              src={organization.Image?.url} 
+              alt={organization.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            
+            {/* Organization Badge */}
+            <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
+              <span className="text-sm font-semibold text-primary">
+                {organization.published ? 'Active' : 'Draft'}
+              </span>
+            </div>
+
+            {/* Title Overlay */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                {organization.name}
+              </h1>
+              <div className="flex items-center gap-4 text-white/90">
+                <div className="flex items-center gap-2">
+                  <FaLocationDot />
+                  <span>Germany</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaUsers />
+                  <span>Cultural Organization</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Section */}
+          <div className="p-8 md:p-12">
+            <div className="grid md:grid-cols-2 gap-12">
+              {/* About Section */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">About Our Organization</h2>
+                <p className="text-gray-600 leading-relaxed text-lg mb-8">
+                  {organization.description}
+                </p>
+
+                {/* Mission Statement */}
+                <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 mb-8">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Our Mission</h3>
+                  <p className="text-gray-700">
+                    Dedicated to preserving, promoting, and celebrating cultural heritage while 
+                    fostering community engagement and educational opportunities for all.
+                  </p>
+                </div>
+
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 bg-gray-50 rounded-xl">
+                    <FaCertificate className="text-2xl text-primary mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-gray-800">50+</div>
+                    <div className="text-sm text-gray-600">Certificates Issued</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 rounded-xl">
+                    <FaCalendar className="text-2xl text-secondary mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-gray-800">12+</div>
+                    <div className="text-sm text-gray-600">Programs Active</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact & Info Section */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
+                
+                {/* Contact Information */}
+                <div className="space-y-4 mb-8">
+                  {organization.website && (
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <FaGlobe className="text-primary text-xl" />
+                      <div>
+                        <div className="font-semibold text-gray-800">Website</div>
+                        <a 
+                          href={organization.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary hover:text-secondary transition-colors"
+                        >
+                          {organization.website}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {organization.email && (
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <FaEnvelope className="text-secondary text-xl" />
+                      <div>
+                        <div className="font-semibold text-gray-800">Email</div>
+                        <a 
+                          href={`mailto:${organization.email}`}
+                          className="text-secondary hover:text-primary transition-colors"
+                        >
+                          {organization.email}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {organization.phone && (
+                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                      <FaPhone className="text-primary text-xl" />
+                      <div>
+                        <div className="font-semibold text-gray-800">Phone</div>
+                        <a 
+                          href={`tel:${organization.phone}`}
+                          className="text-primary hover:text-secondary transition-colors"
+                        >
+                          {organization.phone}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Call to Action */}
+                <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white">
+                  <h3 className="text-xl font-bold mb-3">Join Our Community</h3>
+                  <p className="mb-4 opacity-90">
+                    Become part of our cultural journey and earn recognition for your achievements.
+                  </p>
+                  <div className="flex gap-3">
+                    <a 
+                      href={organization.email ? `mailto:${organization.email}` : '#'}
+                      className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors flex-1 text-center"
+                    >
+                      Contact Us
+                    </a>
+                    {organization.website && (
+                      <a 
+                        href={organization.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors flex-1 text-center"
+                      >
+                        Visit Website
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Additional Sections */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Programs Section */}
+          <motion.div 
+            className="bg-white rounded-2xl shadow-lg p-8"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Our Programs</h2>
+            <div className="space-y-4">
+              <div className="p-4 border border-gray-200 rounded-xl">
+                <h3 className="font-semibold text-gray-800">Cultural Education</h3>
+                <p className="text-gray-600 text-sm mt-1">Learn about heritage and traditions</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-xl">
+                <h3 className="font-semibold text-gray-800">Community Events</h3>
+                <p className="text-gray-600 text-sm mt-1">Regular workshops and gatherings</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-xl">
+                <h3 className="font-semibold text-gray-800">Achievement Certificates</h3>
+                <p className="text-gray-600 text-sm mt-1">Recognition for participation and excellence</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Recent Activity */}
+          <motion.div 
+            className="bg-white rounded-2xl shadow-lg p-8"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Recent Activity</h2>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                <div>
+                  <p className="text-gray-800 font-medium">New program launched</p>
+                  <p className="text-gray-600 text-sm">2 weeks ago</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
+                <div>
+                  <p className="text-gray-800 font-medium">Certificate milestone reached</p>
+                  <p className="text-gray-600 text-sm">3 weeks ago</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                <div>
+                  <p className="text-gray-800 font-medium">Community event completed</p>
+                  <p className="text-gray-600 text-sm">1 month ago</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OrganizationDetails;

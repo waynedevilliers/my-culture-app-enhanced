@@ -10,6 +10,7 @@ import Protected from "./routes/Protected.jsx";
 import Profile from "./pages/Profile.jsx";
 import Authorize from "./routes/Authorize.jsx";
 import Organizations from "./pages/Organizations.jsx";
+import OrganizationDetails from "./pages/OrganizationDetails.jsx";
 import Root from "./Root.jsx";
 import Impressum from "./pages/Impressum.jsx";
 import Landing from "./pages/Landing.jsx";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Landing />} />
             <Route path="/organizations" element={<Organizations />} />
+            <Route path="/organization/:id" element={<OrganizationDetails />} />
             <Route path="/impressum" element={<Impressum />} />
             <Route element={<Protected />}>
               <Route path="/profile" element={<Profile />} />
