@@ -42,6 +42,9 @@ const Navigation = () => {
           <li>
             <NavLink to="/organizations" className={({ isActive }) => isActive ? "text-primary" : ""}>Organizations</NavLink>
           </li>
+          <li>
+            <NavLink to="/join-us" className={({ isActive }) => isActive ? "text-primary" : ""}>Join Us</NavLink>
+          </li>
           {/*<li>*/}
           {/*  <NavLink to="/blog" className={({ isActive }) => isActive ? "text-primary" : ""}>Blog</NavLink>*/}
           {/*</li>*/}

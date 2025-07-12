@@ -113,26 +113,28 @@ const JoinUs = () => {
   };
 
   return (
-    <div className="pt-24 pb-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <main className="relative scroll-mt-24 pt-24">
+      <div className="max-w-7xl mx-auto pt-24 pb-16 min-h-screen">
         {/* Hero Section */}
-        <motion.div 
+        <section aria-labelledby="hero-title">
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
+          <h1 id="hero-title" className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
             Join Our
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-3">
               Cultural Community
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Become part of Germany's leading platform for cultural organizations. 
-            Connect, collaborate, and celebrate achievements together.
+            Become part of Germany's leading platform for cultural
+            organizations. Connect, collaborate, and celebrate achievements
+            together.
           </p>
-          
+
           {/* Quick Stats */}
           <div className="flex justify-center items-center gap-8 text-sm text-gray-600">
             <div className="flex items-center gap-2">
@@ -149,20 +151,22 @@ const JoinUs = () => {
             </div>
           </div>
         </motion.div>
+        </section>
 
         {/* Benefits Section */}
-        <motion.div 
+        <section aria-labelledby="benefits-title">
+        <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+          <h2 id="benefits-title" className="text-3xl font-bold text-center text-gray-800 mb-12">
             What You Get as a Member
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
-              <motion.div 
+              <motion.div
                 key={index}
                 className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
                 initial={{ opacity: 0, y: 30 }}
@@ -170,22 +174,26 @@ const JoinUs = () => {
                 transition={{ duration: 0.6, delay: 0.1 * index }}
               >
                 <benefit.icon className="text-3xl text-primary mb-4" />
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">{benefit.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  {benefit.title}
+                </h3>
                 <p className="text-gray-600">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
+        </section>
 
         {/* Application Form */}
-        <motion.div 
+        <section aria-labelledby="application-title">
+        <motion.div
           className="bg-white rounded-3xl shadow-xl p-8 md:p-12 mb-16"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            <h2 id="application-title" className="text-3xl font-bold text-gray-800 mb-4">
               Organization Application Form
             </h2>
             <p className="text-gray-600">
@@ -224,7 +232,9 @@ const JoinUs = () => {
                 >
                   <option value="">Select organization type</option>
                   {organizationTypes.map((type) => (
-                    <option key={type} value={type}>{type}</option>
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -422,35 +432,58 @@ const JoinUs = () => {
             </div>
           </form>
         </motion.div>
+        </section>
 
         {/* Process Timeline */}
-        <motion.div 
+        <section aria-labelledby="process-title">
+        <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-12">Application Process</h2>
+          <h2 id="process-title" className="text-3xl font-bold text-gray-800 mb-12">
+            Application Process
+          </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Submit Application</h3>
-              <p className="text-gray-600">Fill out the form with your organization details</p>
+              <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                1
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Submit Application
+              </h3>
+              <p className="text-gray-600">
+                Fill out the form with your organization details
+              </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Review Process</h3>
-              <p className="text-gray-600">We review your application within 2-3 business days</p>
+              <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                2
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Review Process
+              </h3>
+              <p className="text-gray-600">
+                We review your application within 2-3 business days
+              </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Welcome Aboard</h3>
-              <p className="text-gray-600">Get access to your dashboard and start issuing certificates</p>
+              <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                3
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Welcome Aboard
+              </h3>
+              <p className="text-gray-600">
+                Get access to your dashboard and start issuing certificates
+              </p>
             </div>
           </div>
         </motion.div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 

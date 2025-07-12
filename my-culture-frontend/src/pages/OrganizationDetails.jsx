@@ -62,9 +62,10 @@ const OrganizationDetails = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <main className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Back Button */}
+        <nav aria-label="Breadcrumb">
         <motion.div 
           className="mb-8"
           initial={{ opacity: 0, x: -20 }}
@@ -79,8 +80,10 @@ const OrganizationDetails = () => {
             <span>Back to Organizations</span>
           </Link>
         </motion.div>
+        </nav>
 
         {/* Hero Section */}
+        <article>
         <motion.div 
           className="bg-white rounded-3xl shadow-xl overflow-hidden mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -88,7 +91,7 @@ const OrganizationDetails = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Header Image */}
-          <div className="relative h-64 md:h-80 overflow-hidden">
+          <figure className="relative h-64 md:h-80 overflow-hidden">
             <img 
               src={organization.Image?.url} 
               alt={organization.name}
@@ -119,14 +122,15 @@ const OrganizationDetails = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </figure>
 
           {/* Content Section */}
           <div className="p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-12">
               {/* About Section */}
+              <section aria-labelledby="about-title">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">About Our Organization</h2>
+                <h2 id="about-title" className="text-2xl font-bold text-gray-800 mb-6">About Our Organization</h2>
                 <p className="text-gray-600 leading-relaxed text-lg mb-8">
                   {organization.description}
                 </p>
@@ -154,10 +158,12 @@ const OrganizationDetails = () => {
                   </div>
                 </div>
               </div>
+              </section>
 
               {/* Contact & Info Section */}
+              <section aria-labelledby="contact-title">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
+                <h2 id="contact-title" className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
                 
                 {/* Contact Information */}
                 <div className="space-y-4 mb-8">
@@ -235,9 +241,11 @@ const OrganizationDetails = () => {
                   </div>
                 </div>
               </div>
+              </section>
             </div>
           </div>
         </motion.div>
+        </article>
 
         {/* Additional Sections */}
         <div className="grid md:grid-cols-2 gap-8">
@@ -299,7 +307,7 @@ const OrganizationDetails = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

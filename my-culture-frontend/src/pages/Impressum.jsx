@@ -11,13 +11,13 @@ const Impressum = () => {
   }, []);
 
   return (
-    <section id="impressum" className="flex flex-col justify-center items-center bg-neutral text-gray-200">
-      <div className="max-w-screen-xl mt-32 flex flex-col gap-2 text-pretty px-4 mb-10">
-        <h2 className="text-3xl sm:text-4xl font-bold text-primary">Datenschutzerklärung</h2>
+    <main id="impressum" className="flex flex-col justify-center items-center bg-neutral text-gray-200">
+      <article className="max-w-screen-xl mt-32 flex flex-col gap-2 text-pretty px-4 mb-10">
+        <h1 className="text-3xl sm:text-4xl font-bold text-primary">Datenschutzerklärung</h1>
         <p>Wir freuen uns über Ihr Interesse an unserer Webseite. Der Schutz Ihrer personenbezogenen Daten bei der
           Erhebung, Verarbeitung und Nutzung anlässlich Ihres Besuchs auf unserer Webseite ist uns ein wichtiges
           Anliegen.</p>
-        <h3 className="text-2xl sm:text-3xl font-bold text-primary">1. Personenbezogene Daten</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">1. Personenbezogene Daten</h2>
         <p>Personenbezogene Daten sind Informationen, die dazu genutzt werden können, Ihre Identität zu erfahren.
           Darunter fallen Ihr Name, die Adresse, Postanschrift und Telefonnummer. Informationen, die nicht mit Ihrer
           Identität in Verbindung gebracht werden (wie zum Beispiel Anzahl der Nutzer einer Internetseite), gehören
@@ -41,8 +41,8 @@ const Impressum = () => {
           gesetzlicher, satzungsmäßiger oder vertraglicher Aufbewahrungsfristen benötigt (z.B. Rechnungen), werden diese
           Daten auch darüber hinaus gespeichert. Diese Daten sind jedoch gesperrt und nur wenigen, befugten Personen
           über Passwörter zugänglich.</p>
-        <h4 className="text-xl sm:text-2xl font-bold text-primary">Widerspruchsrecht gegen die Datenerhebung in
-          besonderen Fällen sowie gegen Direktwerbung (Art. 21 DSGVO)</h4>
+        <h3 className="text-xl sm:text-2xl font-bold text-primary">Widerspruchsrecht gegen die Datenerhebung in
+          besonderen Fällen sowie gegen Direktwerbung (Art. 21 DSGVO)</h3>
         <p>Wenn die Datenverarbeitung auf Grundlage von Art. 6 Abs. 1 lit. e oder f DSGVO erfolgt, haben Sie jederzeit
           das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, gegen die Verarbeitung Ihrer
           personenbezogenen Daten Widerspruch einzulegen; dies gilt auch für ein auf diese Bestimmungen gestütztes
@@ -56,7 +56,7 @@ const Impressum = () => {
           Werbung einzulegen; dies gilt auch für das Profiling, soweit es mit solcher Direktwerbung in Verbindung steht.
           Wenn Sie widersprechen, werden Ihre personenbezogenen Daten anschließend nicht mehr zum Zwecke der
           Direktwerbung verwendet (Widerspruch nach Art. 21 Abs. 2 DSGVO).</p>
-        <h4 className="text-xl sm:text-2xl font-bold text-primary">Recht auf Einschränkung der Verarbeitung</h4>
+        <h3 className="text-xl sm:text-2xl font-bold text-primary">Recht auf Einschränkung der Verarbeitung</h3>
         <p>Sie haben das Recht, die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen. Hierzu
           können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden.</p>
         <p>Das Recht auf Einschränkung der Verarbeitung besteht in folgenden Fällen:</p>
@@ -82,12 +82,12 @@ const Impressum = () => {
           Rechtsansprüchen oder zum Schutz der Rechte einer anderen natürlichen oder juristischen Person oder aus
           Gründen eines wichtigen öffentlichen Interesses der Europäischen Union oder eines Mitgliedstaats verarbeitet
           werden.</p>
-        <h3 className="text-2xl sm:text-3xl font-bold text-primary">2. Weitergabe personenbezogener Daten an Dritte</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">2. Weitergabe personenbezogener Daten an Dritte</h2>
         <p>Wir verwenden Ihre personenbezogenen Informationen nur zum Zweck der Verwendung durch uns. Wir geben die
           Daten nicht ohne Ihre ausdrückliche Einwilligung an Dritte weiter. Soweit wir gesetzlich oder per
           Gerichtsbeschluss dazu verpflichtet sind, werden wir Ihre Daten an auskunftsberechtigte Stellen
           übermitteln.</p>
-        <h3 className="text-2xl sm:text-3xl font-bold text-primary">3. Einsatz von Cookies</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">3. Einsatz von Cookies</h2>
         <p>Bei Internet-Cookies handelt es sich um kleine Datenpakete, die von Ihrem Browser auf dem Festplattenlaufwerk
           Ihres Computers gespeichert werden. Wir verwenden auf unserer Webseite Cookies. Solche Cookies sind notwendig,
           damit Sie sich auf der Website frei bewegen und deren Features nutzen können; hierzu gehört u. a. auch der
@@ -96,18 +96,18 @@ const Impressum = () => {
         <p>Die meisten Browser sind so eingestellt, dass sie Cookies automatisch akzeptieren. Sie können das Speichern
           von Cookies jedoch deaktivieren oder Ihren Browser so einstellen, dass er Sie benachrichtigt, sobald Cookies
           gesendet werden.</p>
-        <h3 className="text-2xl sm:text-3xl font-bold text-primary">4. Minderjährigenschutz</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">4. Minderjährigenschutz</h2>
         <p>Kinder und Personen unter 18 Jahren sollten ohne Zustimmung der Eltern oder Erziehungsberechtigten keine
           personenbezogenen Daten an uns übermitteln.</p>
-        <h3 className="text-2xl sm:text-3xlfont-bold text-primary">5. Links zu anderen Websites</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">5. Links zu anderen Websites</h2>
         <p>Unser Online-Angebot enthält Links zu anderen Webseiten. Wir haben keinen Einfluss darauf, dass deren
           Betreiber die Datenschutzbestimmungen einhalten.</p>
-        <h3 className="text-2xl sm:text-3xl font-bold text-primary">8. Kontakt</h3>
-        <p className="pl-10">
+        <h2 className="text-2xl sm:text-3xl font-bold text-primary">8. Kontakt</h2>
+        <address className="pl-10 not-italic">
           Musik Leben e.V.<br /> Datenschutzbeauftragter<br /> Gaggenauer Straße 7<br /> 14974 Ludwigsfelde<br />
           <a href="mailto:live-in-lu@gmx.de" className="text-primary hover:text-gray-200 hover:underline">live-in-lu@gmx.de</a>
-        </p>
-        <h4 className="text-xl sm:text-2xl font-bold text-primary">Ihre Betroffenenrechte</h4>
+        </address>
+        <h3 className="text-xl sm:text-2xl font-bold text-primary">Ihre Betroffenenrechte</h3>
         <p>Unter den angegebenen Kontaktdaten können Sie jederzeit folgende Rechte ausüben:</p>
         <ul className="list-disc pl-10">
           <li>Auskunft über Ihre bei uns gespeicherten Daten und deren Verarbeitung,</li>
@@ -131,8 +131,8 @@ const Impressum = () => {
         <p>
           <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html" className="text-xs sm:text-lg text-primary hover:text-gray-200 hover:underline">www.bfdi.bund.de/.../anschriften_links-node.html</a>
         </p>
-      </div>
-    </section>
+      </article>
+    </main>
   );
 };
 
