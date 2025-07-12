@@ -41,6 +41,7 @@ app.get('/', (req, res) => {
 
 const __dirname = path.resolve(); 
 app.use("/certificates", express.static(path.join(__dirname, "public", "certificates")));
+app.use("/images", express.static(path.join(__dirname, "../my-culture-frontend/public/images")));
 
 app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`, {
