@@ -12,7 +12,7 @@ const organizationData = [
     phone: "+49 30 1234567",
     email: "info@berlin-heritage.de",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v1/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331010/image_2025-07-12_163647645_l8j9hk.png"
   },
   {
     name: "Munich International Music Academy",
@@ -21,7 +21,7 @@ const organizationData = [
     phone: "+49 89 2345678",
     email: "contact@munich-music.org",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v2/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331019/cc-illustrative-map_blxbr6.png"
   },
   {
     name: "Hamburg Contemporary Arts Collective",
@@ -30,7 +30,7 @@ const organizationData = [
     phone: "+49 40 3456789",
     email: "hello@hamburg-arts.com",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v3/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331032/lg_1panel-color_0_yrdrkr.png"
   },
   {
     name: "Cologne Community Theater",
@@ -39,7 +39,7 @@ const organizationData = [
     phone: "+49 221 4567890",
     email: "tickets@cologne-theater.org",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v4/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331058/people-connecting-puzzle-pieces-colorful-background_23-2148085523_ynhsf4.jpg"
   },
   {
     name: "Frankfurt Dance & Movement Studio",
@@ -48,7 +48,7 @@ const organizationData = [
     phone: "+49 69 5678901",
     email: "studio@frankfurt-dance.de",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v5/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331082/download_znnxs8.jpg"
   },
   {
     name: "Stuttgart Multicultural Center",
@@ -57,7 +57,7 @@ const organizationData = [
     phone: "+49 711 6789012",
     email: "welcome@stuttgart-multicultural.org",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v6/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331042/8-Key-Components_jrwjtr.png"
   },
   {
     name: "Dresden Youth Cultural Initiative",
@@ -66,7 +66,7 @@ const organizationData = [
     phone: "+49 351 7890123",
     email: "youth@dresden-youth.de",
     published: false,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v6/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331010/image_2025-07-12_163647645_l8j9hk.png"
   },
   {
     name: "Nuremberg Traditional Crafts Guild",
@@ -75,7 +75,7 @@ const organizationData = [
     phone: "+49 911 8901234",
     email: "guild@nuremberg-crafts.org",
     published: true,
-    imagePath: "https://res.cloudinary.com/demo/image/upload/v1/sample.jpg"
+    imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331019/cc-illustrative-map_blxbr6.png"
   }
 ];
 
