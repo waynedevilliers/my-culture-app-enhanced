@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,14 +6,45 @@ import axios from "axios";
 const NewCertificate = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [templates, setTemplates] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
   const [form, setForm] = useState({
     title: "",
     description: "",
     issuedFrom: "",
     issueDate: "",
+    templateId: "elegant-gold", // Default template
   });
 
   const [recipients, setRecipients] = useState([{ name: "", email: "" }]);
+
+  // Fetch available templates and organizations
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_BACKEND + "/api/certificate-templates");
+        setTemplates(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+        toast.error("Failed to load certificate templates");
+      }
+    };
+
+    const fetchOrganizations = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_BACKEND + "/api/organizations");
+        // Filter to only published organizations
+        const publishedOrgs = response.data.results?.filter(org => org.published) || [];
+        setOrganizations(publishedOrgs);
+      } catch (error) {
+        console.error("Error fetching organizations:", error);
+        toast.error("Failed to load organizations");
+      }
+    };
+
+    fetchTemplates();
+    fetchOrganizations();
+  }, []);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -60,6 +91,7 @@ const NewCertificate = () => {
         description: form.description,
         issuedFrom: form.issuedFrom,
         issuedDate: form.issueDate,
+        templateId: form.templateId,
         recipients,
       };
 
@@ -88,14 +120,57 @@ const NewCertificate = () => {
         Description
         <input type="text" name="description" className="grow" placeholder="Certificate Description" value={form.description} onChange={handleChange} required />
       </label>
-      <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Issued From
-        <input type="text" name="issuedFrom" className="grow" placeholder="Person issuing certificate" value={form.issuedFrom} onChange={handleChange} required />
-      </label>
+      <div className="flex flex-col gap-2">
+        <label className="text-lg font-semibold">Issued From</label>
+        <select 
+          name="issuedFrom" 
+          value={form.issuedFrom} 
+          onChange={handleChange}
+          className="select select-bordered w-full rounded-none"
+          required
+        >
+          <option value="">Select Organization</option>
+          {organizations.map((org) => (
+            <option key={org.id} value={org.name}>
+              {org.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         Issue Date
         <input type="date" name="issueDate" className="grow" value={form.issueDate} onChange={handleChange} required />
       </label>
+
+      {/* Template Selection */}
+      <div className="flex flex-col gap-2">
+        <label className="text-lg font-semibold">Certificate Template</label>
+        <select 
+          name="templateId" 
+          value={form.templateId} 
+          onChange={handleChange}
+          className="select select-bordered w-full rounded-none"
+          required
+        >
+          {templates.map((template) => (
+            <option key={template.id} value={template.id}>
+              {template.name} - {template.description}
+            </option>
+          ))}
+        </select>
+        
+        {/* Template Preview */}
+        {form.templateId && (
+          <div className="mt-4 p-4 border border-gray-300 rounded">
+            <h4 className="font-semibold mb-2">Template Preview:</h4>
+            <iframe 
+              src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${form.templateId}/preview`}
+              className="w-full h-64 border border-gray-200"
+              title="Certificate Template Preview"
+            />
+          </div>
+        )}
+      </div>
 
       {/* Recipients Section */}
       <div className="flex flex-col gap-4">
