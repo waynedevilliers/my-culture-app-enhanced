@@ -32,10 +32,10 @@ const Navigation = () => {
         <NavLink to="/" className={({ isActive }) => isActive ? "" : ""}>
           <img src="/logoNew/MB_Sparkasse.png" alt="culture academy" className="h-14 sm:h-16 md:h-20 w-auto mb-5" />
         </NavLink>
-        <label htmlFor="page-drawer" className="btn btn-ghost drawer-button lg:hidden text-white">
+        <label htmlFor="page-drawer" className="btn btn-ghost drawer-button lg:hidden text-secondary">
           <FaBarsStaggered className="text-2xl" />
         </label>
-        <ul className="hidden lg:flex flex-row gap-6 items-center font-semibold text-2xl text-white">
+        <ul className="hidden lg:flex flex-row gap-6 items-center font-semibold text-2xl text-secondary">
           <li>
             <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""}>Home</NavLink>
           </li>
