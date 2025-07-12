@@ -3,6 +3,7 @@ import path from "path";
 import { Certificate, CertificateRecipient } from "../db.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
+import { getTemplateById, generateCertificateHTML } from "../utils/certificateTemplates.js";
 
 export const generateCertificatePages = asyncWrapper(async (req, res) => {
   const { id } = req.params;
@@ -35,6 +36,23 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(recipientUrl)}`;
     const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(recipientUrl)}&text=${encodeURIComponent("I earned a certificate!")}`;
 
+    // Get the template (use templateId from certificate or default to elegant-gold)
+    const templateId = certificate.templateId || 'elegant-gold';
+    const template = getTemplateById(templateId);
+    
+    // Prepare certificate data
+    const certificateData = {
+      participant: recipient.name,
+      event: certificate.title,
+      issueDate: new Date(certificate.issuedDate).toDateString(),
+      signature: certificate.signature || null,
+      organizationName: certificate.issuedFrom
+    };
+    
+    // Generate the certificate HTML using the template system
+    const certificateBody = generateCertificateHTML(template, certificateData);
+    
+    // Create the full HTML with sharing and download functionality
     const certificateHtml = `
       <!DOCTYPE html>
       <html lang="en">
@@ -52,66 +70,30 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
         <!-- Required libraries for PDF and JPEG generation -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        
+        <!-- Load Google Fonts for templates -->
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;600&family=Inter:wght@400;500;600;700&family=Crimson+Text:wght@400;600&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
         <style>
           body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background: #f7f7f7;
             margin: 0;
             padding: 20px;
+            font-family: Arial, sans-serif;
           }
-          .certificate-container {
-            background: #fff;
-            padding: 50px;
-            border: 12px solid #d4af37;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-            max-width: 1000px;
-            width: 90%;
-            text-align: center;
-            position: relative;
+          
+          #certificate-wrapper {
+            margin-bottom: 40px;
           }
-          .certificate-container::before {
-            content: "";
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            border: 6px dashed #d4af37;
-            pointer-events: none;
-          }
-          h1 {
-            font-size: 3em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-          }
-          .details {
-            font-size: 1.5em;
-            color: #34495e;
-            margin-bottom: 10px;
-          }
-          .recipient {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 30px 0;
-            color: #16a085;
-          }
-          .issuedFrom {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 30px 0;
-            color: #1abc9c;
-          }
-          .issued-date {
-            font-size: 1.2em;
-            color: #7f8c8d;
-          }
+          
           .share-buttons, .download-buttons {
-            margin-top: 40px;
+            margin: 20px 0;
+            text-align: center;
           }
           .share-buttons a button, .download-buttons button {
             padding: 12px 24px;
@@ -122,22 +104,39 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
             color: #fff;
             border: none;
             outline: none;
+            transition: transform 0.2s;
+          }
+          .share-buttons a button:hover, .download-buttons button:hover {
+            transform: translateY(-2px);
           }
           .share-facebook { background: #3b5998; }
           .share-twitter { background: #1da1f2; }
           .download-pdf { background: #27ae60; }
           .download-jpeg { background: #e67e22; }
+          
+          .action-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+          }
+          
+          .action-section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
+          }
         </style>
       </head>
       <body>
-        <div class="certificate-container" id="certificate">
-          <h1>${certificate.title}</h1>
-          <p class="details">${certificate.description}</p>
-          <p class="recipient">Awarded to: ${recipient.name}</p>
-          <p class="issuedFrom">Awarded by: ${certificate.issuedFrom}</p>
-          <p class="issued-date">Issued on: ${new Date(certificate.issuedDate).toDateString()}</p>
+        <div id="certificate-wrapper">
+          ${certificateBody.replace('<!DOCTYPE html>', '').replace(/<html[^>]*>/, '').replace('</html>', '').replace(/<head[^>]*>[\s\S]*?<\/head>/, '').replace(/<\/?body[^>]*>/g, '')}
+        </div>
+        
+        <div class="action-section">
           <div class="share-buttons">
-            <p>Share your achievement:</p>
+            <h3>Share your achievement:</h3>
             <a href="${facebookShareUrl}" target="_blank">
               <button class="share-facebook">Share on Facebook</button>
             </a>
@@ -145,8 +144,9 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
               <button class="share-twitter">Share on Twitter</button>
             </a>
           </div>
+          
           <div class="download-buttons">
-            <p>Download your certificate:</p>
+            <h3>Download your certificate:</h3>
             <button class="download-pdf" id="download-pdf">Download as PDF</button>
             <button class="download-jpeg" id="download-jpeg">Download as JPEG</button>
           </div>
@@ -154,10 +154,11 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
         
         <script>
           function captureCertificate(callback) {
-            const buttons = document.querySelectorAll('.share-buttons, .download-buttons');
-            buttons.forEach(btn => btn.style.display = 'none');
-            html2canvas(document.getElementById("certificate")).then(canvas => {
-              buttons.forEach(btn => btn.style.display = '');
+            const actionSection = document.querySelector('.action-section');
+            actionSection.style.display = 'none';
+            
+            html2canvas(document.getElementById("certificate-wrapper")).then(canvas => {
+              actionSection.style.display = '';
               callback(canvas);
             });
           }

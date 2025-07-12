@@ -1,38 +1,81 @@
 import { Link } from "react-router-dom";
+import { FaLocationDot, FaCalendar, FaArrowRight } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
-function OrganizationCard({ organization }) {
-  console.log("Organization image", organization.Image);
+function OrganizationCard({ organization, index = 0 }) {
   return (
-    <div className="max-w-sm md:max-w-md lg:max-w-lg rounded-lg overflow-hidden shadow-lg m-4 transition-transform transform hover:scale-105">
+    <motion.div
+      className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+    >
+      {/* Image section with enhanced overlay */}
       <Link to={`/organization/${organization.id}`} className="block">
-        <div className="relative group">
+        <div className="relative overflow-hidden h-56">
           <img
             src={organization.Image.url}
             alt={organization.name}
-            className="w-full h-48 object-cover transition-transform transform group-hover:scale-110 duration-300"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </div>
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-40 group-hover:opacity-70 transition-opacity duration-300"></div>
 
-        <div className="p-6 text-center">
-          <h3 className="text-xl font-semibold text-primary mb-2">
-            {organization.name}
-          </h3>
-          <p className="text-gray-700 text-sm md:text-base line-clamp-3">
-            {organization.description}
-          </p>
+          {/* Floating badge */}
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+            <span className="text-xs font-medium text-primary">Featured</span>
+          </div>
+
+          {/* Title overlay on hover */}
+          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <h3 className="text-white font-bold text-lg mb-1 drop-shadow-lg">
+              {organization.name}
+            </h3>
+          </div>
         </div>
       </Link>
 
-      <div className="p-4 flex justify-center">
-        <Link
-          to={`/organization/${organization.id}`}
-          className="bg-primary text-white py-2 px-6 rounded-full shadow-md transition-transform duration-300 hover:scale-105 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Learn More
+      {/* Content section */}
+      <div className="p-6 flex flex-col flex-grow">
+        {/* Organization name */}
+        <Link to={`/organization/${organization.id}`}>
+          <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-primary transition-colors duration-300 line-clamp-2 min-h-[3.5rem]">
+            {organization.name}
+          </h3>
         </Link>
+
+        {/* Description */}
+        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow min-h-[4.5rem]">
+          {organization.description}
+        </p>
+
+        {/* Meta information */}
+        <div className="flex items-center gap-4 mb-4 text-xs text-gray-500">
+          <div className="flex items-center gap-1">
+            <FaLocationDot className="text-primary" />
+            <span>Global</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <FaCalendar className="text-primary" />
+            <span>Active</span>
+          </div>
+        </div>
+
+        {/* Action button - Always at bottom */}
+        <div className="mt-auto">
+          <Link
+            to={`/organization/${organization.id}`}
+            className="group/btn inline-flex items-center gap-2 w-full justify-center bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-xl font-medium transition-all duration-300 hover:shadow-lg hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary/25"
+          >
+            <span>Explore Organization</span>
+            <FaArrowRight className="text-sm transition-transform duration-300 group-hover/btn:translate-x-1" />
+          </Link>
+        </div>
       </div>
-    </div>
+
+      {/* Decorative corner */}
+      <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-transparent rounded-br-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </motion.div>
   );
 }
 

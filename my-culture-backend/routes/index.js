@@ -21,6 +21,7 @@ import galleryRouter from "./galleryRouter.js";
 import organizationRouter from "./organizationRouter.js";
 import newsletterRouter from "./newsletterRouter.js";
 import subscriberRouter from "./subscriberRouter.js";
+import certificateTemplateRouter from "./certificateTemplates.js";
 
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.use("/newsletters", newsletterRouter);
 router.use("/subscribers", subscriberRouter);
 router.use("/organizations", organizationRouter);
 router.use("/certificates", certificateRouter);
+router.use("/certificate-templates", certificateTemplateRouter);
 router.use("/:model", dynamicModel);
 
 router
