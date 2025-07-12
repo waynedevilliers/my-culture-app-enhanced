@@ -57,19 +57,20 @@ router.get('/:templateId', asyncWrapper(async (req, res) => {
 // Get template preview HTML
 router.get('/:templateId/preview', asyncWrapper(async (req, res) => {
   const { templateId } = req.params;
+  const { participant, event, issueDate, signature, organizationName } = req.query;
   const template = getTemplateById(templateId);
   
-  // Sample data for preview
-  const sampleData = {
-    participant: "John Doe",
-    event: "Sample Event",
-    issueDate: new Date().toDateString(),
-    signature: "Director Name",
-    organizationName: "Sample Organization"
+  // Use query parameters or fallback to sample data
+  const previewData = {
+    participant: participant || "John Doe",
+    event: event || "Sample Event",
+    issueDate: issueDate || new Date().toDateString(),
+    signature: signature || "Director Name",
+    organizationName: organizationName || "Sample Organization"
   };
   
   const { generateCertificateHTML } = await import('../utils/certificateTemplates.js');
-  const previewHTML = generateCertificateHTML(template, sampleData);
+  const previewHTML = generateCertificateHTML(template, previewData);
 
   res.setHeader('Content-Type', 'text/html');
   res.send(previewHTML);
