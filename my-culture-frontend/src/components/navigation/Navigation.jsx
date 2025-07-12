@@ -74,7 +74,7 @@ const Navigation = () => {
             <>
               <li>
                 <button onClick={() => document.getElementById("login-form")?.showModal()}>
-                  Sign Up
+                  Log In
                 </button>
               </li>
             </>
@@ -137,7 +137,7 @@ const Navigation = () => {
             <>
               <li>
                 <button onClick={() => document.getElementById("login-form")?.showModal()}>
-                  <span className="text-2xl"><FaArrowRightToBracket /></span>Sign Up
+                  <span className="text-2xl"><FaArrowRightToBracket /></span>Log In
                 </button>
               </li>
             </>
