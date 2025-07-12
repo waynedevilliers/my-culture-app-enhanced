@@ -4,7 +4,7 @@ const Organizations = () => {
   return (
     <section
       id="organization"
-      className="relative scroll-mt-24 pt-24 h-screen flex flex-col justify-center items-center"
+      className="relative scroll-mt-24 pt-24 pb-16 min-h-screen"
     >
       <OrganizationList />
     </section>
