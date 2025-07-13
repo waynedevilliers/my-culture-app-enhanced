@@ -82,7 +82,10 @@ const Navigation = () => {
           ) : (
             <>
               <li>
-                <button onClick={() => document.getElementById("login-form")?.showModal()}>
+                <button 
+                  onClick={() => document.getElementById("login-form")?.showModal()}
+                  aria-label={t('nav.login')}
+                >
                   {t('nav.login')}
                 </button>
               </li>
@@ -138,13 +141,18 @@ const Navigation = () => {
                 </li>
               )}
               <li>
-                <button onClick={logout}><span className="text-2xl"><FaArrowRightFromBracket /></span>{t('nav.logout')}</button>
+                <button onClick={logout} aria-label={t('nav.logout')}>
+                  <span className="text-2xl"><FaArrowRightFromBracket /></span>{t('nav.logout')}
+                </button>
               </li>
             </>
           ) : (
             <>
               <li>
-                <button onClick={() => document.getElementById("login-form")?.showModal()}>
+                <button 
+                  onClick={() => document.getElementById("login-form")?.showModal()}
+                  aria-label={t('nav.login')}
+                >
                   <span className="text-2xl"><FaArrowRightToBracket /></span>{t('nav.login')}
                 </button>
               </li>

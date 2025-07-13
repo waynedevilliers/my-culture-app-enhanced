@@ -95,8 +95,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     void fetchUsers();
-    // void fetchEvents();
-    // void fetchSubscribers();
 
     return () => {};
   }, []);

@@ -1,7 +1,6 @@
 import { defaultProps } from "@blocknote/core";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Menu } from "@mantine/core";
-// import { Menu } from "@ariakit/react"
 import { MdCancel, MdCheckCircle, MdError, MdInfo } from "react-icons/md";
 
 // The types of alerts that users can choose from.
