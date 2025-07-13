@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { 
   FaBuilding, 
   FaUsers, 
@@ -16,6 +17,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const JoinUs = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     organizationName: "",
     organizationType: "",
@@ -51,23 +53,23 @@ const JoinUs = () => {
   const benefits = [
     {
       icon: FaCertificate,
-      title: "Digital Certificates",
-      description: "Issue beautiful, professional certificates to recognize achievements and participation"
+      title: t('joinUs.benefits.digitalCertificates.title'),
+      description: t('joinUs.benefits.digitalCertificates.description')
     },
     {
       icon: FaUsers,
-      title: "Community Network",
-      description: "Connect with other cultural organizations across Germany and beyond"
+      title: t('joinUs.benefits.communityNetwork.title'),
+      description: t('joinUs.benefits.communityNetwork.description')
     },
     {
       icon: FaGlobe,
-      title: "Online Presence",
-      description: "Get featured on our platform with your own dedicated organization page"
+      title: t('joinUs.benefits.onlinePresence.title'),
+      description: t('joinUs.benefits.onlinePresence.description')
     },
     {
       icon: FaHandshake,
-      title: "Partnership Opportunities",
-      description: "Collaborate with other organizations on events and cultural initiatives"
+      title: t('joinUs.benefits.partnerships.title'),
+      description: t('joinUs.benefits.partnerships.description')
     }
   ];
 
@@ -124,30 +126,28 @@ const JoinUs = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 id="hero-title" className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-            Join Our
+            {t('joinUs.title')}
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-3">
-              Cultural Community
+              {t('joinUs.titleHighlight')}
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Become part of Germany's leading platform for cultural
-            organizations. Connect, collaborate, and celebrate achievements
-            together.
+            {t('joinUs.subtitle')}
           </p>
 
           {/* Quick Stats */}
           <div className="flex justify-center items-center gap-8 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <FaBuilding className="text-primary" />
-              <span>50+ Organizations</span>
+              <span>50+ {t('joinUs.stats.organizations')}</span>
             </div>
             <div className="flex items-center gap-2">
               <FaCertificate className="text-secondary" />
-              <span>1000+ Certificates Issued</span>
+              <span>1000+ {t('joinUs.stats.certificates')}</span>
             </div>
             <div className="flex items-center gap-2">
               <FaUsers className="text-primary" />
-              <span>Growing Community</span>
+              <span>{t('joinUs.stats.community')}</span>
             </div>
           </div>
         </motion.div>
@@ -162,7 +162,7 @@ const JoinUs = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <h2 id="benefits-title" className="text-3xl font-bold text-center text-gray-800 mb-12">
-            What You Get as a Member
+            {t('joinUs.benefits.title')}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
@@ -194,10 +194,10 @@ const JoinUs = () => {
         >
           <div className="text-center mb-8">
             <h2 id="application-title" className="text-3xl font-bold text-gray-800 mb-4">
-              Organization Application Form
+              {t('joinUs.form.title')}
             </h2>
             <p className="text-gray-600">
-              Fill out this form to join our cultural community platform
+              {t('joinUs.form.subtitle')}
             </p>
           </div>
 
@@ -443,7 +443,7 @@ const JoinUs = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
         >
           <h2 id="process-title" className="text-3xl font-bold text-gray-800 mb-12">
-            Application Process
+            {t('joinUs.process.title')}
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
@@ -451,10 +451,10 @@ const JoinUs = () => {
                 1
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Submit Application
+                {t('joinUs.process.step1.title')}
               </h3>
               <p className="text-gray-600">
-                Fill out the form with your organization details
+                {t('joinUs.process.step1.description')}
               </p>
             </div>
             <div className="text-center">
@@ -462,10 +462,10 @@ const JoinUs = () => {
                 2
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Review Process
+                {t('joinUs.process.step2.title')}
               </h3>
               <p className="text-gray-600">
-                We review your application within 2-3 business days
+                {t('joinUs.process.step2.description')}
               </p>
             </div>
             <div className="text-center">
@@ -473,10 +473,10 @@ const JoinUs = () => {
                 3
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Welcome Aboard
+                {t('joinUs.process.step3.title')}
               </h3>
               <p className="text-gray-600">
-                Get access to your dashboard and start issuing certificates
+                {t('joinUs.process.step3.description')}
               </p>
             </div>
           </div>

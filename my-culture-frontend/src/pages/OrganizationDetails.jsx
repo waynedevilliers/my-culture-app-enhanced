@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import { 
   FaGlobe, 
   FaPhone, 
@@ -15,6 +16,7 @@ import axios from "axios";
 
 const OrganizationDetails = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
   const [organization, setOrganization] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,13 +50,29 @@ const OrganizationDetails = () => {
     return (
       <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Organization Not Found</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">{t('organizationDetails.notFound')}</h1>
           <p className="text-gray-600 mb-6">{error}</p>
           <Link 
             to="/organizations" 
             className="btn btn-primary"
           >
-            Back to Organizations
+            {t('organizationDetails.backToOrganizations')}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!organization) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">{t('organizationDetails.notFound')}</h1>
+          <Link 
+            to="/organizations" 
+            className="btn btn-primary"
+          >
+            {t('organizationDetails.backToOrganizations')}
           </Link>
         </div>
       </div>
@@ -77,7 +95,7 @@ const OrganizationDetails = () => {
             className="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors duration-300"
           >
             <FaArrowLeft />
-            <span>Back to Organizations</span>
+            <span>{t('organizationDetails.backToOrganizations')}</span>
           </Link>
         </motion.div>
         </nav>
@@ -92,17 +110,26 @@ const OrganizationDetails = () => {
         >
           {/* Header Image */}
           <figure className="relative h-64 md:h-80 overflow-hidden">
-            <img 
-              src={organization.Image?.url} 
-              alt={organization.name}
-              className="w-full h-full object-cover"
-            />
+            {organization.Image?.url ? (
+              <img 
+                src={organization.Image.url} 
+                alt={organization.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <div className="text-6xl mb-4">🏢</div>
+                  <div className="text-lg font-medium">{organization.name}</div>
+                </div>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
             
             {/* Organization Badge */}
             <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
               <span className="text-sm font-semibold text-primary">
-                {organization.published ? 'Active' : 'Draft'}
+                {organization.published ? t('organizationDetails.active') : t('organizationDetails.draft')}
               </span>
             </div>
 
@@ -114,11 +141,11 @@ const OrganizationDetails = () => {
               <div className="flex items-center gap-4 text-white/90">
                 <div className="flex items-center gap-2">
                   <FaLocationDot />
-                  <span>Germany</span>
+                  <span>{t('common.germany')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <FaUsers />
-                  <span>Cultural Organization</span>
+                  <span>{t('organizationDetails.culturalOrganization')}</span>
                 </div>
               </div>
             </div>
@@ -130,17 +157,16 @@ const OrganizationDetails = () => {
               {/* About Section */}
               <section aria-labelledby="about-title">
               <div>
-                <h2 id="about-title" className="text-2xl font-bold text-gray-800 mb-6">About Our Organization</h2>
+                <h2 id="about-title" className="text-2xl font-bold text-gray-800 mb-6">{t('organizationDetails.aboutTitle')}</h2>
                 <p className="text-gray-600 leading-relaxed text-lg mb-8">
                   {organization.description}
                 </p>
 
                 {/* Mission Statement */}
                 <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 mb-8">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Our Mission</h3>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">{t('organizationDetails.mission')}</h3>
                   <p className="text-gray-700">
-                    Dedicated to preserving, promoting, and celebrating cultural heritage while 
-                    fostering community engagement and educational opportunities for all.
+                    {t('organizationDetails.missionText')}
                   </p>
                 </div>
 
@@ -149,12 +175,12 @@ const OrganizationDetails = () => {
                   <div className="text-center p-4 bg-gray-50 rounded-xl">
                     <FaCertificate className="text-2xl text-primary mx-auto mb-2" />
                     <div className="text-2xl font-bold text-gray-800">50+</div>
-                    <div className="text-sm text-gray-600">Certificates Issued</div>
+                    <div className="text-sm text-gray-600">{t('organizationDetails.certificatesIssued')}</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-xl">
                     <FaCalendar className="text-2xl text-secondary mx-auto mb-2" />
                     <div className="text-2xl font-bold text-gray-800">12+</div>
-                    <div className="text-sm text-gray-600">Programs Active</div>
+                    <div className="text-sm text-gray-600">{t('organizationDetails.programsActive')}</div>
                   </div>
                 </div>
               </div>
@@ -163,7 +189,7 @@ const OrganizationDetails = () => {
               {/* Contact & Info Section */}
               <section aria-labelledby="contact-title">
               <div>
-                <h2 id="contact-title" className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
+                <h2 id="contact-title" className="text-2xl font-bold text-gray-800 mb-6">{t('organizationDetails.contactTitle')}</h2>
                 
                 {/* Contact Information */}
                 <div className="space-y-4 mb-8">
@@ -171,7 +197,7 @@ const OrganizationDetails = () => {
                     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                       <FaGlobe className="text-primary text-xl" />
                       <div>
-                        <div className="font-semibold text-gray-800">Website</div>
+                        <div className="font-semibold text-gray-800">{t('organizationDetails.website')}</div>
                         <a 
                           href={organization.website} 
                           target="_blank" 
@@ -188,7 +214,7 @@ const OrganizationDetails = () => {
                     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                       <FaEnvelope className="text-secondary text-xl" />
                       <div>
-                        <div className="font-semibold text-gray-800">Email</div>
+                        <div className="font-semibold text-gray-800">{t('organizationDetails.email')}</div>
                         <a 
                           href={`mailto:${organization.email}`}
                           className="text-secondary hover:text-primary transition-colors"
@@ -203,7 +229,7 @@ const OrganizationDetails = () => {
                     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                       <FaPhone className="text-primary text-xl" />
                       <div>
-                        <div className="font-semibold text-gray-800">Phone</div>
+                        <div className="font-semibold text-gray-800">{t('organizationDetails.phone')}</div>
                         <a 
                           href={`tel:${organization.phone}`}
                           className="text-primary hover:text-secondary transition-colors"
@@ -217,16 +243,16 @@ const OrganizationDetails = () => {
 
                 {/* Call to Action */}
                 <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white">
-                  <h3 className="text-xl font-bold mb-3">Join Our Community</h3>
+                  <h3 className="text-xl font-bold mb-3">{t('organizationDetails.joinCommunity')}</h3>
                   <p className="mb-4 opacity-90">
-                    Become part of our cultural journey and earn recognition for your achievements.
+                    {t('organizationDetails.joinDescription')}
                   </p>
                   <div className="flex gap-3">
                     <a 
                       href={organization.email ? `mailto:${organization.email}` : '#'}
                       className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors flex-1 text-center"
                     >
-                      Contact Us
+                      {t('organizationDetails.contactUs')}
                     </a>
                     {organization.website && (
                       <a 
@@ -235,7 +261,7 @@ const OrganizationDetails = () => {
                         rel="noopener noreferrer"
                         className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors flex-1 text-center"
                       >
-                        Visit Website
+                        {t('organizationDetails.visitWebsite')}
                       </a>
                     )}
                   </div>
@@ -256,7 +282,7 @@ const OrganizationDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Our Programs</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('organizationDetails.programs')}</h2>
             <div className="space-y-4">
               <div className="p-4 border border-gray-200 rounded-xl">
                 <h3 className="font-semibold text-gray-800">Cultural Education</h3>
@@ -280,7 +306,7 @@ const OrganizationDetails = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Recent Activity</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">{t('organizationDetails.recentActivity')}</h2>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
                 <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>

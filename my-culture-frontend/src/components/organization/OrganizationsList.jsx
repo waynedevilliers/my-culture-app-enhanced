@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 import OrganizationCard from "./OrganizationCards";
 import axios from "axios";
 
 const OrganizationList = () => {
+  const { t } = useTranslation();
   const [organizations, setOrganizations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,14 +41,13 @@ const OrganizationList = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Featured
+            {t('hero.featuredOrganizations').split(' ')[0]}
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-3">
-              Organizations
+              {t('hero.featuredOrganizations').split(' ').slice(1).join(' ')}
             </span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover amazing cultural organizations from around the world and
-            explore their unique programs and achievements
+            {t('hero.featuredSubtitle')}
           </p>
 
           {/* Decorative line */}
@@ -94,10 +95,10 @@ const OrganizationList = () => {
               >
                 <div className="text-gray-400 text-6xl mb-4">🏢</div>
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                  No Organizations Found
+                  {t('organizations.noOrganizations')}
                 </h3>
                 <p className="text-gray-500">
-                  Check back soon for new organizations to join our community!
+                  {t('organizations.checkBackSoon')}
                 </p>
               </motion.div>
             )}
@@ -115,17 +116,16 @@ const OrganizationList = () => {
           >
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                Join Our Community
+                {t('organizations.joinCommunity')}
               </h3>
               <p className="text-gray-600 mb-6">
-                Are you part of a cultural organization? Join our platform and
-                start recognizing achievements with beautiful certificates.
+                {t('organizations.joinDescription')}
               </p>
               <a
-                href="/admin"
+                href="/join-us"
                 className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
-                Get Started Today
+                {t('organizations.getStartedToday')}
               </a>
             </div>
           </motion.div>

@@ -1,8 +1,11 @@
 import { FaAngleDown, FaAward, FaUsers, FaGlobe } from "react-icons/fa6";
 import { Link } from "react-scroll";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-base-100">
       {/* Background decoration */}
@@ -25,10 +28,8 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.2 }}
         >
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-            Empowering Culture
+            {t('hero.title')}
           </span>
-          <br />
-          <span className="text-gray-800 font-medium">Through Recognition</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -38,17 +39,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
         >
-          Join our community of cultural organizations and celebrate
-          achievements with
-          <span className="font-semibold text-primary">
-            {" "}
-            beautiful certificates
-          </span>{" "}
-          and
-          <span className="font-semibold text-secondary">
-            {" "}
-            meaningful rewards
-          </span>
+          {t('hero.subtitle')}
         </motion.p>
 
         {/* Stats section */}
@@ -61,17 +52,17 @@ const HeroSection = () => {
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaAward className="text-3xl text-primary mb-2" />
             <div className="text-2xl font-bold text-gray-800">1000+</div>
-            <div className="text-sm text-gray-600">Certificates Issued</div>
+            <div className="text-sm text-gray-600">{t('hero.stats.certificates')}</div>
           </div>
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaUsers className="text-3xl text-secondary mb-2" />
             <div className="text-2xl font-bold text-gray-800">50+</div>
-            <div className="text-sm text-gray-600">Organizations</div>
+            <div className="text-sm text-gray-600">{t('hero.stats.organizations')}</div>
           </div>
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaGlobe className="text-3xl text-primary mb-2" />
             <div className="text-2xl font-bold text-gray-800">25+</div>
-            <div className="text-sm text-gray-600">Countries</div>
+            <div className="text-sm text-gray-600">{t('hero.stats.members')}</div>
           </div>
         </motion.div>
 
@@ -89,13 +80,13 @@ const HeroSection = () => {
             duration={800}
             className="px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
-            Explore Organizations
+            {t('organizations.exploreOrganization')}
           </Link>
           <a
-            href="/dashboard"
+            href="/join-us"
             className="px-8 py-4 border-2 border-primary text-primary font-semibold rounded-full hover:bg-primary hover:text-white transition-all duration-300"
           >
-            Join as Organization
+            {t('hero.getStarted')}
           </a>
         </motion.div>
       </motion.div>

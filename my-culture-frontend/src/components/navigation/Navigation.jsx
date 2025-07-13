@@ -1,5 +1,6 @@
 import { useUser } from "../../contexts/UserContext.jsx";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   FaArrowRightFromBracket, FaArrowRightToBracket,
   FaHouseChimney,
@@ -8,9 +9,11 @@ import {
   FaUser, FaBarsStaggered, FaFire, FaHandshake,
 } from 'react-icons/fa6';
 import { useState } from 'react';
+import LanguageSwitcher from '../common/LanguageSwitcher.jsx';
 
 const Navigation = () => {
   const { user, logout, initials } = useUser();
+  const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
 
   const drawerHandler = () => {
@@ -37,13 +40,16 @@ const Navigation = () => {
         </label>
         <ul className="hidden lg:flex flex-row gap-6 items-center font-semibold text-2xl text-secondary">
           <li>
-            <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""}>Home</NavLink>
+            <NavLink to="/" className={({ isActive }) => isActive ? "text-primary" : ""}>{t('nav.home')}</NavLink>
           </li>
           <li>
-            <NavLink to="/organizations" className={({ isActive }) => isActive ? "text-primary" : ""}>Organizations</NavLink>
+            <NavLink to="/organizations" className={({ isActive }) => isActive ? "text-primary" : ""}>{t('nav.organizations')}</NavLink>
           </li>
           <li>
-            <NavLink to="/join-us" className={({ isActive }) => isActive ? "text-primary" : ""}>Join Us</NavLink>
+            <NavLink to="/join-us" className={({ isActive }) => isActive ? "text-primary" : ""}>{t('nav.joinUs')}</NavLink>
+          </li>
+          <li>
+            <LanguageSwitcher />
           </li>
           {/*<li>*/}
           {/*  <NavLink to="/blog" className={({ isActive }) => isActive ? "text-primary" : ""}>Blog</NavLink>*/}
@@ -59,15 +65,15 @@ const Navigation = () => {
                     tabIndex={0}
                     className="menu menu-sm dropdown-content bg-neutral border-primary border-4 z-[1] mt-3 w-52 p-2 shadow">
                     <li>
-                      <NavLink to="/profile" onClick={handleDropDown} className={({ isActive }) => isActive ? "text-primary" : ""}>Profile</NavLink>
+                      <NavLink to="/profile" onClick={handleDropDown} className={({ isActive }) => isActive ? "text-primary" : ""}>{t('nav.profile')}</NavLink>
                     </li>
                     {user.role === "admin" && (
                       <li>
-                        <NavLink to="/dashboard/home" className={({ isActive }) => isActive ? "" : ""}>Dashboard</NavLink>
+                        <NavLink to="/dashboard/home" className={({ isActive }) => isActive ? "" : ""}>{t('nav.dashboard')}</NavLink>
                       </li>
                     )}
                     <li>
-                      <button onClick={logout} className="">Logout</button>
+                      <button onClick={logout} className="">{t('nav.logout')}</button>
                     </li>
                   </ul>
                 </div>
@@ -77,7 +83,7 @@ const Navigation = () => {
             <>
               <li>
                 <button onClick={() => document.getElementById("login-form")?.showModal()}>
-                  Log In
+                  {t('nav.login')}
                 </button>
               </li>
             </>
@@ -97,23 +103,22 @@ const Navigation = () => {
           </li>
           <li>
             <NavLink to="/" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-              <span className="text-2xl"><FaHouseChimney /></span>Home</NavLink>
+              <span className="text-2xl"><FaHouseChimney /></span>{t('nav.home')}</NavLink>
           </li>
           {/*<li>*/}
           {/*  <NavLink to="/events" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>*/}
           {/*    <span className="text-2xl"><FaMusic /></span>Events</NavLink>*/}
           {/*</li>*/}
           <li>
-            <NavLink to="/gallery" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-              <span className="text-2xl"><FaFire /></span>Organisations</NavLink>
-          </li>
-          <li>
-            <NavLink to="/about-us" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-              <span className="text-2xl"><FaUserGroup /></span>About Us</NavLink>
+            <NavLink to="/organizations" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
+              <span className="text-2xl"><FaFire /></span>{t('nav.organizations')}</NavLink>
           </li>
           <li>
             <NavLink to="/join-us" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-              <span className="text-2xl"><FaHandshake /></span>Take part</NavLink>
+              <span className="text-2xl"><FaHandshake /></span>{t('nav.joinUs')}</NavLink>
+          </li>
+          <li className="mt-4">
+            <LanguageSwitcher />
           </li>
           {/*<li>*/}
           {/*  <NavLink to="/blog" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>*/}
@@ -124,23 +129,23 @@ const Navigation = () => {
             <>
               <li>
                 <NavLink to="/profile" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-                  <span className="text-2xl"><FaUser /></span>Profile</NavLink>
+                  <span className="text-2xl"><FaUser /></span>{t('nav.profile')}</NavLink>
               </li>
               {user.role === "admin" && (
                 <li>
                   <NavLink to="/dashboard/home" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
-                    <span className="text-2xl"><FaHouseChimneyUser /></span>Dashboard</NavLink>
+                    <span className="text-2xl"><FaHouseChimneyUser /></span>{t('nav.dashboard')}</NavLink>
                 </li>
               )}
               <li>
-                <button onClick={logout}><span className="text-2xl"><FaArrowRightFromBracket /></span>Logout</button>
+                <button onClick={logout}><span className="text-2xl"><FaArrowRightFromBracket /></span>{t('nav.logout')}</button>
               </li>
             </>
           ) : (
             <>
               <li>
                 <button onClick={() => document.getElementById("login-form")?.showModal()}>
-                  <span className="text-2xl"><FaArrowRightToBracket /></span>Log In
+                  <span className="text-2xl"><FaArrowRightToBracket /></span>{t('nav.login')}
                 </button>
               </li>
             </>

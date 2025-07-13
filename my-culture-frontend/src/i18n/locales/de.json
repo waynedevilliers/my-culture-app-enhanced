@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "organizations": "Organisationen", 
+    "joinUs": "Mitmachen",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "profile": "Profil",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Stärkung der Kultur durch Anerkennung",
+    "subtitle": "Verbinden Sie sich mit kulturellen Organisationen, nehmen Sie an Veranstaltungen teil und erhalten Sie professionelle Zertifikate für Ihre Leistungen.",
+    "getStarted": "Heute loslegen",
+    "learnMore": "Mehr erfahren",
+    "featuredOrganizations": "Ausgewählte Organisationen",
+    "featuredSubtitle": "Entdecken Sie führende kulturelle Organisationen in ganz Deutschland",
+    "stats": {
+      "organizations": "Organisationen",
+      "certificates": "Zertifikate",
+      "members": "Mitglieder"
+    }
+  },
+  "joinUs": {
+    "title": "Treten Sie unserer",
+    "titleHighlight": "Kulturgemeinschaft bei",
+    "subtitle": "Werden Sie Teil von Deutschlands führender Plattform für kulturelle Organisationen. Vernetzen, kooperieren und feiern Sie gemeinsam Erfolge.",
+    "stats": {
+      "organizations": "Organisationen",
+      "certificates": "Zertifikate ausgestellt", 
+      "community": "Wachsende Gemeinschaft"
+    },
+    "benefits": {
+      "title": "Was Sie als Mitglied erhalten",
+      "digitalCertificates": {
+        "title": "Digitale Zertifikate",
+        "description": "Stellen Sie schöne, professionelle Zertifikate aus, um Leistungen und Teilnahme anzuerkennen"
+      },
+      "communityNetwork": {
+        "title": "Gemeinschaftsnetzwerk", 
+        "description": "Vernetzen Sie sich mit anderen kulturellen Organisationen in ganz Deutschland und darüber hinaus"
+      },
+      "onlinePresence": {
+        "title": "Online-Präsenz",
+        "description": "Werden Sie auf unserer Plattform mit Ihrer eigenen Organisationsseite vorgestellt"
+      },
+      "partnerships": {
+        "title": "Partnerschaftsmöglichkeiten",
+        "description": "Arbeiten Sie mit anderen Organisationen bei Veranstaltungen und kulturellen Initiativen zusammen"
+      }
+    },
+    "form": {
+      "title": "Antragsformular für Organisationen",
+      "subtitle": "Füllen Sie dieses Formular aus, um unserer kulturellen Gemeinschaftsplattform beizutreten",
+      "organizationName": "Name der Organisation",
+      "organizationType": "Organisationstyp",
+      "selectType": "Organisationstyp auswählen",
+      "description": "Beschreibung der Organisation",
+      "descriptionPlaceholder": "Beschreiben Sie die Mission, Aktivitäten und Ziele Ihrer Organisation...",
+      "contactPerson": "Kontaktperson",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "website": "Webseite",
+      "location": "Standort",
+      "locationPlaceholder": "Stadt, Deutschland",
+      "establishedYear": "Gründungsjahr",
+      "memberCount": "Mitgliederzahl",
+      "memberCountPlaceholder": "50-100 Mitglieder",
+      "programs": "Aktuelle Programme & Aktivitäten",
+      "programsPlaceholder": "Beschreiben Sie Ihre aktuellen Programme, Workshops, Veranstaltungen oder Aktivitäten...",
+      "goals": "Ziele für den Beitritt zu unserer Plattform",
+      "goalsPlaceholder": "Was hoffen Sie durch den Beitritt zu unserer Plattform zu erreichen?",
+      "additionalInfo": "Zusätzliche Informationen",
+      "additionalInfoPlaceholder": "Weitere Informationen, die Sie gerne teilen möchten...",
+      "submit": "Antrag einreichen",
+      "submitting": "Antrag wird eingereicht...",
+      "required": "Pflichtfeld"
+    },
+    "process": {
+      "title": "Bewerbungsprozess",
+      "step1": {
+        "title": "Antrag einreichen",
+        "description": "Füllen Sie das Formular mit Ihren Organisationsdetails aus"
+      },
+      "step2": {
+        "title": "Prüfungsprozess", 
+        "description": "Wir prüfen Ihren Antrag innerhalb von 2-3 Werktagen"
+      },
+      "step3": {
+        "title": "Willkommen an Bord",
+        "description": "Erhalten Sie Zugang zu Ihrem Dashboard und beginnen Sie mit der Ausstellung von Zertifikaten"
+      }
+    }
+  },
+  "organizations": {
+    "title": "Unsere Organisationen",
+    "subtitle": "Entdecken Sie kulturelle Organisationen in Ihrer Gemeinschaft",
+    "exploreOrganization": "Organisation erkunden",
+    "getStartedToday": "Heute loslegen",
+    "featuredTitle": "Ausgewählte Organisationen",
+    "featured": "Ausgewählt",
+    "featuredSubtitle": "Entdecken Sie führende kulturelle Organisationen in Deutschland",
+    "joinCommunity": "Gemeinschaft beitreten",
+    "joinDescription": "Werden Sie Teil unserer wachsenden Gemeinschaft kultureller Organisationen und beginnen Sie noch heute mit der Anerkennung von Leistungen durch schöne Zertifikate.",
+    "loading": "Organisationen werden geladen...",
+    "noOrganizations": "Keine Organisationen gefunden",
+    "checkBackSoon": "Schauen Sie bald wieder vorbei, um neue Organisationen zu entdecken, die unserer Gemeinschaft beitreten!"
+  },
+  "organizationDetails": {
+    "backToOrganizations": "Zurück zu den Organisationen",
+    "aboutTitle": "Über unsere Organisation", 
+    "contactTitle": "Kontakt aufnehmen",
+    "website": "Webseite",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "joinCommunity": "Treten Sie unserer Gemeinschaft bei",
+    "joinDescription": "Werden Sie Teil unserer kulturellen Reise und erhalten Sie Anerkennung für Ihre Leistungen.",
+    "contactUs": "Kontaktieren Sie uns",
+    "visitWebsite": "Webseite besuchen",
+    "programs": "Unsere Programme",
+    "recentActivity": "Aktuelle Aktivitäten",
+    "notFound": "Organisation nicht gefunden",
+    "mission": "Unsere Mission",
+    "missionText": "Unterstützung aufstrebender und etablierter Künstler durch Ausstellungsräume, gemeinsame Projekte und Gemeinschaftsprogramme, die traditionelle und moderne Kunstformen verbinden.",
+    "certificatesIssued": "Zertifikate ausgestellt",
+    "programsActive": "Programme aktiv",
+    "active": "Aktiv",
+    "draft": "Entwurf",
+    "culturalOrganization": "Kulturelle Organisation"
+  },
+  "footer": {
+    "stayConnected": "Bleiben Sie verbunden!",
+    "socialMedia": "Folgen Sie uns in den sozialen Medien",
+    "copyright": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen"
+  },
+  "login": {
+    "title": "Anmelden",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "loginButton": "Anmelden",
+    "forgotPassword": "Passwort vergessen?"
+  },
+  "events": {
+    "title": "Veranstaltungen",
+    "subtitle": "Bald verfügbar - Entdecken Sie bevorstehende kulturelle Veranstaltungen"
+  },
+  "profile": {
+    "title": "Profil"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolgreich",
+    "close": "Schließen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "view": "Anzeigen",
+    "germany": "Deutschland"
+  }
+}

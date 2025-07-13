@@ -6,8 +6,8 @@ dotenv.config();
 
 const organizationData = [
   {
-    name: "Berlin Cultural Heritage Center",
-    description: "Preserving and promoting German cultural traditions through educational programs, workshops, and community events. We connect generations through shared heritage and cultural learning.",
+    name: "Berliner Kulturerbe-Zentrum",
+    description: "Bewahrung und Förderung deutscher Kulturtraditionen durch Bildungsprogramme, Workshops und Gemeinschaftsveranstaltungen. Wir verbinden Generationen durch gemeinsames Erbe und kulturelles Lernen.",
     website: "https://www.berlin-heritage.de",
     phone: "+49 30 1234567",
     email: "info@berlin-heritage.de",
@@ -15,8 +15,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331010/image_2025-07-12_163647645_l8j9hk.png"
   },
   {
-    name: "Munich International Music Academy",
-    description: "Fostering musical excellence and cultural exchange through world-class instruction, performances, and multicultural music programs for students of all ages.",
+    name: "Münchener Internationale Musikakademie",
+    description: "Förderung musikalischer Exzellenz und kulturellen Austauschs durch erstklassigen Unterricht, Aufführungen und multikulturelle Musikprogramme für Schüler aller Altersgruppen.",
     website: "https://www.munich-music.org",
     phone: "+49 89 2345678",
     email: "contact@munich-music.org",
@@ -24,8 +24,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331019/cc-illustrative-map_blxbr6.png"
   },
   {
-    name: "Hamburg Contemporary Arts Collective",
-    description: "Supporting emerging and established artists through exhibition spaces, collaborative projects, and community outreach programs that bridge traditional and modern art forms.",
+    name: "Hamburger Zeitgenössisches Kunstkollektiv",
+    description: "Unterstützung aufstrebender und etablierter Künstler durch Ausstellungsräume, gemeinsame Projekte und Gemeinschaftsprogramme, die traditionelle und moderne Kunstformen verbinden.",
     website: "https://www.hamburg-arts.com",
     phone: "+49 40 3456789",
     email: "hello@hamburg-arts.com",
@@ -33,8 +33,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331032/lg_1panel-color_0_yrdrkr.png"
   },
   {
-    name: "Cologne Community Theater",
-    description: "Creating inclusive theatrical experiences that reflect our diverse community through original productions, educational workshops, and youth development programs.",
+    name: "Kölner Gemeinschaftstheater",
+    description: "Schaffung inklusiver Theatererfahrungen, die unsere vielfältige Gemeinschaft durch Originalproduktionen, Bildungsworkshops und Jugendentwicklungsprogramme widerspiegeln.",
     website: "https://www.cologne-theater.org",
     phone: "+49 221 4567890",
     email: "tickets@cologne-theater.org",
@@ -42,8 +42,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331058/people-connecting-puzzle-pieces-colorful-background_23-2148085523_ynhsf4.jpg"
   },
   {
-    name: "Frankfurt Dance & Movement Studio",
-    description: "Celebrating cultural diversity through dance education, professional training, and community performances that showcase traditional and contemporary movement arts.",
+    name: "Frankfurter Tanz- und Bewegungsstudio",
+    description: "Feier der kulturellen Vielfalt durch Tanzausbildung, professionelle Schulungen und Gemeinschaftsaufführungen, die traditionelle und zeitgenössische Bewegungskünste präsentieren.",
     website: "https://www.frankfurt-dance.de",
     phone: "+49 69 5678901",
     email: "studio@frankfurt-dance.de",
@@ -51,8 +51,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331082/download_znnxs8.jpg"
   },
   {
-    name: "Stuttgart Multicultural Center",
-    description: "Building bridges between communities through language exchange, cultural festivals, integration programs, and intercultural dialogue initiatives.",
+    name: "Stuttgarter Multikulturelles Zentrum",
+    description: "Brücken zwischen Gemeinschaften bauen durch Sprachaustausch, Kulturfestivals, Integrationsprogramme und interkulturelle Dialoginitiativen.",
     website: "https://www.stuttgart-multicultural.org",
     phone: "+49 711 6789012",
     email: "welcome@stuttgart-multicultural.org",
@@ -60,8 +60,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331042/8-Key-Components_jrwjtr.png"
   },
   {
-    name: "Dresden Youth Cultural Initiative",
-    description: "Empowering young people through creative expression, leadership development, and cultural projects that address social issues and build community connections.",
+    name: "Dresdner Jugend-Kulturinitiative",
+    description: "Stärkung junger Menschen durch kreative Ausdrucksformen, Führungskräfteentwicklung und Kulturprojekte, die gesellschaftliche Themen ansprechen und Gemeinschaftsverbindungen aufbauen.",
     website: "https://www.dresden-youth.de",
     phone: "+49 351 7890123",
     email: "youth@dresden-youth.de",
@@ -69,8 +69,8 @@ const organizationData = [
     imagePath: "https://res.cloudinary.com/dz9nn5enp/image/upload/v1752331010/image_2025-07-12_163647645_l8j9hk.png"
   },
   {
-    name: "Nuremberg Traditional Crafts Guild",
-    description: "Preserving traditional German craftsmanship through apprenticeships, workshops, and exhibitions that celebrate historical techniques and contemporary applications.",
+    name: "Nürnberger Traditionelle Handwerkszunft",
+    description: "Bewahrung traditioneller deutscher Handwerkskunst durch Lehrlingsausbildung, Workshops und Ausstellungen, die historische Techniken und zeitgenössische Anwendungen feiern.",
     website: "https://www.nuremberg-crafts.org",
     phone: "+49 911 8901234",
     email: "guild@nuremberg-crafts.org",

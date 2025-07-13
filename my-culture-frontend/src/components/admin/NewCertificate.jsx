@@ -17,6 +17,7 @@ const NewCertificate = () => {
   });
 
   const [recipients, setRecipients] = useState([{ name: "", email: "" }]);
+  const [previewKey, setPreviewKey] = useState(0);
 
   // Fetch available templates and organizations
   useEffect(() => {
@@ -45,6 +46,11 @@ const NewCertificate = () => {
     fetchTemplates();
     fetchOrganizations();
   }, []);
+
+  // Update preview when form data changes
+  useEffect(() => {
+    setPreviewKey(prev => prev + 1);
+  }, [form.templateId, form.title, form.issuedFrom, form.issueDate, recipients[0]?.name]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -159,14 +165,15 @@ const NewCertificate = () => {
           ))}
         </select>
         
-        {/* Template Preview */}
+        {/* Certificate Preview */}
         {form.templateId && (
           <div className="mt-4 p-4 border border-gray-300 rounded">
-            <h4 className="font-semibold mb-2">Template Preview:</h4>
+            <h4 className="font-semibold mb-2">Certificate Preview:</h4>
             <iframe 
-              src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${form.templateId}/preview`}
-              className="w-full h-64 border border-gray-200"
-              title="Certificate Template Preview"
+              key={previewKey}
+              src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${form.templateId}/preview?participant=${encodeURIComponent(recipients[0]?.name || 'Sample Name')}&event=${encodeURIComponent(form.title || 'Certificate Title')}&issueDate=${encodeURIComponent(form.issueDate || new Date().toDateString())}&organizationName=${encodeURIComponent(form.issuedFrom || 'Organization Name')}`}
+              className="w-full h-[700px] border border-gray-200"
+              title="Certificate Preview"
             />
           </div>
         )}

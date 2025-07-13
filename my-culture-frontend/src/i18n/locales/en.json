@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Home",
+    "organizations": "Organizations",
+    "joinUs": "Join Us", 
+    "login": "Log In",
+    "logout": "Logout",
+    "profile": "Profile",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Empowering Culture Through Recognition",
+    "subtitle": "Connect with cultural organizations, participate in events, and earn professional certificates for your achievements.",
+    "getStarted": "Get Started Today",
+    "learnMore": "Learn More",
+    "featuredOrganizations": "Featured Organizations",
+    "featuredSubtitle": "Discover leading cultural organizations across Germany",
+    "stats": {
+      "organizations": "Organizations",
+      "certificates": "Certificates",
+      "members": "Members"
+    }
+  },
+  "joinUs": {
+    "title": "Join Our",
+    "titleHighlight": "Cultural Community",
+    "subtitle": "Become part of Germany's leading platform for cultural organizations. Connect, collaborate, and celebrate achievements together.",
+    "stats": {
+      "organizations": "Organizations",
+      "certificates": "Certificates Issued",
+      "community": "Growing Community"
+    },
+    "benefits": {
+      "title": "What You Get as a Member",
+      "digitalCertificates": {
+        "title": "Digital Certificates",
+        "description": "Issue beautiful, professional certificates to recognize achievements and participation"
+      },
+      "communityNetwork": {
+        "title": "Community Network",
+        "description": "Connect with other cultural organizations across Germany and beyond"
+      },
+      "onlinePresence": {
+        "title": "Online Presence", 
+        "description": "Get featured on our platform with your own dedicated organization page"
+      },
+      "partnerships": {
+        "title": "Partnership Opportunities",
+        "description": "Collaborate with other organizations on events and cultural initiatives"
+      }
+    },
+    "form": {
+      "title": "Organization Application Form",
+      "subtitle": "Fill out this form to join our cultural community platform",
+      "organizationName": "Organization Name",
+      "organizationType": "Organization Type",
+      "selectType": "Select organization type",
+      "description": "Organization Description",
+      "descriptionPlaceholder": "Describe your organization's mission, activities, and goals...",
+      "contactPerson": "Contact Person",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "website": "Website",
+      "location": "Location",
+      "locationPlaceholder": "City, Germany",
+      "establishedYear": "Established Year",
+      "memberCount": "Member Count",
+      "memberCountPlaceholder": "50-100 members",
+      "programs": "Current Programs & Activities",
+      "programsPlaceholder": "Describe your current programs, workshops, events, or activities...",
+      "goals": "Goals for Joining Our Platform",
+      "goalsPlaceholder": "What do you hope to achieve by joining our platform?",
+      "additionalInfo": "Additional Information",
+      "additionalInfoPlaceholder": "Any additional information you'd like to share...",
+      "submit": "Submit Application",
+      "submitting": "Submitting Application...",
+      "required": "Required field"
+    },
+    "process": {
+      "title": "Application Process",
+      "step1": {
+        "title": "Submit Application",
+        "description": "Fill out the form with your organization details"
+      },
+      "step2": {
+        "title": "Review Process",
+        "description": "We review your application within 2-3 business days"
+      },
+      "step3": {
+        "title": "Welcome Aboard",
+        "description": "Get access to your dashboard and start issuing certificates"
+      }
+    }
+  },
+  "organizations": {
+    "title": "Our Organizations",
+    "subtitle": "Discover cultural organizations in your community",
+    "exploreOrganization": "Explore Organization",
+    "getStartedToday": "Get Started Today",
+    "featuredTitle": "Featured Organizations",
+    "featured": "Featured",
+    "featuredSubtitle": "Discover leading cultural organizations across Germany",
+    "joinCommunity": "Join Community",
+    "joinDescription": "Become part of our growing community of cultural organizations and start recognizing achievements with beautiful certificates.",
+    "loading": "Loading organizations...",
+    "noOrganizations": "No organizations found",
+    "checkBackSoon": "Check back soon for new organizations to join our community!"
+  },
+  "organizationDetails": {
+    "backToOrganizations": "Back to Organizations",
+    "aboutTitle": "About Our Organization",
+    "contactTitle": "Get in Touch",
+    "website": "Website",
+    "email": "Email",
+    "phone": "Phone",
+    "joinCommunity": "Join Our Community",
+    "joinDescription": "Become part of our cultural journey and earn recognition for your achievements.",
+    "contactUs": "Contact Us", 
+    "visitWebsite": "Visit Website",
+    "programs": "Our Programs",
+    "recentActivity": "Recent Activity",
+    "notFound": "Organization Not Found",
+    "mission": "Our Mission",
+    "missionText": "Supporting emerging and established artists through exhibition spaces, collaborative projects, and community outreach programs that bridge traditional and modern art forms.",
+    "certificatesIssued": "Certificates Issued",
+    "programsActive": "Programs Active",
+    "active": "Active",
+    "draft": "Draft",
+    "culturalOrganization": "Cultural Organization"
+  },
+  "footer": {
+    "stayConnected": "Stay Connected!",
+    "socialMedia": "Follow us on social media",
+    "copyright": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "login": {
+    "title": "Log In",
+    "email": "Email Address",
+    "password": "Password", 
+    "loginButton": "Log In",
+    "forgotPassword": "Forgot Password?"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Coming soon - Discover upcoming cultural events"
+  },
+  "profile": {
+    "title": "Profile"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "germany": "Germany"
+  }
+}
