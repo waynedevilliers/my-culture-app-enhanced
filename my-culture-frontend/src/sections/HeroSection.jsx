@@ -7,11 +7,11 @@ const HeroSection = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-base-100">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-32 w-80 h-80 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-32 w-80 h-80 rounded-full blur-3xl"></div>
       </div>
 
       <motion.div

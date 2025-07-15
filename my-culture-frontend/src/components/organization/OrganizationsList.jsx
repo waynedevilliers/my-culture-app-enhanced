@@ -61,7 +61,7 @@ const OrganizationList = () => {
         {/* Organizations grid */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {[...Array(8)].map((_, i) => (
+            {[...Array(4)].map((_, i) => (
               <div
                 key={i}
                 className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse"
@@ -79,7 +79,7 @@ const OrganizationList = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-fr">
             {organizations && organizations.length > 0 ? (
-              organizations.map((organization, index) => (
+              organizations.slice(0, 4).map((organization, index) => (
                 <OrganizationCard
                   key={organization.id}
                   organization={organization}
