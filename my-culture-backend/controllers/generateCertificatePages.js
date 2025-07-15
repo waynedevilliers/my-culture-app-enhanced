@@ -67,9 +67,7 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
         <meta property="og:url" content="${recipientUrl}" />
         <meta property="og:type" content="website" />
 
-        <!-- Required libraries for PDF and JPEG generation -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <!-- No client-side libraries needed - using server-side generation -->
         
         <!-- Load Google Fonts for templates -->
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;600&family=Inter:wght@400;500;600;700&family=Crimson+Text:wght@400;600&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -89,6 +87,49 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
           
           #certificate-wrapper {
             margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+          }
+          
+          /* Ensure certificate containers display properly */
+          .certificate-container {
+            max-width: 1123px !important;
+            width: auto !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+          }
+          
+          /* Responsive design for smaller screens */
+          @media (max-width: 1200px) {
+            .certificate-container {
+              max-width: 95vw !important;
+              transform: scale(0.9);
+              transform-origin: center;
+            }
+          }
+          
+          @media (max-width: 800px) {
+            .certificate-container {
+              max-width: 95vw !important;
+              transform: scale(0.75);
+              transform-origin: center;
+            }
+            
+            body {
+              padding: 10px;
+            }
+          }
+          
+          @media (max-width: 600px) {
+            .certificate-container {
+              max-width: 95vw !important;
+              transform: scale(0.6);
+              transform-origin: center;
+            }
           }
           
           /* Certificate Template Styles */
@@ -150,39 +191,60 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
           
           <div class="download-buttons">
             <h3>Download your certificate:</h3>
-            <button class="download-pdf" id="download-pdf">Download as PDF</button>
-            <button class="download-jpeg" id="download-jpeg">Download as JPEG</button>
+            <button class="download-pdf" id="download-pdf">Download High-Quality PDF</button>
+            <button class="download-jpeg" id="download-jpeg">Download High-Quality PNG</button>
+            <div id="download-status" style="margin-top: 15px; text-align: center; color: #666;"></div>
           </div>
         </div>
         
         <script>
-          function captureCertificate(callback) {
-            const actionSection = document.querySelector('.action-section');
-            actionSection.style.display = 'none';
+          const baseUrl = '${process.env.URL || "http://localhost:3000"}';
+          const certificateId = ${id};
+          
+          function showStatus(message, isError = false) {
+            const status = document.getElementById('download-status');
+            status.textContent = message;
+            status.style.color = isError ? '#e74c3c' : '#27ae60';
+          }
+          
+          function downloadFile(endpoint, filename) {
+            showStatus('Generating file, please wait...');
             
-            html2canvas(document.getElementById("certificate-wrapper")).then(canvas => {
-              actionSection.style.display = '';
-              callback(canvas);
-            });
+            fetch(endpoint)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Download failed');
+                }
+                return response.blob();
+              })
+              .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                showStatus('Download completed successfully!');
+                setTimeout(() => {
+                  document.getElementById('download-status').textContent = '';
+                }, 3000);
+              })
+              .catch(error => {
+                console.error('Download error:', error);
+                showStatus('Download failed. Please try again.', true);
+              });
           }
 
           document.getElementById("download-pdf").addEventListener("click", function () {
-            captureCertificate(function(canvas) {
-              const imgData = canvas.toDataURL("image/png");
-              const { jsPDF } = window.jspdf;
-              const pdf = new jsPDF("landscape", "pt", [canvas.width, canvas.height]);
-              pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-              pdf.save("certificate.pdf");
-            });
+            const endpoint = \`\${baseUrl}/api/certificates/\${certificateId}/pdf\`;
+            downloadFile(endpoint, 'certificate.pdf');
           });
 
           document.getElementById("download-jpeg").addEventListener("click", function () {
-            captureCertificate(function(canvas) {
-              const link = document.createElement("a");
-              link.download = "certificate.jpeg";
-              link.href = canvas.toDataURL("image/jpeg");
-              link.click();
-            });
+            const endpoint = \`\${baseUrl}/api/certificates/\${certificateId}/png\`;
+            downloadFile(endpoint, 'certificate.png');
           });
         </script>
       </body>
@@ -210,4 +272,119 @@ export const generateCertificatePages = asyncWrapper(async (req, res) => {
 
   res.status(200).json({ message: "Certificates generated", links: generatedLinks });
 });
+
+/**
+ * Generate HTML content for a certificate (used by PDF generator)
+ * @param {Object} certificate - Certificate object from database
+ * @returns {string} - Complete HTML content for the certificate
+ */
+export async function generateCertificateHTML(certificate) {
+  // Get the template (use templateId from certificate or default to elegant-gold)
+  const templateId = certificate.templateId || 'elegant-gold';
+  const template = getTemplateById(templateId);
+  
+  // Use first recipient for single certificate generation
+  // For multiple recipients, this should be called per recipient
+  const recipient = certificate.recipients?.[0];
+  if (!recipient) {
+    throw new Error('No recipients found for certificate');
+  }
+  
+  // Prepare certificate data
+  const certificateData = {
+    participant: recipient.name,
+    event: certificate.title,
+    issueDate: new Date(certificate.issuedDate).toDateString(),
+    signature: certificate.signature || null,
+    organizationName: certificate.issuedFrom
+  };
+  
+  // Generate the certificate content and styles using the template system
+  const { styles, content } = generateCertificateContent(template, certificateData);
+  
+  // Create the full HTML optimized for PDF generation
+  const certificateHtml = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Certificate - ${certificate.title}</title>
+      
+      <!-- Load Google Fonts for templates -->
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;600&family=Inter:wght@400;500;600;700&family=Crimson+Text:wght@400;600&family=Poppins:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        body {
+          font-family: 'Inter', sans-serif;
+          background: #f5f5f5;
+          padding: 20px;
+          margin: 0;
+          -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+        }
+
+        .certificate-wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          padding: 20px;
+        }
+        
+        /* Ensure certificate containers are properly sized */
+        .certificate-container {
+          max-width: 1123px !important;
+          min-height: 794px !important;
+          width: auto !important;
+          height: auto !important;
+          display: block !important;
+          margin: 0 auto !important;
+          box-sizing: border-box !important;
+        }
+
+        /* Print-optimized styles */
+        @media print {
+          body {
+            background: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          .certificate-wrapper {
+            min-height: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          .action-section {
+            display: none !important;
+          }
+        }
+
+        /* Template-specific styles */
+        ${styles}
+        
+        /* Hide action buttons for clean PDF */
+        .action-section {
+          display: none;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="certificate-wrapper" id="certificate-wrapper">
+        ${content}
+      </div>
+    </body>
+    </html>
+  `;
+
+  return certificateHtml;
+}
 

@@ -12,10 +12,12 @@ export const certificateTemplates = {
         border: '15px solid #d4af37',
         borderRadius: '8px',
         boxShadow: '0 0 40px rgba(212, 175, 55, 0.3)',
-        padding: '60px',
+        padding: '40px',
         position: 'relative',
-        maxWidth: '1000px',
-        minHeight: '700px'
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
       },
       innerBorder: {
         border: '3px solid #d4af37',
@@ -90,8 +92,10 @@ export const certificateTemplates = {
         borderRadius: '12px',
         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
         padding: '50px',
-        maxWidth: '1000px',
-        minHeight: '700px',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px',
         position: 'relative'
       },
       accent: {
@@ -149,8 +153,10 @@ export const certificateTemplates = {
         border: '12px solid #1e40af',
         borderRadius: '4px',
         padding: '55px',
-        maxWidth: '1000px',
-        minHeight: '700px',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px',
         position: 'relative'
       },
       crest: {
@@ -219,8 +225,10 @@ export const certificateTemplates = {
         borderImage: 'linear-gradient(45deg, #ec4899, #8b5cf6, #3b82f6) 1',
         borderRadius: '16px',
         padding: '50px',
-        maxWidth: '1000px',
-        minHeight: '700px',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px',
         position: 'relative'
       },
       decorativeElements: {
@@ -295,8 +303,10 @@ export const certificateTemplates = {
         border: '3px solid #374151',
         borderRadius: '8px',
         padding: '50px',
-        maxWidth: '1000px',
-        minHeight: '700px',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px',
         position: 'relative'
       },
       header: {
@@ -374,14 +384,19 @@ export const generateCertificateHTML = (template, certificateData) => {
     .certificate-container {
       ${style.container.background ? `background: ${style.container.background};` : ''}
       ${style.container.border ? `border: ${style.container.border};` : ''}
+      ${style.container.borderImage ? `border-image: ${style.container.borderImage};` : ''}
       ${style.container.borderRadius ? `border-radius: ${style.container.borderRadius};` : ''}
       ${style.container.boxShadow ? `box-shadow: ${style.container.boxShadow};` : ''}
       ${style.container.padding ? `padding: ${style.container.padding};` : ''}
       ${style.container.maxWidth ? `max-width: ${style.container.maxWidth};` : ''}
       ${style.container.minHeight ? `min-height: ${style.container.minHeight};` : ''}
+      ${style.container.width ? `width: ${style.container.width};` : ''}
+      ${style.container.height ? `height: ${style.container.height};` : ''}
       ${style.container.position ? `position: ${style.container.position};` : ''}
       margin: 0 auto;
       font-family: Arial, sans-serif;
+      display: block;
+      box-sizing: border-box;
     }`;
     
     // Inner border (for elegant-gold)
@@ -613,14 +628,19 @@ export const generateCertificateContent = (template, certificateData) => {
     .certificate-container {
       ${style.container.background ? `background: ${style.container.background};` : ''}
       ${style.container.border ? `border: ${style.container.border};` : ''}
+      ${style.container.borderImage ? `border-image: ${style.container.borderImage};` : ''}
       ${style.container.borderRadius ? `border-radius: ${style.container.borderRadius};` : ''}
       ${style.container.boxShadow ? `box-shadow: ${style.container.boxShadow};` : ''}
       ${style.container.padding ? `padding: ${style.container.padding};` : ''}
       ${style.container.maxWidth ? `max-width: ${style.container.maxWidth};` : ''}
       ${style.container.minHeight ? `min-height: ${style.container.minHeight};` : ''}
+      ${style.container.width ? `width: ${style.container.width};` : ''}
+      ${style.container.height ? `height: ${style.container.height};` : ''}
       ${style.container.position ? `position: ${style.container.position};` : ''}
       margin: 0 auto;
       font-family: Arial, sans-serif;
+      display: block;
+      box-sizing: border-box;
     }`;
     
     // Inner border (for elegant-gold template)
