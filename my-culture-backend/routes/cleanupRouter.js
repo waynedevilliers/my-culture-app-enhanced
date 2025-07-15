@@ -72,7 +72,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/manual', authenticate, authorize('admin'), async (req, res) => {
+router.post('/manual', authenticate, authorize, async (req, res) => {
   try {
     const { retentionDays, dryRun = false, maxFiles } = req.body;
     
@@ -129,7 +129,7 @@ router.post('/manual', authenticate, authorize('admin'), async (req, res) => {
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/config', authenticate, authorize('admin'), async (req, res) => {
+router.get('/config', authenticate, authorize, async (req, res) => {
   try {
     const config = getCleanupConfig();
     const validation = validateCleanupConfig();
@@ -165,7 +165,7 @@ router.get('/config', authenticate, authorize('admin'), async (req, res) => {
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/validate', authenticate, authorize('admin'), async (req, res) => {
+router.get('/validate', authenticate, authorize, async (req, res) => {
   try {
     const validation = validateCleanupConfig();
     

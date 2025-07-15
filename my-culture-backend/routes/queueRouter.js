@@ -46,7 +46,7 @@ const router = Router();
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:id/pdf', authenticate, authorize(['admin']), queueCertificatePDFGeneration);
+router.post('/certificate/:id/pdf', authenticate, authorize, queueCertificatePDFGeneration);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.post('/certificate/:id/pdf', authenticate, authorize(['admin']), queueCer
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:id/email', authenticate, authorize(['admin']), queueCertificateEmailSending);
+router.post('/certificate/:id/email', authenticate, authorize, queueCertificateEmailSending);
 
 /**
  * @swagger
@@ -134,7 +134,7 @@ router.post('/certificate/:id/email', authenticate, authorize(['admin']), queueC
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:id/complete', authenticate, authorize(['admin']), queueCompleteCertificateProcessing);
+router.post('/certificate/:id/complete', authenticate, authorize, queueCompleteCertificateProcessing);
 
 /**
  * @swagger
@@ -162,7 +162,7 @@ router.post('/certificate/:id/complete', authenticate, authorize(['admin']), que
  *       403:
  *         description: Forbidden
  */
-router.get('/certificate/:id/status', authenticate, authorize(['admin']), getCertificateJobStatus);
+router.get('/certificate/:id/status', authenticate, authorize, getCertificateJobStatus);
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.get('/certificate/:id/status', authenticate, authorize(['admin']), getCer
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/stats', authenticate, authorize(['admin']), async (req, res) => {
+router.get('/stats', authenticate, authorize, async (req, res) => {
   try {
     const { getQueueStats } = await import("../utils/queueService.js");
     const stats = await getQueueStats();

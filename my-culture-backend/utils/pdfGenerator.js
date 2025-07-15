@@ -215,6 +215,39 @@ export async function generateCertificatePNG(certificateId, htmlContent) {
 }
 
 /**
+ * Generate both PDF and PNG for a certificate (for backward compatibility)
+ * @param {Object} certificateData - Certificate data
+ * @param {Object} recipientData - Recipient data
+ * @param {string} templateId - Template ID
+ * @returns {Promise<Object>} - Paths to generated files
+ */
+export async function generatePDF(certificateData, recipientData, templateId) {
+  const { generateCertificateHTML } = await import('../controllers/generateCertificatePages.js');
+  
+  // Create a full certificate object for HTML generation
+  const certificateObj = {
+    title: certificateData.event,
+    issuedDate: certificateData.issueDate,
+    issuedFrom: certificateData.organizationName,
+    templateId: templateId || 'elegant-gold',
+    recipients: [recipientData]
+  };
+  
+  // Generate HTML
+  const htmlContent = await generateCertificateHTML(certificateObj);
+  const certificateId = `${Date.now()}-${recipientData.id}`;
+  
+  // Generate both PDF and PNG
+  const pdfPath = await generateCertificatePDF(certificateId, htmlContent);
+  const pngPath = await generateCertificatePNG(certificateId, htmlContent);
+  
+  return {
+    pdfPath,
+    pngPath
+  };
+}
+
+/**
  * Clean up old certificate files (optional maintenance function)
  * @param {number} daysOld - Delete files older than this many days
  */

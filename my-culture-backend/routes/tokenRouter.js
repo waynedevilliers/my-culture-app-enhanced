@@ -70,7 +70,7 @@ const router = Router();
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:certificateId/access', authenticate, authorize(['admin']), asyncWrapper(async (req, res) => {
+router.post('/certificate/:certificateId/access', authenticate, authorize, asyncWrapper(async (req, res) => {
   const { certificateId } = req.params;
   const { recipientId, expiresIn = '7d', purpose = 'certificate_access' } = req.body;
 
@@ -169,7 +169,7 @@ router.post('/certificate/:certificateId/access', authenticate, authorize(['admi
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:certificateId/download', authenticate, authorize(['admin']), asyncWrapper(async (req, res) => {
+router.post('/certificate/:certificateId/download', authenticate, authorize, asyncWrapper(async (req, res) => {
   const { certificateId } = req.params;
   const { fileType = 'pdf', recipientId } = req.body;
 
@@ -267,7 +267,7 @@ router.post('/certificate/:certificateId/download', authenticate, authorize(['ad
  *       403:
  *         description: Forbidden
  */
-router.post('/certificate/:certificateId/share', authenticate, authorize(['admin']), asyncWrapper(async (req, res) => {
+router.post('/certificate/:certificateId/share', authenticate, authorize, asyncWrapper(async (req, res) => {
   const { certificateId } = req.params;
   const { recipientId, platform = 'general' } = req.body;
 
@@ -335,7 +335,7 @@ router.post('/certificate/:certificateId/share', authenticate, authorize(['admin
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/config', authenticate, authorize(['admin']), async (req, res) => {
+router.get('/config', authenticate, authorize, async (req, res) => {
   try {
     const config = getTokenConfig();
     const validation = validateTokenConfig();
@@ -371,7 +371,7 @@ router.get('/config', authenticate, authorize(['admin']), async (req, res) => {
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/validate', authenticate, authorize(['admin']), async (req, res) => {
+router.get('/validate', authenticate, authorize, async (req, res) => {
   try {
     const validation = validateTokenConfig();
 

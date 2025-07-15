@@ -63,7 +63,7 @@ pdfQueue.process('generate-certificate-pdf', async (job) => {
     
     job.progress(80);
     
-    // Update recipient record with file paths
+    // Update recipient record with file paths  
     await CertificateRecipient.update({
       recipientUrl: result.pngPath,
     }, {
