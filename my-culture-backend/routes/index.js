@@ -25,6 +25,8 @@ import certificateTemplateRouter from "./certificateTemplates.js";
 import certificatePdfRouter from "./certificatePdfRouter.js";
 import cleanupRouter from "./cleanupRouter.js";
 import queueRouter from "./queueRouter.js";
+import secureCertificateRouter from "./secureCertificateRouter.js";
+import tokenRouter from "./tokenRouter.js";
 
 const router = express.Router();
 
@@ -39,9 +41,11 @@ router.use("/subscribers", subscriberRouter);
 router.use("/organizations", organizationRouter);
 router.use("/certificates", certificateRouter);
 router.use("/certificates", certificatePdfRouter);
+router.use("/certificates", secureCertificateRouter);
 router.use("/certificate-templates", certificateTemplateRouter);
 router.use("/cleanup", cleanupRouter);
 router.use("/queue", queueRouter);
+router.use("/tokens", tokenRouter);
 router.use("/:model", dynamicModel);
 
 router
