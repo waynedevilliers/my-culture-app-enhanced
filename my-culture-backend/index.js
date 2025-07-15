@@ -15,7 +15,6 @@ import path from 'path';
 
 import router from './routes/index.js';
 import { startCleanupScheduler } from './utils/cleanupService.js';
-import { closeQueues } from './utils/queueService.js';
 import "./db.js";
 
 const app = express();
@@ -23,7 +22,14 @@ const PORT = process.env.PORT || 3000;
 
 app.use(generalLimiter);
 app.use(cors({
-  origin: ['http://localhost:5177', 'http://localhost:5176', 'http://localhost:5173', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow requests from any localhost port or no origin (for Postman/curl)
+    if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('https://localhost:')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -65,12 +71,22 @@ app.listen(PORT, () => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   logger.info('Received SIGTERM, shutting down gracefully...');
-  await closeQueues();
+  try {
+    const { closeQueues } = await import('./utils/queueService.js');
+    await closeQueues();
+  } catch (error) {
+    logger.warn('Queue service not available during shutdown');
+  }
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   logger.info('Received SIGINT, shutting down gracefully...');
-  await closeQueues();
+  try {
+    const { closeQueues } = await import('./utils/queueService.js');
+    await closeQueues();
+  } catch (error) {
+    logger.warn('Queue service not available during shutdown');
+  }
   process.exit(0);
 });

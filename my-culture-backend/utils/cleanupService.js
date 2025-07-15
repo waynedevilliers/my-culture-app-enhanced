@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import cron from 'node-cron';
-import { cleanupQueues } from './queueService.js';
 import logger from './logger.js';
 
 const CERTIFICATES_DIR = path.join(process.cwd(), 'public', 'certificates');
@@ -180,14 +179,15 @@ export const startCleanupScheduler = () => {
     }
   });
 
-  // Schedule queue cleanup (if enabled)
+  // Schedule queue cleanup (if enabled and Redis is available)
   if (CONFIG.QUEUE_CLEANUP_ENABLED) {
     cron.schedule(CONFIG.QUEUE_CLEANUP_SCHEDULE, async () => {
       logger.info('Running scheduled queue cleanup...');
       try {
+        const { cleanupQueues } = await import('./queueService.js');
         await cleanupQueues();
       } catch (error) {
-        logger.error('Scheduled queue cleanup failed:', error);
+        logger.warn('Queue cleanup skipped - Redis not available:', error.message);
       }
     });
     
