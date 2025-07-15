@@ -14,6 +14,7 @@ import logger from './utils/logger.js';
 import path from 'path';
 
 import router from './routes/index.js';
+import { startCleanupScheduler } from './utils/cleanupService.js';
 import "./db.js";
 
 const app = express();
@@ -55,4 +56,7 @@ app.listen(PORT, () => {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
   });
+
+  // Start the cleanup scheduler
+  startCleanupScheduler();
 });
