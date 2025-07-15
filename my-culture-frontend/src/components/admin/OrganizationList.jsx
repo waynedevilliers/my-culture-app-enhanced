@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import UpdateOrganizationModal from "./UpdateOrganizationModal";
+import { useTranslation } from "react-i18next";
 
 const OrganizationList = () => {
+  const { t } = useTranslation();
   const [organizations, setOrganizations] = useState([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -30,7 +32,7 @@ const OrganizationList = () => {
         setPages(1);
         setHasNextPage(false);
         setHasPreviousPage(false);
-        toast.error("Error fetching organizations");
+        toast.error(t('admin.messages.errorFetchingOrganizations'));
       });
   };
 
@@ -69,11 +71,11 @@ const OrganizationList = () => {
         }
       )
       .then(() => {
-        toast.success("Organization deleted successfully");
+        toast.success(t('admin.messages.organizationDeletedSuccess'));
         fetchOrganizations();
       })
       .catch(() => {
-        toast.error("Failed to delete Organization");
+        toast.error(t('admin.messages.organizationDeleteFailed'));
       });
   };
 
@@ -84,14 +86,14 @@ const OrganizationList = () => {
   return (
     <div className="overflow-x-auto flex flex-col max-w-screen-xl w-full justify-center items-center gap-4">
       <label className="input input-bordered flex items-center gap-2 w-full">
-        Search <input type="search" className="grow" placeholder="..." />
+        {t('admin.tables.search')} <input type="search" className="grow" placeholder={t('admin.tables.searchPlaceholder')} />
       </label>
       <table className="table table-xs table-zebra mb-4">
         <thead className="bg-secondary text-white">
           <tr>
             <th></th>
-            <th>Name</th>
-            <th className="hidden sm:table-cell">Published</th>
+            <th>{t('admin.tables.name')}</th>
+            <th className="hidden sm:table-cell">{t('admin.tables.published')}</th>
             <th className="hidden sm:table-cell"></th>
             <th></th>
           </tr>
@@ -110,7 +112,7 @@ const OrganizationList = () => {
                     }}
                     type="button"
                   >
-                    {organization.published ? "No" : "Yes"}
+                    {organization.published ? t('admin.tables.no') : t('admin.tables.yes')}
                   </button>
                 </th>
                 <th className="hidden sm:table-cell">
@@ -119,7 +121,7 @@ const OrganizationList = () => {
                     onClick={() => handleDelete(organization.id)}
                     type="button"
                   >
-                    delete
+                    {t('admin.tables.delete')}
                   </button>
                 </th>
                 <th>
@@ -128,7 +130,7 @@ const OrganizationList = () => {
                     onClick={() => setSelectedOrg(organization)}
                     className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
                   >
-                    update
+                    {t('admin.tables.update')}
                   </button>
                 </th>
               </tr>

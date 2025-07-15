@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext.jsx";
+import { useTranslation } from "react-i18next";
 import {
   FaArrowRightFromBracket,
   FaCalendarCheck,
@@ -17,6 +18,7 @@ import { useState } from "react";
 
 const Navigation = () => {
   const { logout } = useUser();
+  const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
 
   const drawerHandler = () => {
@@ -43,27 +45,27 @@ const Navigation = () => {
             <NavLink to="/dashboard/home" onClick={drawerHandler} className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaHouseChimneyUser />
-              </span> Dashboard </NavLink>
+              </span> {t('admin.dashboard')} </NavLink>
           </li>
           <li>
             <details>
               <summary>
                 <span className="text-2xl">
                   <FaMusic />
-                </span> Veranstaltungen
+                </span> {t('admin.navigation.events')}
               </summary>
               <ul className="flex flex-col gap-4 mt-4">
                 <li>
                   <NavLink to="/dashboard/events" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaChartBar />
-                    </span> Übersicht </NavLink>
+                    </span> {t('admin.navigation.overview')} </NavLink>
                 </li>
                 <li>
                   <NavLink to="/dashboard/new-event" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaPlus />
-                    </span> Neue Veranstaltung </NavLink>
+                    </span> {t('admin.navigation.newEvent')} </NavLink>
                 </li>
                 {/*<li>
                   <NavLink to="/dashboard/calendar" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : "" } >
@@ -77,7 +79,7 @@ const Navigation = () => {
                   <NavLink to="/dashboard/locations" onClick={drawerHandler} className={({ isActive }) => (isActive ? "text-primary" : "")}>
                     <span className="text-2xl">
                       <FaMapLocationDot />
-                    </span> Veranstaltungsorte </NavLink>
+                    </span> {t('admin.navigation.locations')} </NavLink>
                 </li>
               </ul>
             </details>
@@ -86,20 +88,20 @@ const Navigation = () => {
             <NavLink to="/dashboard/users" onClick={drawerHandler} className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaUserGroup />
-              </span> Benutzer </NavLink>
+              </span> {t('admin.navigation.users')} </NavLink>
           </li>
           <li>
             <NavLink to="/dashboard/subscribers" onClick={drawerHandler} className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaUserPen />
-              </span> Subscribers </NavLink>
+              </span> {t('admin.navigation.subscribers')} </NavLink>
           </li>
           <li>
             <details>
               <summary>
               <span className="text-2xl">
                 <FaNewspaper />
-              </span> Newsletter
+              </span> {t('admin.navigation.newsletter')}
               </summary>
               <ul className="flex flex-col gap-4 mt-4">
                 <li>
@@ -112,7 +114,7 @@ const Navigation = () => {
                   >
                   <span className="text-2xl">
                     <FaChartBar />
-                  </span> Übersicht </NavLink>
+                  </span> {t('admin.navigation.overview')} </NavLink>
                 </li>
                 <li>
                   <NavLink
@@ -124,7 +126,7 @@ const Navigation = () => {
                   >
                     <span className="text-2xl">
                       <FaPlus />
-                    </span> Neuer Newsletter </NavLink>
+                    </span> {t('admin.navigation.newNewsletter')} </NavLink>
                 </li>
               </ul>
             </details>
@@ -134,7 +136,7 @@ const Navigation = () => {
               <summary>
                 <span className="text-2xl">
                   <FaImages />
-                </span> Galerie
+                </span> {t('admin.navigation.gallery')}
               </summary>
               <ul className="flex flex-col gap-4 mt-4">
                 <li>
@@ -147,7 +149,7 @@ const Navigation = () => {
                   >
                     <span className="text-2xl">
                       <FaChartBar />
-                    </span> Übersicht </NavLink>
+                    </span> {t('admin.navigation.overview')} </NavLink>
                 </li>
                 <li>
                   <NavLink
@@ -159,7 +161,7 @@ const Navigation = () => {
                   >
                     <span className="text-2xl">
                       <FaPlus />
-                    </span> Neue Galerie </NavLink>
+                    </span> {t('admin.navigation.newGallery')} </NavLink>
                 </li>
                 <li>
                   <NavLink
@@ -171,7 +173,7 @@ const Navigation = () => {
                   >
                     <span className="text-2xl">
                       <FaImages />
-                    </span> Bilder </NavLink>
+                    </span> {t('admin.navigation.images')} </NavLink>
                 </li>
               </ul>
             </details>
@@ -185,7 +187,7 @@ const Navigation = () => {
             >
               <span className="text-2xl">
                 <FaInfo />
-              </span> Help </NavLink>
+              </span> {t('admin.navigation.help')} </NavLink>
           </li>
           <li>
             <NavLink
@@ -195,13 +197,13 @@ const Navigation = () => {
             >
               <span className="text-2xl">
                 <FaHouseChimney />
-              </span> Startseite </NavLink>
+              </span> {t('admin.navigation.homepage')} </NavLink>
           </li>
           <li>
             <button onClick={logout}>
               <span className="text-2xl">
                 <FaArrowRightFromBracket />
-              </span> Abmelden
+              </span> {t('admin.navigation.logout')}
             </button>
           </li>
         </ul>

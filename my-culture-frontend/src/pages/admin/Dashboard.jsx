@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
@@ -114,7 +116,7 @@ const Dashboard = () => {
         {users && (
           <div className="flex flex-col justify-center items-center gap-4">
             <h2 className="text-2xl text-neutral opacity-80 font-bold">
-              Users: {users.totalCount}
+              {t('admin.pages.usersCount', { count: users.totalCount })}
             </h2>
           </div>
         )}

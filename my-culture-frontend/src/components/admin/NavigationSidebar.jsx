@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext.jsx";
+import { useTranslation } from "react-i18next";
 import {
   FaArrowRightFromBracket,
   FaHouseChimney,
@@ -18,6 +19,7 @@ import { useState } from "react";
 
 const NavigationSidebar = () => {
   const { logout } = useUser();
+  const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(true);
 
   return (
@@ -41,7 +43,7 @@ const NavigationSidebar = () => {
             <NavLink to="/dashboard/home" className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaHouseChimneyUser />
-              </span> Dashboard
+              </span> {t('admin.dashboard')}
             </NavLink>
           </li>
           <li>
@@ -49,21 +51,21 @@ const NavigationSidebar = () => {
               <summary>
                 <span className="text-2xl">
                   <RiCommunityFill />
-                </span> Organizations
+                </span> {t('admin.navigation.organizations')}
               </summary>
               <ul className="flex flex-col gap-4 mt-4">
                 <li>
                   <NavLink to="/dashboard/organizations" className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaChartBar />
-                    </span> Overview
+                    </span> {t('admin.navigation.overview')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/dashboard/new-organization" className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaPlus />
-                    </span> New Organization
+                    </span> {t('admin.navigation.newOrganization')}
                   </NavLink>
                 </li>
               </ul>
@@ -74,21 +76,21 @@ const NavigationSidebar = () => {
               <summary>
                 <span className="text-2xl">
                   <FaCertificate />
-                </span> Certificates
+                </span> {t('admin.navigation.certificates')}
               </summary>
               <ul className="flex flex-col gap-4 mt-4">
                 <li>
                   <NavLink to="/dashboard/certificates" className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaChartBar />
-                    </span> Overview
+                    </span> {t('admin.navigation.overview')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/dashboard/new-certificate" className={({ isActive }) => isActive ? "text-primary" : ""}>
                     <span className="text-2xl">
                       <FaPlus />
-                    </span> Create Certificate
+                    </span> {t('admin.navigation.createCertificate')}
                   </NavLink>
                 </li>
               </ul>
@@ -98,7 +100,7 @@ const NavigationSidebar = () => {
             <NavLink to="/dashboard/users" className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaUserGroup />
-              </span> Users
+              </span> {t('admin.navigation.users')}
             </NavLink>
           </li>
           <div className="divider"></div>
@@ -106,21 +108,21 @@ const NavigationSidebar = () => {
             <NavLink to="/dashboard/help" className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaInfo />
-              </span> Help
+              </span> {t('admin.navigation.help')}
             </NavLink>
           </li>
           <li>
             <NavLink to="/" className={({ isActive }) => (isActive ? "text-primary" : "")}>
               <span className="text-2xl">
                 <FaHouseChimney />
-              </span> Homepage
+              </span> {t('admin.navigation.homepage')}
             </NavLink>
           </li>
           <li>
             <button onClick={logout}>
               <span className="text-2xl">
                 <FaArrowRightFromBracket />
-              </span> Logout
+              </span> {t('admin.navigation.logout')}
             </button>
           </li>
         </ul>

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const Pagination = ({ 
   page, 
   totalPages, 
@@ -8,6 +10,7 @@ const Pagination = ({
   showInfo = true,
   totalCount = 0
 }) => {
+  const { t } = useTranslation();
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const handlePrevious = () => {
@@ -34,7 +37,7 @@ const Pagination = ({
     <div className="flex flex-col items-center gap-4 mt-6">
       {showInfo && totalCount > 0 && (
         <div className="text-sm text-gray-600">
-          Showing page {page} of {totalPages} ({totalCount} total items)
+          {t('admin.pagination.showing', { page, totalPages, totalCount })}
         </div>
       )}
       

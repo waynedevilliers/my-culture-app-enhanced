@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const NewOrganization = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: '',
@@ -81,7 +83,7 @@ const NewOrganization = () => {
         }
       );
 
-      toast.success("Organization created successfully!");
+      toast.success(t('admin.messages.organizationCreateSuccess'));
       navigate("/dashboard/organizations");
 
     } catch (error) {
@@ -95,30 +97,30 @@ const NewOrganization = () => {
   return (
     <form className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10" onSubmit={handleSubmit}>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Name
-        <input type="text" name="name" className="grow" placeholder="Organization Name" value={form.name} onChange={handleChange} required />
+        {t('admin.forms.name')}
+        <input type="text" name="name" className="grow" placeholder={t('admin.forms.namePlaceholder')} value={form.name} onChange={handleChange} required />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Description
-        <input type="text" name="description" className="grow" placeholder="Organization Description" value={form.description} onChange={handleChange} required />
+        {t('admin.forms.description')}
+        <input type="text" name="description" className="grow" placeholder={t('admin.forms.descriptionPlaceholder')} value={form.description} onChange={handleChange} required />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Website
-        <input type="url" name="website" className="grow" placeholder="http://..." value={form.website} onChange={handleChange} />
+        {t('admin.forms.website')}
+        <input type="url" name="website" className="grow" placeholder={t('admin.forms.websitePlaceholder')} value={form.website} onChange={handleChange} />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Phone
-        <input type="tel" name="phone" className="grow" placeholder="+1234567890" value={form.phone} onChange={handleChange} />
+        {t('admin.forms.phone')}
+        <input type="tel" name="phone" className="grow" placeholder={t('admin.forms.phonePlaceholder')} value={form.phone} onChange={handleChange} />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Email
-        <input type="email" name="email" className="grow" placeholder="email@example.com" value={form.email} onChange={handleChange} />
+        {t('admin.forms.email')}
+        <input type="email" name="email" className="grow" placeholder={t('admin.forms.emailPlaceholder')} value={form.email} onChange={handleChange} />
       </label>
       <label className="input input-bordered flex items-center rounded-none px-0">
         <input type="file" name="image" className="file-input file-input-md w-full max-w-xs rounded-none" onChange={handleChange} />
       </label>
       <button type="submit" className="btn btn-base-100 rounded-none" disabled={loading}>
-        {loading ? "Saving..." : "Save"}
+        {loading ? t('admin.forms.saving') : t('admin.forms.save')}
       </button>
     </form>
   );
