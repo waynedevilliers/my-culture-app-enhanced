@@ -4,6 +4,7 @@ import { Certificate, CertificateRecipient } from "../db.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 import ErrorResponse from "../utils/ErrorResponse.js";
 import { getTemplateById, generateCertificateContent } from "../utils/certificateTemplates.js";
+import { addPdfGenerationJob } from "../utils/queueService.js";
 
 export const generateCertificatePages = asyncWrapper(async (req, res) => {
   const { id } = req.params;

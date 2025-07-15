@@ -24,6 +24,7 @@ import subscriberRouter from "./subscriberRouter.js";
 import certificateTemplateRouter from "./certificateTemplates.js";
 import certificatePdfRouter from "./certificatePdfRouter.js";
 import cleanupRouter from "./cleanupRouter.js";
+import queueRouter from "./queueRouter.js";
 
 const router = express.Router();
 
@@ -40,6 +41,7 @@ router.use("/certificates", certificateRouter);
 router.use("/certificates", certificatePdfRouter);
 router.use("/certificate-templates", certificateTemplateRouter);
 router.use("/cleanup", cleanupRouter);
+router.use("/queue", queueRouter);
 router.use("/:model", dynamicModel);
 
 router

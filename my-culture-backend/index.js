@@ -15,6 +15,7 @@ import path from 'path';
 
 import router from './routes/index.js';
 import { startCleanupScheduler } from './utils/cleanupService.js';
+import { closeQueues } from './utils/queueService.js';
 import "./db.js";
 
 const app = express();
@@ -59,4 +60,17 @@ app.listen(PORT, () => {
 
   // Start the cleanup scheduler
   startCleanupScheduler();
+});
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  logger.info('Received SIGTERM, shutting down gracefully...');
+  await closeQueues();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  logger.info('Received SIGINT, shutting down gracefully...');
+  await closeQueues();
+  process.exit(0);
 });
