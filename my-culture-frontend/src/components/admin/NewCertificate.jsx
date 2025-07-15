@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -18,6 +18,14 @@ const NewCertificate = () => {
 
   const [recipients, setRecipients] = useState([{ name: "", email: "" }]);
   const [previewKey, setPreviewKey] = useState(0);
+  const [debouncedPreviewData, setDebouncedPreviewData] = useState({
+    templateId: "elegant-gold",
+    title: "",
+    issuedFrom: "",
+    issueDate: "",
+    recipientName: ""
+  });
+  const debounceTimer = useRef(null);
 
   // Fetch available templates and organizations
   useEffect(() => {
@@ -47,10 +55,40 @@ const NewCertificate = () => {
     fetchOrganizations();
   }, []);
 
-  // Update preview when form data changes
+  // Debounced preview update function
+  const updatePreview = useCallback(() => {
+    const newPreviewData = {
+      templateId: form.templateId,
+      title: form.title,
+      issuedFrom: form.issuedFrom,
+      issueDate: form.issueDate,
+      recipientName: recipients[0]?.name || ""
+    };
+
+    // Only update if data has actually changed
+    if (JSON.stringify(newPreviewData) !== JSON.stringify(debouncedPreviewData)) {
+      setDebouncedPreviewData(newPreviewData);
+      setPreviewKey(prev => prev + 1);
+    }
+  }, [form.templateId, form.title, form.issuedFrom, form.issueDate, recipients, debouncedPreviewData]);
+
+  // Debounce preview updates
   useEffect(() => {
-    setPreviewKey(prev => prev + 1);
-  }, [form.templateId, form.title, form.issuedFrom, form.issueDate, recipients[0]?.name]);
+    // Clear existing timer
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Set new timer for debounced update
+    debounceTimer.current = setTimeout(updatePreview, 500); // 500ms delay
+
+    // Cleanup timer on unmount
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [updatePreview]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -171,7 +209,7 @@ const NewCertificate = () => {
             <h4 className="font-semibold mb-2">Certificate Preview:</h4>
             <iframe 
               key={previewKey}
-              src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${form.templateId}/preview?participant=${encodeURIComponent(recipients[0]?.name || 'Sample Name')}&event=${encodeURIComponent(form.title || 'Certificate Title')}&issueDate=${encodeURIComponent(form.issueDate || new Date().toDateString())}&organizationName=${encodeURIComponent(form.issuedFrom || 'Organization Name')}`}
+              src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${debouncedPreviewData.templateId}/preview?participant=${encodeURIComponent(debouncedPreviewData.recipientName || 'Sample Name')}&event=${encodeURIComponent(debouncedPreviewData.title || 'Certificate Title')}&issueDate=${encodeURIComponent(debouncedPreviewData.issueDate || new Date().toDateString())}&organizationName=${encodeURIComponent(debouncedPreviewData.issuedFrom || 'Organization Name')}`}
               className="w-full h-[700px] border border-gray-200"
               title="Certificate Preview"
             />

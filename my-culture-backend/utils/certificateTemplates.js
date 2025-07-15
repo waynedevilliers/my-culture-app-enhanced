@@ -79,6 +79,401 @@ export const certificateTemplates = {
     }
   },
 
+  'elegant-silver': {
+    id: 'elegant-silver',
+    name: 'Elegant Silver',
+    description: 'Classic design with silver borders and ornate styling',
+    preview: '/templates/elegant-silver-preview.jpg',
+    category: 'formal',
+    style: {
+      container: {
+        background: 'linear-gradient(135deg, #fefefe 0%, #f8f8f8 100%)',
+        border: '15px solid #c0c0c0',
+        borderRadius: '8px',
+        boxShadow: '0 0 40px rgba(192, 192, 192, 0.3)',
+        padding: '40px',
+        position: 'relative',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
+      },
+      innerBorder: {
+        border: '3px solid #c0c0c0',
+        borderStyle: 'double',
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        bottom: '20px'
+      },
+      typography: {
+        title: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '3.5rem',
+          fontWeight: '700',
+          color: '#2c3e50',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          marginBottom: '30px'
+        },
+        subtitle: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.5rem',
+          color: '#34495e',
+          fontStyle: 'italic',
+          marginBottom: '40px'
+        },
+        recipient: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '2.5rem',
+          fontWeight: '600',
+          color: '#c0c0c0',
+          marginBottom: '30px'
+        },
+        details: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.2rem',
+          color: '#2c3e50',
+          lineHeight: '1.6'
+        }
+      },
+      decorations: {
+        seal: {
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, #c0c0c0, #a0a0a0)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      }
+    }
+  },
+
+  'elegant-blue': {
+    id: 'elegant-blue',
+    name: 'Elegant Blue',
+    description: 'Classic design with blue borders and ornate styling',
+    preview: '/templates/elegant-blue-preview.jpg',
+    category: 'formal',
+    style: {
+      container: {
+        background: 'linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%)',
+        border: '15px solid #1976d2',
+        borderRadius: '8px',
+        boxShadow: '0 0 40px rgba(25, 118, 210, 0.3)',
+        padding: '40px',
+        position: 'relative',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
+      },
+      innerBorder: {
+        border: '3px solid #1976d2',
+        borderStyle: 'double',
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        bottom: '20px'
+      },
+      typography: {
+        title: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '3.5rem',
+          fontWeight: '700',
+          color: '#0d47a1',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          marginBottom: '30px'
+        },
+        subtitle: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.5rem',
+          color: '#1565c0',
+          fontStyle: 'italic',
+          marginBottom: '40px'
+        },
+        recipient: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '2.5rem',
+          fontWeight: '600',
+          color: '#1976d2',
+          marginBottom: '30px'
+        },
+        details: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.2rem',
+          color: '#0d47a1',
+          lineHeight: '1.6'
+        }
+      },
+      decorations: {
+        seal: {
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, #1976d2, #0d47a1)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      }
+    }
+  },
+
+  'elegant-green': {
+    id: 'elegant-green',
+    name: 'Elegant Green',
+    description: 'Classic design with green borders and ornate styling',
+    preview: '/templates/elegant-green-preview.jpg',
+    category: 'formal',
+    style: {
+      container: {
+        background: 'linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%)',
+        border: '15px solid #4caf50',
+        borderRadius: '8px',
+        boxShadow: '0 0 40px rgba(76, 175, 80, 0.3)',
+        padding: '40px',
+        position: 'relative',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
+      },
+      innerBorder: {
+        border: '3px solid #4caf50',
+        borderStyle: 'double',
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        bottom: '20px'
+      },
+      typography: {
+        title: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '3.5rem',
+          fontWeight: '700',
+          color: '#1b5e20',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          marginBottom: '30px'
+        },
+        subtitle: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.5rem',
+          color: '#2e7d32',
+          fontStyle: 'italic',
+          marginBottom: '40px'
+        },
+        recipient: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '2.5rem',
+          fontWeight: '600',
+          color: '#4caf50',
+          marginBottom: '30px'
+        },
+        details: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.2rem',
+          color: '#1b5e20',
+          lineHeight: '1.6'
+        }
+      },
+      decorations: {
+        seal: {
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, #4caf50, #2e7d32)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      }
+    }
+  },
+
+  'elegant-purple': {
+    id: 'elegant-purple',
+    name: 'Elegant Purple',
+    description: 'Classic design with purple borders and ornate styling',
+    preview: '/templates/elegant-purple-preview.jpg',
+    category: 'formal',
+    style: {
+      container: {
+        background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)',
+        border: '15px solid #9c27b0',
+        borderRadius: '8px',
+        boxShadow: '0 0 40px rgba(156, 39, 176, 0.3)',
+        padding: '40px',
+        position: 'relative',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
+      },
+      innerBorder: {
+        border: '3px solid #9c27b0',
+        borderStyle: 'double',
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        bottom: '20px'
+      },
+      typography: {
+        title: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '3.5rem',
+          fontWeight: '700',
+          color: '#4a148c',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          marginBottom: '30px'
+        },
+        subtitle: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.5rem',
+          color: '#6a1b9a',
+          fontStyle: 'italic',
+          marginBottom: '40px'
+        },
+        recipient: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '2.5rem',
+          fontWeight: '600',
+          color: '#9c27b0',
+          marginBottom: '30px'
+        },
+        details: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.2rem',
+          color: '#4a148c',
+          lineHeight: '1.6'
+        }
+      },
+      decorations: {
+        seal: {
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, #9c27b0, #6a1b9a)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      }
+    }
+  },
+
+  'elegant-red': {
+    id: 'elegant-red',
+    name: 'Elegant Red',
+    description: 'Classic design with red borders and ornate styling',
+    preview: '/templates/elegant-red-preview.jpg',
+    category: 'formal',
+    style: {
+      container: {
+        background: 'linear-gradient(135deg, #fff8f8 0%, #ffebee 100%)',
+        border: '15px solid #f44336',
+        borderRadius: '8px',
+        boxShadow: '0 0 40px rgba(244, 67, 54, 0.3)',
+        padding: '40px',
+        position: 'relative',
+        width: 'auto',
+        height: 'auto',
+        maxWidth: '1123px',
+        minHeight: '794px'
+      },
+      innerBorder: {
+        border: '3px solid #f44336',
+        borderStyle: 'double',
+        position: 'absolute',
+        top: '20px',
+        left: '20px',
+        right: '20px',
+        bottom: '20px'
+      },
+      typography: {
+        title: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '3.5rem',
+          fontWeight: '700',
+          color: '#b71c1c',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          marginBottom: '30px'
+        },
+        subtitle: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.5rem',
+          color: '#c62828',
+          fontStyle: 'italic',
+          marginBottom: '40px'
+        },
+        recipient: {
+          fontFamily: '"Playfair Display", serif',
+          fontSize: '2.5rem',
+          fontWeight: '600',
+          color: '#f44336',
+          marginBottom: '30px'
+        },
+        details: {
+          fontFamily: '"Open Sans", sans-serif',
+          fontSize: '1.2rem',
+          color: '#b71c1c',
+          lineHeight: '1.6'
+        }
+      },
+      decorations: {
+        seal: {
+          position: 'absolute',
+          bottom: '40px',
+          right: '40px',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, #f44336, #c62828)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold'
+        }
+      }
+    }
+  },
+
   'modern-minimal': {
     id: 'modern-minimal',
     name: 'Modern Minimal',
