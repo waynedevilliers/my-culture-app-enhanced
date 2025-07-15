@@ -45,6 +45,10 @@ Image.hasMany(Event, { foreignKey: "imageId" });
 Organization.belongsTo(Image, { foreignKey: "imageId" });
 Image.hasMany(Organization, { foreignKey: "imageId" });
 
+// User-Organization relationship (one organization can have one admin user)
+User.belongsTo(Organization, { foreignKey: "organizationId" });
+Organization.hasOne(User, { foreignKey: "organizationId" });
+
 Event.belongsTo(Location, { foreignKey: "locationId" });
 Location.hasMany(Event, { foreignKey: "locationId" });
 

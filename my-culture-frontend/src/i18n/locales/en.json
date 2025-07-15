@@ -130,10 +130,13 @@
   },
   "footer": {
     "stayConnected": "Stay Connected!",
-    "socialMedia": "Follow us on social media",
+    "connectDescription": "We're excited to connect with you and share updates.",
+    "email": "Email:",
+    "phone": "Phone:",
+    "socialMedia": "Follow us on social media:",
     "copyright": "All rights reserved.",
-    "privacy": "Privacy",
-    "terms": "Terms"
+    "imprint": "Imprint",
+    "privacy": "Privacy Policy"
   },
   "login": {
     "title": "Log In",
@@ -160,5 +163,132 @@
     "delete": "Delete",
     "view": "View",
     "germany": "Germany"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "navigation": {
+      "events": "Events",
+      "overview": "Overview",
+      "newEvent": "New Event",
+      "locations": "Event Locations",
+      "users": "Users",
+      "subscribers": "Subscribers",
+      "newsletter": "Newsletter",
+      "newNewsletter": "New Newsletter",
+      "gallery": "Gallery",
+      "newGallery": "New Gallery",
+      "images": "Images",
+      "organizations": "Organizations",
+      "newOrganization": "New Organization",
+      "certificates": "Certificates",
+      "newCertificate": "New Certificate",
+      "createCertificate": "Create Certificate",
+      "help": "Help",
+      "homepage": "Homepage",
+      "logout": "Logout"
+    },
+    "pages": {
+      "users": "Users",
+      "organizations": "Organizations",
+      "certificates": "Certificates",
+      "help": "Help",
+      "newOrganization": "New Organization",
+      "newCertificate": "New Certificate",
+      "usersCount": "Users: {{count}}"
+    },
+    "tables": {
+      "search": "Search",
+      "searchPlaceholder": "Search...",
+      "searchCertificates": "Search certificates...",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "registered": "Registered",
+      "access": "Access",
+      "edit": "edit",
+      "name": "Name",
+      "published": "Published",
+      "delete": "delete",
+      "update": "update",
+      "yes": "Yes",
+      "no": "No",
+      "title": "Title",
+      "issuedDate": "Issued Date",
+      "recipients": "Recipients",
+      "issuedFrom": "Issued From",
+      "generate": "Generate",
+      "view": "View",
+      "send": "Send",
+      "noRecipients": "No recipients"
+    },
+    "forms": {
+      "name": "Name",
+      "namePlaceholder": "Enter name...",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description...",
+      "website": "Website",
+      "websitePlaceholder": "https://example.com",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter phone number...",
+      "email": "Email",
+      "emailPlaceholder": "Enter email...",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "title": "Title",
+      "titlePlaceholder": "Enter title...",
+      "issuedFrom": "Issued From",
+      "issuedFromPlaceholder": "Issuing organization...",
+      "issueDate": "Issue Date",
+      "certificateTemplate": "Certificate Template",
+      "certificatePreview": "Certificate Preview:",
+      "recipients": "Recipients",
+      "recipientName": "Recipient Name",
+      "recipientNamePlaceholder": "Full name",
+      "recipientEmail": "Recipient Email",
+      "recipientEmailPlaceholder": "Email address",
+      "remove": "Remove",
+      "addRecipient": "+ Add Recipient",
+      "published": "Published",
+      "updateOrganization": "Update Organization"
+    },
+    "pagination": {
+      "showing": "Showing page {{page}} of {{totalPages}} ({{totalCount}} total items)"
+    },
+    "messages": {
+      "errorFetchingOrganizations": "Error fetching organizations",
+      "organizationDeletedSuccess": "Organization deleted successfully",
+      "organizationDeleteFailed": "Failed to delete organization",
+      "organizationUpdateSuccess": "Organization updated successfully",
+      "organizationUpdateFailed": "Failed to update organization",
+      "organizationCreateSuccess": "Organization created successfully",
+      "organizationCreateFailed": "Failed to create organization",
+      "certificateDeleteSuccess": "Certificate deleted successfully",
+      "certificateDeleteFailed": "Failed to delete certificate",
+      "certificateCreateSuccess": "Certificate created successfully",
+      "certificateCreateFailed": "Failed to create certificate",
+      "userUpdateSuccess": "User updated successfully",
+      "userUpdateFailed": "Failed to update user"
+    }
+  },
+  "emailVerification": {
+    "verifying": "Verifying your email...",
+    "failed": {
+      "title": "Verification Failed",
+      "message": "The verification link is invalid or has expired. Please try registering again."
+    },
+    "success": {
+      "title": "Email Verified!",
+      "message": "Your organization {{organizationName}} has been successfully verified and activated.",
+      "adminAccount": {
+        "title": "Your Admin Account",
+        "description": "An admin account has been created for your organization:",
+        "instructions": "You can now log in to access your admin dashboard and create certificates."
+      }
+    },
+    "buttons": {
+      "goHome": "Go to Homepage",
+      "goToLogin": "Go to Login"
+    }
   }
 }

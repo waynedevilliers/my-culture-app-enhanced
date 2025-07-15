@@ -160,5 +160,142 @@
     "delete": "Löschen",
     "view": "Anzeigen",
     "germany": "Deutschland"
+  },
+  "footer": {
+    "stayConnected": "Bleiben Sie verbunden!",
+    "connectDescription": "Wir freuen uns darauf, uns mit Ihnen zu verbinden und Updates zu teilen.",
+    "email": "E-Mail:",
+    "phone": "Telefon:",
+    "socialMedia": "Folgen Sie uns in den sozialen Medien:",
+    "copyright": "Alle Rechte vorbehalten.",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "navigation": {
+      "events": "Veranstaltungen",
+      "overview": "Übersicht",
+      "newEvent": "Neue Veranstaltung",
+      "locations": "Veranstaltungsorte",
+      "users": "Benutzer",
+      "subscribers": "Abonnenten",
+      "newsletter": "Newsletter",
+      "newNewsletter": "Neuer Newsletter",
+      "gallery": "Galerie",
+      "newGallery": "Neue Galerie",
+      "images": "Bilder",
+      "organizations": "Organisationen",
+      "newOrganization": "Neue Organisation",
+      "certificates": "Zertifikate",
+      "newCertificate": "Neues Zertifikat",
+      "createCertificate": "Zertifikat erstellen",
+      "help": "Hilfe",
+      "homepage": "Startseite",
+      "logout": "Abmelden"
+    },
+    "pages": {
+      "users": "Benutzer",
+      "organizations": "Organisationen",
+      "certificates": "Zertifikate",
+      "help": "Hilfe",
+      "newOrganization": "Neue Organisation",
+      "newCertificate": "Neues Zertifikat",
+      "usersCount": "Benutzer: {{count}}"
+    },
+    "tables": {
+      "search": "Suchen",
+      "searchPlaceholder": "Suchen...",
+      "searchCertificates": "Zertifikate suchen...",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "registered": "Registriert",
+      "access": "Zugriff",
+      "edit": "bearbeiten",
+      "name": "Name",
+      "published": "Veröffentlicht",
+      "delete": "löschen",
+      "update": "aktualisieren",
+      "yes": "Ja",
+      "no": "Nein",
+      "title": "Titel",
+      "issuedDate": "Ausstellungsdatum",
+      "recipients": "Empfänger",
+      "issuedFrom": "Ausgestellt von",
+      "generate": "Generieren",
+      "view": "Ansehen",
+      "send": "Senden",
+      "noRecipients": "Keine Empfänger"
+    },
+    "forms": {
+      "name": "Name",
+      "namePlaceholder": "Name eingeben...",
+      "description": "Beschreibung",
+      "descriptionPlaceholder": "Beschreibung eingeben...",
+      "website": "Webseite",
+      "websitePlaceholder": "https://beispiel.de",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefonnummer eingeben...",
+      "email": "E-Mail",
+      "emailPlaceholder": "E-Mail eingeben...",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "cancel": "Abbrechen",
+      "title": "Titel",
+      "titlePlaceholder": "Titel eingeben...",
+      "issuedFrom": "Ausgestellt von",
+      "issuedFromPlaceholder": "Ausstellende Organisation...",
+      "issueDate": "Ausstellungsdatum",
+      "certificateTemplate": "Zertifikat-Vorlage",
+      "certificatePreview": "Zertifikat-Vorschau:",
+      "recipients": "Empfänger",
+      "recipientName": "Empfängername",
+      "recipientNamePlaceholder": "Vollständiger Name",
+      "recipientEmail": "Empfänger-E-Mail",
+      "recipientEmailPlaceholder": "E-Mail-Adresse",
+      "remove": "Entfernen",
+      "addRecipient": "+ Empfänger hinzufügen",
+      "published": "Veröffentlicht",
+      "updateOrganization": "Organisation aktualisieren"
+    },
+    "pagination": {
+      "showing": "Zeige Seite {{page}} von {{totalPages}} ({{totalCount}} Elemente insgesamt)"
+    },
+    "messages": {
+      "errorFetchingOrganizations": "Fehler beim Laden der Organisationen",
+      "organizationDeletedSuccess": "Organisation erfolgreich gelöscht",
+      "organizationDeleteFailed": "Fehler beim Löschen der Organisation",
+      "organizationUpdateSuccess": "Organisation erfolgreich aktualisiert",
+      "organizationUpdateFailed": "Fehler beim Aktualisieren der Organisation",
+      "organizationCreateSuccess": "Organisation erfolgreich erstellt",
+      "organizationCreateFailed": "Fehler beim Erstellen der Organisation",
+      "certificateDeleteSuccess": "Zertifikat erfolgreich gelöscht",
+      "certificateDeleteFailed": "Fehler beim Löschen des Zertifikats",
+      "certificateCreateSuccess": "Zertifikat erfolgreich erstellt",
+      "certificateCreateFailed": "Fehler beim Erstellen des Zertifikats",
+      "userUpdateSuccess": "Benutzer erfolgreich aktualisiert",
+      "userUpdateFailed": "Fehler beim Aktualisieren des Benutzers"
+    }
+  },
+  "emailVerification": {
+    "verifying": "E-Mail wird verifiziert...",
+    "failed": {
+      "title": "Verifizierung fehlgeschlagen",
+      "message": "Der Verifizierungslink ist ungültig oder abgelaufen. Bitte versuchen Sie sich erneut zu registrieren."
+    },
+    "success": {
+      "title": "E-Mail verifiziert!",
+      "message": "Ihre Organisation {{organizationName}} wurde erfolgreich verifiziert und aktiviert.",
+      "adminAccount": {
+        "title": "Ihr Administrator-Konto",
+        "description": "Ein Administrator-Konto wurde für Ihre Organisation erstellt:",
+        "instructions": "Sie können sich jetzt anmelden, um auf Ihr Admin-Dashboard zuzugreifen und Zertifikate zu erstellen."
+      }
+    },
+    "buttons": {
+      "goHome": "Zur Startseite",
+      "goToLogin": "Zum Login"
+    }
   }
 }

@@ -85,29 +85,31 @@ const JoinUs = () => {
     setLoading(true);
 
     try {
-      // For now, we'll just show a success message
-      // In a real implementation, you'd send this to a backend endpoint
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const backendUrl = import.meta.env.VITE_BACKEND || "http://localhost:3001";
+      const response = await axios.post(`${backendUrl}/api/organization/apply`, formData);
       
-      toast.success("Application submitted successfully! We'll contact you within 2-3 business days.");
-      
-      // Reset form
-      setFormData({
-        organizationName: "",
-        organizationType: "",
-        description: "",
-        website: "",
-        email: "",
-        phone: "",
-        contactPerson: "",
-        location: "",
-        establishedYear: "",
-        memberCount: "",
-        programs: "",
-        goals: "",
-        additionalInfo: ""
-      });
+      if (response.status === 201) {
+        toast.success("Application submitted successfully! Please check your email to verify your account and activate your organization.");
+        
+        // Reset form
+        setFormData({
+          organizationName: "",
+          organizationType: "",
+          description: "",
+          website: "",
+          email: "",
+          phone: "",
+          contactPerson: "",
+          location: "",
+          establishedYear: "",
+          memberCount: "",
+          programs: "",
+          goals: "",
+          additionalInfo: ""
+        });
+      }
     } catch (error) {
+      console.error("Application submission error:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

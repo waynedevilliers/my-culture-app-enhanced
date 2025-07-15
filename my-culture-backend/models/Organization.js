@@ -60,5 +60,17 @@ export default (sequelize) => {
         },
       },
     },
+    emailVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    emailVerificationToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    contactPerson: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   });
 }

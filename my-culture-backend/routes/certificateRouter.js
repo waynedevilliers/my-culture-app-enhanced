@@ -9,7 +9,7 @@ import {
   updateCertificate,
 } from "../controllers/certificate.js";
 import { authenticate } from "../middlewares/authenticate.js";
-import { authorize } from "../middlewares/authorize.js";
+import { authorize, authorizeAdminOrSuperAdmin } from "../middlewares/authorize.js";
 import { generateCertificatePages } from "../controllers/generateCertificatePages.js";
 import { sendCertificateEmail } from "../controllers/sendCertificateEmail.js";
 
@@ -19,18 +19,18 @@ const router = express.Router();
 router
   .route("/")
   .get(pagination, findAllCertificates)
-  .post(authenticate, authorize, createCertificate);
+  .post(authenticate, authorizeAdminOrSuperAdmin, createCertificate);
 
 router.route("/published").get(findPublishedCertificates);
 
-router.post("/generate-certificate/:id", authenticate, authorize, generateCertificatePages);
+router.post("/generate-certificate/:id", authenticate, authorizeAdminOrSuperAdmin, generateCertificatePages);
 
-router.post("/send-certificate/:id", authenticate, authorize, sendCertificateEmail);
+router.post("/send-certificate/:id", authenticate, authorizeAdminOrSuperAdmin, sendCertificateEmail);
 
 router
   .route("/:id")
   .get(findOneCertificateById)
-  .put(authenticate, authorize, updateCertificate)
-  .delete(authenticate, authorize, deleteCertificate);
+  .put(authenticate, authorizeAdminOrSuperAdmin, updateCertificate)
+  .delete(authenticate, authorizeAdminOrSuperAdmin, deleteCertificate);
 
 export default router;

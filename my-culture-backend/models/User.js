@@ -54,8 +54,16 @@ export default (sequelize) => {
       },
       role: {
         type: DataTypes.STRING,
-        enum: ["user", "admin"],
+        enum: ["user", "admin", "superAdmin"],
         defaultValue: "user",
+      },
+      organizationId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Organizations',
+          key: 'id'
+        }
       },
       newsletter: {
         type: DataTypes.BOOLEAN,
@@ -97,7 +105,9 @@ export default (sequelize) => {
         { fields: ['role'] },
         { fields: ['newsletter'] },
         { fields: ['role', 'newsletter'] },
-        { fields: ['email'] }
+        { fields: ['email'] },
+        { fields: ['organizationId'] },
+        { fields: ['role', 'organizationId'] }
       ]
     }
   );
