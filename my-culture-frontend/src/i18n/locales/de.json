@@ -257,7 +257,12 @@
       "remove": "Entfernen",
       "addRecipient": "+ Empfänger hinzufügen",
       "published": "Veröffentlicht",
-      "updateOrganization": "Organisation aktualisieren"
+      "updateOrganization": "Organisation aktualisieren",
+      "editUser": "Benutzer bearbeiten",
+      "validation": {
+        "required": "Dieses Feld ist erforderlich",
+        "invalidEmail": "Ungültige E-Mail-Adresse"
+      }
     },
     "pagination": {
       "showing": "Zeige Seite {{page}} von {{totalPages}} ({{totalCount}} Elemente insgesamt)"
@@ -275,7 +280,51 @@
       "certificateCreateSuccess": "Zertifikat erfolgreich erstellt",
       "certificateCreateFailed": "Fehler beim Erstellen des Zertifikats",
       "userUpdateSuccess": "Benutzer erfolgreich aktualisiert",
-      "userUpdateFailed": "Fehler beim Aktualisieren des Benutzers"
+      "userUpdateFailed": "Fehler beim Aktualisieren des Benutzers",
+      "confirmDelete": "Sind Sie sicher, dass Sie {{name}} löschen möchten?"
+    },
+    "roles": {
+      "user": "Benutzer",
+      "admin": "Administrator",
+      "superAdmin": "Super-Administrator"
+    },
+    "certificates": {
+      "title": "Titel",
+      "description": "Beschreibung",
+      "noRecipients": "Keine Empfänger",
+      "generate": "Generieren",
+      "send": "Senden",
+      "view": "Anzeigen",
+      "searchPlaceholder": "Zertifikate suchen...",
+      "fetchError": "Fehler beim Laden der Zertifikate",
+      "sendSuccess": "Zertifikate erfolgreich an alle Empfänger gesendet!",
+      "sendError": "Fehler beim Senden des Zertifikats.",
+      "generateSuccess": "Zertifikat erfolgreich generiert",
+      "generateError": "Fehler beim Generieren der Zertifikatseite",
+      "viewError": "Fehler beim Abrufen der Zertifikatsdetails.",
+      "noRecipientsError": "Keine Empfänger für dieses Zertifikat gefunden.",
+      "urlNotFound": "Zertifikat-URL nicht gefunden.",
+      "create": {
+        "title": "Zertifikat-Titel",
+        "description": "Zertifikat-Beschreibung",
+        "issuedFrom": "Ausgestellt von",
+        "selectOrganization": "Organisation auswählen",
+        "issueDate": "Ausstellungsdatum",
+        "certificateTemplate": "Zertifikat-Vorlage",
+        "certificatePreview": "Zertifikat-Vorschau:",
+        "recipients": "Empfänger",
+        "recipientName": "Empfängername",
+        "recipientEmail": "Empfänger-E-Mail",
+        "addRecipient": "+ Empfänger hinzufügen",
+        "remove": "Entfernen",
+        "saving": "Speichern...",
+        "save": "Speichern",
+        "templatesError": "Fehler beim Laden der Zertifikat-Vorlagen",
+        "organizationsError": "Fehler beim Laden der Organisationen",
+        "recipientsError": "Alle Empfänger müssen einen Namen und eine gültige E-Mail-Adresse haben.",
+        "success": "Zertifikat erfolgreich erstellt!",
+        "error": "Ein Fehler ist aufgetreten."
+      }
     }
   },
   "emailVerification": {

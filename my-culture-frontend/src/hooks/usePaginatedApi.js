@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -13,17 +13,24 @@ export const usePaginatedApi = (endpoint, options = {}) => {
 
   const { 
     limit = 10, 
-    searchParams = {}, 
+    searchParams: rawSearchParams = {}, 
     includeAuth = true,
     onError,
     onSuccess 
   } = options;
 
-  const fetchData = useCallback(async (pageNumber = page) => {
-    if (loading) return;
-    
+  // Memoize searchParams to prevent infinite re-renders
+  const searchParams = useMemo(() => rawSearchParams, [JSON.stringify(rawSearchParams)]);
+  
+  // Use ref to store the latest values to avoid dependency issues
+  const optionsRef = useRef({ endpoint, limit, searchParams, includeAuth, onError, onSuccess });
+  optionsRef.current = { endpoint, limit, searchParams, includeAuth, onError, onSuccess };
+
+  const fetchData = useCallback(async (pageNumber) => {
     setLoading(true);
     try {
+      const { endpoint, limit, searchParams, includeAuth, onError, onSuccess } = optionsRef.current;
+      
       const params = new URLSearchParams({
         page: pageNumber,
         limit,
@@ -67,11 +74,11 @@ export const usePaginatedApi = (endpoint, options = {}) => {
     } finally {
       setLoading(false);
     }
-  }, [endpoint, page, limit, searchParams, includeAuth, onError, onSuccess, loading]);
+  }, []);
 
   useEffect(() => {
     fetchData(page);
-  }, [fetchData]);
+  }, [fetchData, page, endpoint, limit, searchParams, includeAuth]);
 
   const goToPage = useCallback((newPage) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
@@ -93,6 +100,7 @@ export const usePaginatedApi = (endpoint, options = {}) => {
 
   const deleteItem = useCallback(async (id) => {
     try {
+      const { endpoint, includeAuth } = optionsRef.current;
       const config = includeAuth ? {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -106,7 +114,7 @@ export const usePaginatedApi = (endpoint, options = {}) => {
       const errorMessage = error.response?.data?.message || 'Failed to delete item';
       toast.error(errorMessage);
     }
-  }, [endpoint, includeAuth, refresh]);
+  }, [refresh]);
 
   return {
     data,

@@ -2,8 +2,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const NewCertificate = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
@@ -35,7 +37,7 @@ const NewCertificate = () => {
         setTemplates(response.data.data || []);
       } catch (error) {
         console.error("Error fetching templates:", error);
-        toast.error("Failed to load certificate templates");
+        toast.error(t("admin.certificates.create.templatesError"));
       }
     };
 
@@ -47,7 +49,7 @@ const NewCertificate = () => {
         setOrganizations(publishedOrgs);
       } catch (error) {
         console.error("Error fetching organizations:", error);
-        toast.error("Failed to load organizations");
+        toast.error(t("admin.certificates.create.organizationsError"));
       }
     };
 
@@ -122,7 +124,7 @@ const NewCertificate = () => {
     e.preventDefault();
 
     if (recipients.some((r) => !r.name || !r.email)) {
-      toast.error("All recipients must have a name and valid email.");
+      toast.error(t("admin.certificates.create.recipientsError"));
       return;
     }
 
@@ -144,10 +146,10 @@ const NewCertificate = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      toast.success("Certificate created successfully!");
+      toast.success(t("admin.certificates.create.success"));
       navigate("/dashboard/certificates");
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred.");
+      toast.error(error.response?.data?.message || t("admin.certificates.create.error"));
       console.error(error);
     } finally {
       setLoading(false);
@@ -157,15 +159,15 @@ const NewCertificate = () => {
   return (
     <form className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10" onSubmit={handleSubmit}>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Title
-        <input type="text" name="title" className="grow" placeholder="Certificate Title" value={form.title} onChange={handleChange} required />
+        {t("admin.certificates.title")}
+        <input type="text" name="title" className="grow" placeholder={t("admin.certificates.create.title")} value={form.title} onChange={handleChange} required />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Description
-        <input type="text" name="description" className="grow" placeholder="Certificate Description" value={form.description} onChange={handleChange} required />
+        {t("admin.certificates.description")}
+        <input type="text" name="description" className="grow" placeholder={t("admin.certificates.create.description")} value={form.description} onChange={handleChange} required />
       </label>
       <div className="flex flex-col gap-2">
-        <label className="text-lg font-semibold">Issued From</label>
+        <label className="text-lg font-semibold">{t("admin.certificates.create.issuedFrom")}</label>
         <select 
           name="issuedFrom" 
           value={form.issuedFrom} 
@@ -173,7 +175,7 @@ const NewCertificate = () => {
           className="select select-bordered w-full rounded-none"
           required
         >
-          <option value="">Select Organization</option>
+          <option value="">{t("admin.certificates.create.selectOrganization")}</option>
           {organizations.map((org) => (
             <option key={org.id} value={org.name}>
               {org.name}
@@ -182,13 +184,13 @@ const NewCertificate = () => {
         </select>
       </div>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
-        Issue Date
+        {t("admin.certificates.create.issueDate")}
         <input type="date" name="issueDate" className="grow" value={form.issueDate} onChange={handleChange} required />
       </label>
 
       {/* Template Selection */}
       <div className="flex flex-col gap-2">
-        <label className="text-lg font-semibold">Certificate Template</label>
+        <label className="text-lg font-semibold">{t("admin.certificates.create.certificateTemplate")}</label>
         <select 
           name="templateId" 
           value={form.templateId} 
@@ -206,7 +208,7 @@ const NewCertificate = () => {
         {/* Certificate Preview */}
         {form.templateId && (
           <div className="mt-4 p-4 border border-gray-300 rounded">
-            <h4 className="font-semibold mb-2">Certificate Preview:</h4>
+            <h4 className="font-semibold mb-2">{t("admin.certificates.create.certificatePreview")}</h4>
             <iframe 
               key={previewKey}
               src={`${import.meta.env.VITE_BACKEND}/api/certificate-templates/${debouncedPreviewData.templateId}/preview?participant=${encodeURIComponent(debouncedPreviewData.recipientName || 'Sample Name')}&event=${encodeURIComponent(debouncedPreviewData.title || 'Certificate Title')}&issueDate=${encodeURIComponent(debouncedPreviewData.issueDate || new Date().toDateString())}&organizationName=${encodeURIComponent(debouncedPreviewData.issuedFrom || 'Organization Name')}`}
@@ -219,12 +221,12 @@ const NewCertificate = () => {
 
       {/* Recipients Section */}
       <div className="flex flex-col gap-4">
-        <h3 className="text-lg font-semibold">Recipients</h3>
+        <h3 className="text-lg font-semibold">{t("admin.certificates.create.recipients")}</h3>
         {recipients.map((recipient, index) => (
           <div key={index} className="flex flex-col sm:flex-row gap-4">
             <input
               type="text"
-              placeholder="Recipient Name"
+              placeholder={t("admin.certificates.create.recipientName")}
               value={recipient.name}
               onChange={(e) => handleRecipientChange(index, "name", e.target.value)}
               className="input input-bordered w-full sm:w-1/2"
@@ -232,7 +234,7 @@ const NewCertificate = () => {
             />
             <input
               type="email"
-              placeholder="Recipient Email"
+              placeholder={t("admin.certificates.create.recipientEmail")}
               value={recipient.email}
               onChange={(e) => handleRecipientChange(index, "email", e.target.value)}
               className="input input-bordered w-full sm:w-1/2"
@@ -240,18 +242,18 @@ const NewCertificate = () => {
             />
             {recipients.length > 1 && (
               <button type="button" onClick={() => removeRecipient(index)} className="btn btn-error btn-sm">
-                Remove
+                {t("admin.certificates.create.remove")}
               </button>
             )}
           </div>
         ))}
         <button type="button" onClick={addRecipient} className="btn btn-primary btn-sm self-start">
-          + Add Recipient
+          {t("admin.certificates.create.addRecipient")}
         </button>
       </div>
 
       <button type="submit" className="btn btn-base-100 rounded-none" disabled={loading}>
-        {loading ? "Saving..." : "Save"}
+        {loading ? t("admin.certificates.create.saving") : t("admin.certificates.create.save")}
       </button>
     </form>
   );

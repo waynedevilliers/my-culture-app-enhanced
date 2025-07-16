@@ -1,9 +1,15 @@
 import { usePaginatedApi } from '../../hooks/usePaginatedApi.js';
 import Pagination from '../common/Pagination.jsx';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import UserEditModal from './UserEditModal.jsx';
 
 const UserList = () => {
   const { t } = useTranslation();
+  const [editingUser, setEditingUser] = useState(null);
+  
+  console.log('UserList component loaded with edit functionality');
+  
   const {
     data: users,
     loading,
@@ -13,8 +19,24 @@ const UserList = () => {
     hasNextPage,
     hasPreviousPage,
     goToPage,
-    deleteItem
+    deleteItem,
+    refresh
   } = usePaginatedApi('/users');
+
+  const handleEdit = (user) => {
+    setEditingUser(user);
+  };
+
+  const handleDelete = (user) => {
+    if (window.confirm(t('admin.messages.confirmDelete', { name: `${user.firstName} ${user.lastName}` }))) {
+      deleteItem(user.id);
+    }
+  };
+
+  const handleUpdateSuccess = () => {
+    setEditingUser(null);
+    refresh();
+  };
 
   return (
     <div className="overflow-x-auto flex flex-col max-w-screen-xl w-full justify-center items-center gap-4">
@@ -43,7 +65,20 @@ const UserList = () => {
             <td className="hidden md:table-cell">{new Date(user.createdAt).toLocaleDateString()}</td>
             <td className="hidden sm:table-cell">{user.role}</td>
             <td>
-              <button className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors">{t('admin.tables.edit')}</button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => handleEdit(user)}
+                  className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                >
+                  {t('admin.tables.edit')}
+                </button>
+                <button 
+                  onClick={() => handleDelete(user)}
+                  className="btn btn-ghost btn-xs hover:bg-transparent hover:text-error transform duration-300 transition-colors"
+                >
+                  {t('admin.tables.delete')}
+                </button>
+              </div>
             </td>
           </tr>
         ))}
@@ -65,6 +100,14 @@ const UserList = () => {
         loading={loading}
         totalCount={totalCount}
       />
+      
+      {editingUser && (
+        <UserEditModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSuccess={handleUpdateSuccess}
+        />
+      )}
     </div>
   );
 };

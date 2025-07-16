@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const CertificatesList = () => {
+  const { t } = useTranslation();
   const [certificates, setCertificates] = useState([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -29,7 +31,7 @@ const CertificatesList = () => {
         setPages(1);
         setHasNextPage(false);
         setHasPreviousPage(false);
-        toast.error("Error fetching certificates");
+        toast.error(t("admin.certificates.fetchError"));
       });
   };
 
@@ -47,7 +49,7 @@ const CertificatesList = () => {
       const certificate = response.data;
   
       if (!certificate.recipients || certificate.recipients.length === 0) {
-        toast.error("No recipients found for this certificate.");
+        toast.error(t("admin.certificates.noRecipientsError"));
         return;
       }
   
@@ -67,9 +69,9 @@ const CertificatesList = () => {
       // Wait for all requests to complete
       await Promise.all(sendRequests);
   
-      toast.success("Certificates sent successfully to all recipients!");
+      toast.success(t("admin.certificates.sendSuccess"));
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error sending certificate.");
+      toast.error(error.response?.data?.message || t("admin.certificates.sendError"));
       console.error(error);
     }
   };
@@ -90,7 +92,7 @@ const CertificatesList = () => {
         toast.success(response.data.message);
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message || "Error generating certificate page");
+        toast.error(error.response?.data?.message || t("admin.certificates.generateError"));
       });
   };
 
@@ -105,7 +107,7 @@ const CertificatesList = () => {
       const certificate = response.data;
   
       if (!certificate.recipients || certificate.recipients.length === 0) {
-        toast.error("No recipients found for this certificate.");
+        toast.error(t("admin.certificates.noRecipientsError"));
         return;
       }
   
@@ -113,10 +115,10 @@ const CertificatesList = () => {
       if (firstRecipient.recipientUrl) {
         window.open(firstRecipient.recipientUrl, "_blank");
       } else {
-        toast.error("Certificate URL not found.");
+        toast.error(t("admin.certificates.urlNotFound"));
       }
     } catch (error) {
-      toast.error("Error retrieving certificate details.");
+      toast.error(t("admin.certificates.viewError"));
       console.error(error);
     }
   };
@@ -131,10 +133,10 @@ const CertificatesList = () => {
       })
       .then(() => {
         fetchCertificates(); // Refresh the list after deletion
-        toast.success("Certificate deleted successfully");
+        toast.success(t("admin.messages.certificateDeleteSuccess"));
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message || "Error deleting certificate");
+        toast.error(error.response?.data?.message || t("admin.messages.certificateDeleteFailed"));
       });
   };
 
@@ -145,11 +147,11 @@ const CertificatesList = () => {
   return (
     <div className="overflow-x-auto flex flex-col max-w-screen-xl w-full justify-center items-center gap-4">
       <label className="input input-bordered flex items-center gap-2 w-full">
-        Search{" "}
+        {t("admin.tables.search")}{" "}
         <input
           type="search"
           className="grow"
-          placeholder="Search certificates..."
+          placeholder={t("admin.certificates.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -157,10 +159,10 @@ const CertificatesList = () => {
       <table className="table table-xs table-zebra mb-4">
         <thead className="bg-secondary text-white">
           <tr>
-            <th>Title</th>
-            <th className="hidden sm:table-cell">Issued Date</th>
-            <th className="hidden md:table-cell">Recipients</th>
-            <th className="hidden md:table-cell">Issued From</th>
+            <th>{t("admin.certificates.title")}</th>
+            <th className="hidden sm:table-cell">{t("admin.tables.issuedDate")}</th>
+            <th className="hidden md:table-cell">{t("admin.tables.recipients")}</th>
+            <th className="hidden md:table-cell">{t("admin.tables.issuedFrom")}</th>
             <th></th>
           </tr>
         </thead>
@@ -180,7 +182,7 @@ const CertificatesList = () => {
                     ))}
                   </ul>
                 ) : (
-                  <span className="text-gray-500">No recipients</span>
+                  <span className="text-gray-500">{t("admin.certificates.noRecipients")}</span>
                 )}
               </td>
               <td className="hidden md:table-cell">{certificate.issuedFrom}</td>
@@ -190,28 +192,28 @@ const CertificatesList = () => {
                   className="btn btn-ghost btn-xs mr-2"
                   onClick={() => handleGenerateCertificatePage(certificate.id)}
                 >
-                  Generate
+                  {t("admin.certificates.generate")}
                 </button>
                 {/* View Certificate Button */}
                 <button
                   className="btn btn-ghost btn-xs mr-2"
                   onClick={() => handleViewCertificate(certificate.id)}
                 >
-                  View
+                  {t("admin.certificates.view")}
                 </button>
                 {/* Send Email Button */}
                 <button
                   className="btn btn-ghost btn-xs mr-2"
                   onClick={() => handleSendCertificate(certificate.id)}
                 >
-                  Send
+                  {t("admin.certificates.send")}
                 </button>
                 {/* Delete Button */}
                 <button
                   className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
                   onClick={() => handleDelete(certificate)}
                 >
-                  Delete
+                  {t("admin.tables.delete")}
                 </button>
               </td>
             </tr>

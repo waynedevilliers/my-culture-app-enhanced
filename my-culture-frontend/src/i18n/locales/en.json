@@ -250,7 +250,12 @@
       "remove": "Remove",
       "addRecipient": "+ Add Recipient",
       "published": "Published",
-      "updateOrganization": "Update Organization"
+      "updateOrganization": "Update Organization",
+      "editUser": "Edit User",
+      "validation": {
+        "required": "This field is required",
+        "invalidEmail": "Invalid email address"
+      }
     },
     "pagination": {
       "showing": "Showing page {{page}} of {{totalPages}} ({{totalCount}} total items)"
@@ -268,7 +273,51 @@
       "certificateCreateSuccess": "Certificate created successfully",
       "certificateCreateFailed": "Failed to create certificate",
       "userUpdateSuccess": "User updated successfully",
-      "userUpdateFailed": "Failed to update user"
+      "userUpdateFailed": "Failed to update user",
+      "confirmDelete": "Are you sure you want to delete {{name}}?"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin",
+      "superAdmin": "Super Admin"
+    },
+    "certificates": {
+      "title": "Title",
+      "description": "Description",
+      "noRecipients": "No recipients",
+      "generate": "Generate",
+      "send": "Send",
+      "view": "View",
+      "searchPlaceholder": "Search certificates...",
+      "fetchError": "Error fetching certificates",
+      "sendSuccess": "Certificates sent successfully to all recipients!",
+      "sendError": "Error sending certificate.",
+      "generateSuccess": "Certificate generated successfully",
+      "generateError": "Error generating certificate page",
+      "viewError": "Error retrieving certificate details.",
+      "noRecipientsError": "No recipients found for this certificate.",
+      "urlNotFound": "Certificate URL not found.",
+      "create": {
+        "title": "Certificate Title",
+        "description": "Certificate Description",
+        "issuedFrom": "Issued From",
+        "selectOrganization": "Select Organization",
+        "issueDate": "Issue Date",
+        "certificateTemplate": "Certificate Template",
+        "certificatePreview": "Certificate Preview:",
+        "recipients": "Recipients",
+        "recipientName": "Recipient Name",
+        "recipientEmail": "Recipient Email",
+        "addRecipient": "+ Add Recipient",
+        "remove": "Remove",
+        "saving": "Saving...",
+        "save": "Save",
+        "templatesError": "Failed to load certificate templates",
+        "organizationsError": "Failed to load organizations",
+        "recipientsError": "All recipients must have a name and valid email.",
+        "success": "Certificate created successfully!",
+        "error": "An error occurred."
+      }
     }
   },
   "emailVerification": {
