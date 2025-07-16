@@ -72,5 +72,14 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    logo: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: {
+          msg: "Logo must be a valid URL.",
+        },
+      },
+    },
   });
 }

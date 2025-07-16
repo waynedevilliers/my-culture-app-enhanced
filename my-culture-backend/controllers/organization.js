@@ -126,6 +126,9 @@ export const applyForOrganization = asyncWrapper(async (req, res) => {
     goals,
     additionalInfo
   } = body;
+  
+  // Get logo URL from cloudinary upload if available
+  const logo = req.cloudinaryURL || null;
 
   // Generate email verification token
   const emailVerificationToken = crypto.randomBytes(32).toString('hex');
@@ -138,6 +141,7 @@ export const applyForOrganization = asyncWrapper(async (req, res) => {
     phone,
     email,
     contactPerson,
+    logo,
     published: false, // Will be set to true after email verification
     emailVerified: false,
     emailVerificationToken,

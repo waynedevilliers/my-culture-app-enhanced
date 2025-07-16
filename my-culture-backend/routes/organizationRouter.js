@@ -12,6 +12,8 @@ import {
 } from "../controllers/organization.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
+import fileUploader from "../middlewares/fileUploader.js";
+import cloudUploader from "../middlewares/cloudUploader.js";
 
 const router = express.Router();
 
@@ -22,7 +24,7 @@ router
 
 router.route("/published").get(findPublishedOrganizations);
 
-router.route("/apply").post(applyForOrganization);
+router.route("/apply").post(fileUploader.single('logo'), cloudUploader, applyForOrganization);
 
 router.route("/verify-email/:token").get(verifyEmail);
 

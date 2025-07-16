@@ -33,6 +33,8 @@ const JoinUs = () => {
     goals: "",
     additionalInfo: ""
   });
+  const [logo, setLogo] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const organizationTypes = [
@@ -80,13 +82,63 @@ const JoinUs = () => {
     });
   };
 
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Please select a valid image file (JPEG, JPG, PNG, or WebP)');
+        return;
+      }
+      
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('File size must be less than 10MB');
+        return;
+      }
+      
+      setLogo(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setLogoPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLogo = () => {
+    setLogo(null);
+    setLogoPreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND || "http://localhost:3001";
-      const response = await axios.post(`${backendUrl}/api/organization/apply`, formData);
+      
+      // Create FormData for file upload
+      const formDataToSend = new FormData();
+      
+      // Add all form fields
+      Object.keys(formData).forEach(key => {
+        formDataToSend.append(key, formData[key]);
+      });
+      
+      // Add logo if selected
+      if (logo) {
+        formDataToSend.append('logo', logo);
+      }
+      
+      const response = await axios.post(`${backendUrl}/api/organization/apply`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
       if (response.status === 201) {
         toast.success("Application submitted successfully! Please check your email to verify your account and activate your organization.");
@@ -107,6 +159,10 @@ const JoinUs = () => {
           goals: "",
           additionalInfo: ""
         });
+        
+        // Reset logo
+        setLogo(null);
+        setLogoPreview(null);
       }
     } catch (error) {
       console.error("Application submission error:", error);
@@ -239,6 +295,72 @@ const JoinUs = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            {/* Logo Upload */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Organization Logo (Optional)
+              </label>
+              <div className="space-y-4">
+                {logoPreview ? (
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 border-2 border-gray-200 rounded-lg overflow-hidden">
+                      <img
+                        src={logoPreview}
+                        alt="Logo preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Logo selected</p>
+                      <button
+                        type="button"
+                        onClick={removeLogo}
+                        className="text-red-500 hover:text-red-700 text-sm font-medium"
+                      >
+                        Remove Logo
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                    <div className="text-center">
+                      <svg
+                        className="mx-auto h-12 w-12 text-gray-400"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 48 48"
+                      >
+                        <path
+                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <div className="mt-4">
+                        <label
+                          htmlFor="logo-upload"
+                          className="cursor-pointer bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                        >
+                          Choose Logo
+                        </label>
+                        <input
+                          id="logo-upload"
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          onChange={handleLogoChange}
+                          className="hidden"
+                        />
+                      </div>
+                      <p className="mt-2 text-sm text-gray-500">
+                        PNG, JPG, JPEG, or WebP (max 10MB)
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

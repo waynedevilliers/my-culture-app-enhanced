@@ -12,14 +12,17 @@ cloudinary.config({
 const cloudUploader = asyncWrapper(async (req, res, next) => {
   const { name } = req.body;
 
-  if (!req.file) throw new ErrorResponse("Please upload a file.", 400);
+  // If no file uploaded, continue without error (for optional uploads)
+  if (!req.file) {
+    return next();
+  }
 
   const b64 = Buffer.from(req.file.buffer).toString('base64');
   const dataURI = 'data:' + req.file.mimetype + ';base64,' + b64;
 
   const cloudinaryData = await cloudinary.uploader.upload(dataURI, {
     resource_type: 'auto',
-    public_id: name,
+    public_id: name || `upload_${Date.now()}`,
   });
 
   req.cloudinaryURL = cloudinaryData.secure_url;
