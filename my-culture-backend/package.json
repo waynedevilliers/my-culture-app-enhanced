@@ -40,7 +40,8 @@
     "sequelize": "^6.37.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "4.0.17"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.0",

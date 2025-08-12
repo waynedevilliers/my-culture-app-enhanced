@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [],
   "author": "Wayne de Villiers",
@@ -17,6 +20,7 @@
     "@blocknote/mantine": "^0.21.0",
     "@blocknote/react": "^0.21.0",
     "@blocknote/xl-multi-column": "^0.21.0",
+    "@hookform/resolvers": "5.2.1",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.10.2",
     "axios": "^1.7.9",
@@ -36,17 +40,23 @@
     "react-select": "^5.9.0",
     "react-toastify": "^10.0.6",
     "typewriter-effect": "^2.21.0",
-    "yet-another-react-lightbox": "^3.21.7"
+    "yet-another-react-lightbox": "^3.21.7",
+    "zod": "4.0.17"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "6.6.4",
+    "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "14.6.1",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.22",
+    "jsdom": "26.1.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
-    "vite": "^6.0.1"
+    "vite": "^6.0.1",
+    "vitest": "3.2.4"
   }
 }

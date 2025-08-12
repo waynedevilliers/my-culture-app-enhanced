@@ -143,7 +143,7 @@ const MyComponent = () => {
 
 ### Coverage Status
 
-#### ✅ Fully Translated Areas
+####  Fully Translated Areas
 - **Public Pages**: Hero, organizations, join us, footer
 - **Admin Navigation**: All menu items and navigation elements
 - **Admin Pages**: Dashboard, users, organizations, certificates, help
@@ -187,3 +187,71 @@ const MyComponent = () => {
 - **English Second**: Provide accurate English equivalents
 - **Validation**: Use `python3 -m json.tool file.json` to validate syntax
 - **Backup**: Translation files are version controlled with git
+
+## Development Guidelines
+
+### Code Standards and Organization
+- Think, analyze and brainstorm before making or changing code
+- Write reusable code and break code into smaller files
+- Code must be readable and understandable
+- Follow GitHub rules and regulations when writing code
+- Always check security and add validations using Zod
+- Don't create code that already exists
+- Use libraries when needed
+- No emojis or silly icons in any files
+- Commit and push important changes constantly
+
+### Security Requirements
+- Always validate input using Zod schemas
+- Sanitize all user inputs
+- Use parameterized queries (Sequelize ORM handles this)
+- Implement proper authentication and authorization
+- Never expose sensitive data in responses
+- Use HTTPS in production
+- Implement rate limiting
+- Log security events
+
+### Testing Standards
+- Write tests for all new features or logic that needs to be tested
+- Use Jest for backend tests
+- Use Vitest for frontend tests
+- Test file naming: `*.test.js` or `*.test.jsx`
+- Coverage target: minimum 80%
+- Test security validations
+- Test error handling
+
+### Code Quality
+- Use ESLint and Prettier
+- Write descriptive commit messages
+- Break code into smaller, reusable functions
+- Use async/await instead of callbacks
+- Handle errors properly
+- Keep functions under 20 lines when possible
+- Use meaningful variable and function names
+
+### File Organization
+- Backend: Controllers, models, routes, middleware, schemas, utils, tests
+- Frontend: Components organized by feature, hooks, contexts, utils, tests
+- Keep related files together in logical folders
+- Use consistent naming conventions throughout
+
+### Validation with Zod
+Always use Zod for input validation in both frontend and backend:
+
+```javascript
+const { z } = require('zod');
+
+const userSchema = z.object({
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  age: z.number().int().min(0).max(120).optional()
+});
+```
+
+### Git Workflow
+- Use meaningful commit messages
+- Create feature branches for new features
+- Use pull requests for code review
+- Commit frequently with logical chunks
+- Keep commits focused and atomic
+- Push important changes constantly
