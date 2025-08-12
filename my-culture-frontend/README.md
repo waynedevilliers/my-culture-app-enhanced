@@ -1,41 +1,53 @@
-# My Impact Frontend
+# My Culture App - Frontend
 
-This project is the Frontend of a Full-Stack Application using React.js as a frontend and Express.js as a backend. The backend uses sequelize to communicate with a relational database that is deployed seperately.
+React + Vite + TypeScript frontend for the My Culture App platform with Tailwind CSS, multi-language support, and comprehensive form validation.
 
-## Prerequesites
+## Quick Start
 
-- [nodejs](https://nodejs.org/)
-- [npm](https://www.npmjs.com/)
+```bash
+npm install
+cp example.env .env
+# Edit .env with your backend URL
+npm run dev
+```
 
-## Installation
+## Available Scripts
 
-1. Clone the repository:
+- `npm run dev` - Start Vite development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm test` - Run Vitest tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate test coverage report
 
-    ```bash
-   git clone git@github.com:waynedevilliers/my-impact-frontend.git
-   cd my-impact-frontend
-    ```
+## Environment Configuration
 
-2. Install dependencies:
+Copy `example.env` to `.env` and configure:
 
-    ```bash
-    npm install
-    ```
+```env
+VITE_BACKEND=http://localhost:3001
+```
 
-## Running the Application
+## Architecture
 
-To start the application, both front- and backend must be running simultaneously. To set up the backend use the following commands:
+- **React Router**: Nested routing with protected routes and role-based authorization
+- **Components**: Organized by feature (admin/, events/, organization/, etc.)
+- **Context**: UserContext for authentication state
+- **Styling**: Tailwind CSS + DaisyUI components
+- **Rich Text**: BlockNote editor for content creation
+- **Validation**: Zod schemas with react-hook-form integration
+- **i18n**: Complete German/English translation support
 
-1. Run the application:
+## Key Features
 
-    ```bash
-    npm run dev
-    ```
+- **Multi-language**: German (primary) and English with react-i18next
+- **Role-based UI**: Different interfaces for super admin, admin, and users
+- **Form Validation**: Zod schemas for type-safe validation
+- **Responsive Design**: Mobile-first with Tailwind CSS
+- **Rich Text Editing**: BlockNote editor for blog posts and content
 
-The Frontend will start running on [http://localhost:5173](http://localhost:5173)
+## Testing
 
-## Configuration
-
-Environment-specific configurations can be set in `.env` file. take a look at the `example.env` file.
-
-Create a new `.env` file and then copy the contents of `example.env` into it, make sure to fill out the link to your backend application on the `VITE_BACKEND` value.
+- **Framework**: Vitest with React Testing Library
+- **Coverage**: Minimum 80% target
+- **Files**: Located in `src/tests/` directory
