@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import { FaCheck, FaTimes, FaEye, FaClock } from "react-icons/fa6";
+import { FaCheck, FaXmark, FaEye, FaClock } from "react-icons/fa6";
 
 const OrganizationApplicationsList = () => {
   const { t } = useTranslation();
@@ -86,7 +86,7 @@ const OrganizationApplicationsList = () => {
       case "approved":
         return <FaCheck className="text-success" />;
       case "rejected":
-        return <FaTimes className="text-error" />;
+        return <FaXmark className="text-error" />;
       default:
         return <FaClock className="text-warning" />;
     }
@@ -183,7 +183,7 @@ const OrganizationApplicationsList = () => {
                         title={t("admin.applications.actions.reject")}
                         disabled={loading}
                       >
-                        <FaTimes />
+                        <FaXmark />
                       </button>
                     </>
                   )}

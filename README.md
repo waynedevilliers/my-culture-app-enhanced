@@ -177,6 +177,23 @@ The backend provides a RESTful API with Swagger documentation available at:
 
 ## Deployment
 
+### Live Production URLs
+
+🚀 **Current Deployments:**
+- **Frontend**: https://my-culture-frontend-qulfs0x0i-wblack2050-2932s-projects.vercel.app
+- **Backend**: https://my-culture-backend-3fcj5dtjb-wblack2050-2932s-projects.vercel.app
+
+### Vercel Deployment
+
+**Deploy to Vercel**:
+```bash
+# Backend
+cd my-culture-backend && npx vercel --prod
+
+# Frontend
+cd my-culture-frontend && npx vercel --prod
+```
+
 ### Production Build
 
 **Frontend**:

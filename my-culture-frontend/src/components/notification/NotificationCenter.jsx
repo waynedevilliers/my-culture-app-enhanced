@@ -7,9 +7,9 @@ import {
   FaBell,
   FaEnvelope,
   FaCheck,
-  FaTimes,
+  FaXmark,
   FaSpinner,
-  FaCog,
+  FaGear,
   FaEye,
   FaTrash,
   FaFilter,
@@ -141,7 +141,7 @@ const NotificationCenter = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="btn btn-ghost btn-sm"
           >
-            <FaTimes className="w-5 h-5" />
+            <FaXmark className="w-5 h-5" />
           </button>
         </div>
 
@@ -169,7 +169,7 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            <FaCog className="w-4 h-4 mr-2 inline" />
+            <FaGear className="w-4 h-4 mr-2 inline" />
             Settings
           </button>
         </div>

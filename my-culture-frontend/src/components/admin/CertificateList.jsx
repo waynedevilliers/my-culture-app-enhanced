@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../contexts/UserContext";
-import { FaEye, FaEnvelope, FaDownload, FaTrash, FaFileAlt, FaShield, FaExclamationTriangle } from "react-icons/fa6";
+import { FaEye, FaEnvelope, FaDownload, FaTrash, FaFile, FaShield, FaTriangleExclamation } from "react-icons/fa6";
 
 const CertificatesList = () => {
   const { t } = useTranslation();
@@ -197,7 +197,7 @@ const CertificatesList = () => {
           </div>
           {certificates.length === 0 && (
             <div className="text-sm text-gray-500 flex items-center gap-1">
-              <FaExclamationTriangle className="text-yellow-500" />
+              <FaTriangleExclamation className="text-yellow-500" />
               No certificates found
             </div>
           )}
@@ -257,7 +257,7 @@ const CertificatesList = () => {
                       {hasAccess ? '✓ Full Access' : '✗ Limited Access'}
                     </span>
                   );
-                })()
+                })()}
               </td>
               <td className="text-right">
                 {/* Generate Certificate Button */}
@@ -266,7 +266,7 @@ const CertificatesList = () => {
                   onClick={() => handleGenerateCertificatePage(certificate.id, certificate)}
                   data-tip="Generate certificate page"
                 >
-                  <FaFileAlt className="w-3 h-3" />
+                  <FaFile className="w-3 h-3" />
                   <span className="hidden sm:inline ml-1">{t("admin.certificates.generate")}</span>
                 </button>
                 {/* View Certificate Button */}

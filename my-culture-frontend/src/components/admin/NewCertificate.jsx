@@ -274,7 +274,7 @@ const NewCertificate = () => {
                   )}
                 </div>
               );
-            })()
+            })()}
           </div>
         )}
         

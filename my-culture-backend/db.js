@@ -15,63 +15,92 @@ import NewsletterModel from "./models/Newsletter.js";
 import CertificateModel from "./models/Certificate.js";
 import CertificateRecipientModel from "./models/CertificateRecipient.js";
 
-const sequelize = new Sequelize(process.env.DB, { logging: false });
+// Check for database connection string
+const dbConnectionString = process.env.DATABASE_URL || process.env.DB;
+if (!dbConnectionString) {
+  console.error('Database connection string not found. Please set DATABASE_URL or DB environment variable.');
+  // In serverless, don't exit - just log the error
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1);
+  }
+}
 
-const User = UserModel(sequelize);
-const Event = EventModel(sequelize);
-const Image = ImageModel(sequelize);
-const Location = LocationModel(sequelize);
-const Testimonial = TestimonialModel(sequelize);
-const Category = CategoryModel(sequelize);
-const Gallery = GalleryModel(sequelize);
-const Organization = OrganizationModel(sequelize);
-const Blog = BlogModel(sequelize);
-const EventCategory = EventCategoryModel(sequelize);
-const ImageGallery = ImageGalleryModel(sequelize);
-const Subscriber = SubscriberModel(sequelize);
-const Newsletter = NewsletterModel(sequelize);
-const Certificate = CertificateModel(sequelize);
-const CertificateRecipient = CertificateRecipientModel(sequelize);
+let sequelize = null;
+if (dbConnectionString) {
+  sequelize = new Sequelize(dbConnectionString, { 
+    logging: false,
+    dialectOptions: process.env.NODE_ENV === 'production' ? {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    } : {}
+  });
+}
 
-User.hasMany(Event, { foreignKey: "userId" });
-Event.belongsTo(User, { foreignKey: "userId" });
+let User, Event, Image, Location, Testimonial, Category, Gallery, Organization, Blog, EventCategory, ImageGallery, Subscriber, Newsletter, Certificate, CertificateRecipient;
 
-User.hasMany(Image, { foreignKey: "userId" });
-Image.belongsTo(User, { foreignKey: "userId" });
+if (sequelize) {
+  User = UserModel(sequelize);
+  Event = EventModel(sequelize);
+  Image = ImageModel(sequelize);
+  Location = LocationModel(sequelize);
+  Testimonial = TestimonialModel(sequelize);
+  Category = CategoryModel(sequelize);
+  Gallery = GalleryModel(sequelize);
+  Organization = OrganizationModel(sequelize);
+  Blog = BlogModel(sequelize);
+  EventCategory = EventCategoryModel(sequelize);
+  ImageGallery = ImageGalleryModel(sequelize);
+  Subscriber = SubscriberModel(sequelize);
+  Newsletter = NewsletterModel(sequelize);
+  Certificate = CertificateModel(sequelize);
+  CertificateRecipient = CertificateRecipientModel(sequelize);
+} else {
+  console.warn('Database models not initialized - no database connection');
+}
 
-Event.belongsTo(Image, { foreignKey: "imageId" });
-Image.hasMany(Event, { foreignKey: "imageId" });
+if (sequelize && User && Event && Image && Location && Organization && Blog && Category && Gallery && Certificate && CertificateRecipient) {
+  User.hasMany(Event, { foreignKey: "userId" });
+  Event.belongsTo(User, { foreignKey: "userId" });
 
-Organization.belongsTo(Image, { foreignKey: "imageId" });
-Image.hasMany(Organization, { foreignKey: "imageId" });
+  User.hasMany(Image, { foreignKey: "userId" });
+  Image.belongsTo(User, { foreignKey: "userId" });
 
-// User-Organization relationship (one organization can have one admin user)
-User.belongsTo(Organization, { foreignKey: "organizationId" });
-Organization.hasOne(User, { foreignKey: "organizationId" });
+  Event.belongsTo(Image, { foreignKey: "imageId" });
+  Image.hasMany(Event, { foreignKey: "imageId" });
 
-Event.belongsTo(Location, { foreignKey: "locationId" });
-Location.hasMany(Event, { foreignKey: "locationId" });
+  Organization.belongsTo(Image, { foreignKey: "imageId" });
+  Image.hasMany(Organization, { foreignKey: "imageId" });
 
-User.hasMany(Blog, { foreignKey: "userId" });
-Blog.belongsTo(User, { foreignKey: "userId" });
+  // User-Organization relationship (one organization can have one admin user)
+  User.belongsTo(Organization, { foreignKey: "organizationId" });
+  Organization.hasOne(User, { foreignKey: "organizationId" });
 
-Image.hasMany(Blog, { foreignKey: "imageId" });
-Blog.belongsTo(Image, { foreignKey: "imageId" });
+  Event.belongsTo(Location, { foreignKey: "locationId" });
+  Location.hasMany(Event, { foreignKey: "locationId" });
 
-Event.belongsToMany(Category, { through: "EventCategory" });
-Category.belongsToMany(Event, { through: "EventCategory" });
+  User.hasMany(Blog, { foreignKey: "userId" });
+  Blog.belongsTo(User, { foreignKey: "userId" });
 
-Image.belongsToMany(Gallery, { through: "ImageGallery" });
-Gallery.belongsToMany(Image, { through: "ImageGallery" });
+  Image.hasMany(Blog, { foreignKey: "imageId" });
+  Blog.belongsTo(Image, { foreignKey: "imageId" });
 
-Certificate.hasMany(CertificateRecipient, {
-  foreignKey: "certificateId",
-  as: "recipients",
-});
-CertificateRecipient.belongsTo(Certificate, {
-  foreignKey: "certificateId",
-  as: "certificate",
-});
+  Event.belongsToMany(Category, { through: "EventCategory" });
+  Category.belongsToMany(Event, { through: "EventCategory" });
+
+  Image.belongsToMany(Gallery, { through: "ImageGallery" });
+  Gallery.belongsToMany(Image, { through: "ImageGallery" });
+
+  Certificate.hasMany(CertificateRecipient, {
+    foreignKey: "certificateId",
+    as: "recipients",
+  });
+  CertificateRecipient.belongsTo(Certificate, {
+    foreignKey: "certificateId",
+    as: "certificate",
+  });
+}
 
 // Initialize database connection (for serverless, sync happens lazily)
 const initializeDatabase = async () => {

@@ -13,9 +13,7 @@ import { specs, swaggerUi } from './swagger.js';
 import logger from './utils/logger.js';
 import path from 'path';
 
-import router from './routes/index.js';
-import { startCleanupScheduler } from './utils/cleanupService.js';
-import { initializeDatabase } from "./db.js";
+// Conditional route import to avoid database dependency issues
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,8 +21,12 @@ const PORT = process.env.PORT || 3000;
 app.use(generalLimiter);
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests from any localhost port or no origin (for Postman/curl)
-    if (!origin || origin.startsWith('http://localhost:') || origin.startsWith('https://localhost:')) {
+    // Allow requests from any localhost port, no origin (for Postman/curl), or Vercel domains
+    if (!origin || 
+        origin.startsWith('http://localhost:') || 
+        origin.startsWith('https://localhost:') ||
+        origin.includes('vercel.app') ||
+        origin.includes('my-culture-frontend')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -44,13 +46,21 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('dev'));
 }
 
-app.use('/api', router);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use(errorHandler);
-
+// Simple endpoints that don't require database
 app.get('/', (req, res) => {
   res.status(418).send("I am a teapot");
 })
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+})
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use(errorHandler);
 
 const __dirname = path.resolve(); 
 app.use("/certificates", express.static(path.join(__dirname, "public", "certificates")));
@@ -64,9 +74,22 @@ app.listen(PORT, async () => {
     timestamp: new Date().toISOString(),
   });
 
+  // Load API routes conditionally
+  try {
+    const routesModule = await import('./routes/index.js');
+    app.use('/api', routesModule.default);
+    logger.info('API routes loaded successfully');
+  } catch (error) {
+    logger.warn('API routes not loaded:', error.message);
+    app.use('/api', (req, res) => {
+      res.status(503).json({ message: 'API temporarily unavailable' });
+    });
+  }
+
   // Initialize database connection for production
   if (process.env.NODE_ENV === 'production') {
     try {
+      const { initializeDatabase } = await import('./db.js');
       await initializeDatabase();
       logger.info('Database initialized successfully');
     } catch (error) {
@@ -75,7 +98,12 @@ app.listen(PORT, async () => {
   }
 
   // Start the cleanup scheduler
-  startCleanupScheduler();
+  try {
+    const { startCleanupScheduler } = await import('./utils/cleanupService.js');
+    startCleanupScheduler();
+  } catch (error) {
+    logger.warn('Cleanup scheduler not available:', error.message);
+  }
 });
 
 // Graceful shutdown
