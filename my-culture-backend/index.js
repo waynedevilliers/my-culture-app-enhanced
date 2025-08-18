@@ -15,7 +15,7 @@ import path from 'path';
 
 import router from './routes/index.js';
 import { startCleanupScheduler } from './utils/cleanupService.js';
-import "./db.js";
+import { initializeDatabase } from "./db.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,13 +56,23 @@ const __dirname = path.resolve();
 app.use("/certificates", express.static(path.join(__dirname, "public", "certificates")));
 app.use("/images", express.static(path.join(__dirname, "../my-culture-frontend/public/images")));
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   logger.info(`Server started on port ${PORT}`, {
     port: PORT,
     url: process.env.URL,
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
   });
+
+  // Initialize database connection for production
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      await initializeDatabase();
+      logger.info('Database initialized successfully');
+    } catch (error) {
+      logger.error('Database initialization failed:', error);
+    }
+  }
 
   // Start the cleanup scheduler
   startCleanupScheduler();
@@ -90,3 +100,6 @@ process.on('SIGINT', async () => {
   }
   process.exit(0);
 });
+
+// Export the app for serverless environments
+export default app;

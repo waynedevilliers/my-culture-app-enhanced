@@ -73,16 +73,31 @@ CertificateRecipient.belongsTo(Certificate, {
   as: "certificate",
 });
 
-try {
-  await sequelize.sync({ force: false });
-  console.log("Sequelize database connection successfully.");
-} catch (error) {
-  console.error("\x1b[31m%s\x1b[0m", "Database connection failed:", error.message);
-  process.exit(1);
+// Initialize database connection (for serverless, sync happens lazily)
+const initializeDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Database connection established successfully.");
+    
+    // Only sync in development or when explicitly needed
+    if (process.env.NODE_ENV === 'development') {
+      await sequelize.sync({ force: false });
+      console.log("Database synchronized successfully.");
+    }
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+    throw error;
+  }
+};
+
+// For serverless environments, we don't sync at startup
+if (process.env.NODE_ENV !== 'production') {
+  initializeDatabase().catch(console.error);
 }
 
 export {
   sequelize,
+  initializeDatabase,
   User,
   Testimonial,
   Category,
