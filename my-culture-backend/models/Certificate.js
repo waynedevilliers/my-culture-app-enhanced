@@ -44,6 +44,36 @@ export default (sequelize) => {
     certificateUrl: {
       type: DataTypes.STRING,
     },
+    securePdfPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [0, 500],
+          msg: "Secure PDF path must be less than 500 characters.",
+        },
+      },
+    },
+    securePngPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [0, 500],
+          msg: "Secure PNG path must be less than 500 characters.",
+        },
+      },
+    },
+    secureHtmlPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [0, 500],
+          msg: "Secure HTML path must be less than 500 characters.",
+        },
+      },
+    },
     templateId: {
       type: DataTypes.STRING,
       allowNull: false,

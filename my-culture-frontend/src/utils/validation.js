@@ -33,24 +33,30 @@ export const organizationSchema = z.object({
     .min(1, 'Organization name is required')
     .max(200, 'Name must be less than 200 characters'),
   description: z.string()
-    .max(1000, 'Description must be less than 1000 characters')
-    .optional()
-    .or(z.literal('')),
+    .min(1, 'Description is required')
+    .max(1000, 'Description must be less than 1000 characters'),
   website: z.string()
     .url('Invalid website URL')
     .optional()
     .or(z.literal('')),
   email: z.string()
-    .min(1, 'Email is required')
-    .email('Invalid email address'),
+    .email('Invalid email address')
+    .optional()
+    .or(z.literal('')),
   phone: z.string()
     .regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number format')
     .optional()
     .or(z.literal('')),
-  address: z.string()
-    .max(500, 'Address must be less than 500 characters')
+  contactPerson: z.string()
+    .max(100, 'Contact person name must be less than 100 characters')
     .optional()
-    .or(z.literal(''))
+    .or(z.literal('')),
+  adminName: z.string()
+    .min(1, 'Admin name is required')
+    .max(100, 'Admin name must be less than 100 characters'),
+  adminEmail: z.string()
+    .min(1, 'Admin email is required')
+    .email('Invalid admin email address')
 });
 
 // Event validation schemas

@@ -7,7 +7,7 @@ const HeroSection = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16 pt-24 md:pt-16">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-32 w-80 h-80 rounded-full blur-3xl"></div>

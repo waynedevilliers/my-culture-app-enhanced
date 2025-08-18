@@ -81,5 +81,65 @@ export default (sequelize) => {
         },
       },
     },
+    adminUserId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      validate: {
+        isInt: {
+          msg: "Admin User ID must be an integer.",
+        },
+      },
+    },
+    approvalStatus: {
+      type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+      defaultValue: 'pending',
+      validate: {
+        isIn: {
+          args: [['pending', 'approved', 'rejected']],
+          msg: "Approval status must be pending, approved, or rejected.",
+        },
+      },
+    },
+    approvedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      validate: {
+        isDate: {
+          msg: "Approved at must be a valid date.",
+        },
+      },
+    },
+    rejectedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      validate: {
+        isDate: {
+          msg: "Rejected at must be a valid date.",
+        },
+      },
+    },
+    adminEmail: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isEmail: {
+          msg: "Admin email must be a valid email address.",
+        },
+      },
+    },
+    adminName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [2, 255],
+          msg: "Admin name must be between 2 and 255 characters.",
+        },
+      },
+    },
   });
 }

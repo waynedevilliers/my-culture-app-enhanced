@@ -3,10 +3,12 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../contexts/UserContext";
 
 const NewCertificate = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState([]);
   const [organizations, setOrganizations] = useState([]);
@@ -33,11 +35,26 @@ const NewCertificate = () => {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND + "/api/certificate-templates");
+        const response = await axios.get(import.meta.env.VITE_BACKEND + "/api/certificate-templates", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setTemplates(response.data.data || []);
+        
+        // Log template access info for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Loaded ${response.data.data?.length || 0} templates for ${user?.access || 'unknown'} user`);
+        }
       } catch (error) {
         console.error("Error fetching templates:", error);
-        toast.error(t("admin.certificates.create.templatesError"));
+        if (error.response?.status === 401) {
+          toast.error(t("admin.certificates.create.authenticationError"));
+        } else if (error.response?.status === 403) {
+          toast.error(t("admin.certificates.create.permissionError"));
+        } else {
+          toast.error(t("admin.certificates.create.templatesError"));
+        }
       }
     };
 
@@ -190,20 +207,95 @@ const NewCertificate = () => {
 
       {/* Template Selection */}
       <div className="flex flex-col gap-2">
-        <label className="text-lg font-semibold">{t("admin.certificates.create.certificateTemplate")}</label>
+        <div className="flex justify-between items-center">
+          <label className="text-lg font-semibold">{t("admin.certificates.create.certificateTemplate")}</label>
+          <div className="text-sm text-gray-600">
+            {user?.access === 'superAdmin' && (
+              <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                System + Organization Templates
+              </span>
+            )}
+            {user?.access === 'admin' && (
+              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                Organization Templates
+              </span>
+            )}
+          </div>
+        </div>
         <select 
           name="templateId" 
           value={form.templateId} 
           onChange={handleChange}
           className="select select-bordered w-full rounded-none"
           required
+          disabled={templates.length === 0}
         >
-          {templates.map((template) => (
-            <option key={template.id} value={template.id}>
-              {template.name} - {template.description}
+          {templates.length === 0 ? (
+            <option value="">
+              {user?.access === 'admin' ? 'No templates available for your organization' : 'No templates available'}
             </option>
-          ))}
+          ) : (
+            templates.map((template) => (
+              <option key={template.id} value={template.id}>
+                {template.name} - {template.description}
+                {user?.access === 'superAdmin' && template.organizationId && ` (${template.organizationName || 'Organization'})`}
+              </option>
+            ))
+          )}
         </select>
+        
+        {/* Template Information */}
+        {form.templateId && templates.length > 0 && (
+          <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+            {(() => {
+              const selectedTemplate = templates.find(t => t.id === form.templateId);
+              if (!selectedTemplate) return null;
+              
+              return (
+                <div className="text-sm text-gray-700">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium">{selectedTemplate.name}</span>
+                    {user?.access === 'superAdmin' && (
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
+                        {selectedTemplate.organizationId ? 'Organization Template' : 'System Template'}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600">{selectedTemplate.description}</p>
+                  {user?.access === 'superAdmin' && selectedTemplate.organizationName && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Organization: {selectedTemplate.organizationName}
+                    </p>
+                  )}
+                  {user?.access === 'admin' && (
+                    <p className="text-xs text-blue-600 mt-1">
+                      ✓ Available for your organization
+                    </p>
+                  )}
+                </div>
+              );
+            })()
+          </div>
+        )}
+        
+        {/* Template Access Help */}
+        {templates.length === 0 && (
+          <div className="mt-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <h4 className="text-sm font-medium text-yellow-800 mb-1">No templates available</h4>
+                <p className="text-sm text-yellow-700">
+                  {user?.access === 'admin' 
+                    ? 'Please contact a SuperAdmin to create certificate templates for your organization.'
+                    : 'No certificate templates have been created yet. Please create templates first.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Certificate Preview */}
         {form.templateId && (
@@ -252,8 +344,17 @@ const NewCertificate = () => {
         </button>
       </div>
 
-      <button type="submit" className="btn btn-base-100 rounded-none" disabled={loading}>
-        {loading ? t("admin.certificates.create.saving") : t("admin.certificates.create.save")}
+      <button 
+        type="submit" 
+        className="btn btn-base-100 rounded-none" 
+        disabled={loading || templates.length === 0}
+      >
+        {loading 
+          ? t("admin.certificates.create.saving") 
+          : templates.length === 0 
+            ? 'No templates available'
+            : t("admin.certificates.create.save")
+        }
       </button>
     </form>
   );

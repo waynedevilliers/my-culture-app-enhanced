@@ -70,8 +70,20 @@
       "programsPlaceholder": "Describe your current programs, workshops, events, or activities...",
       "goals": "Goals for Joining Our Platform",
       "goalsPlaceholder": "What do you hope to achieve by joining our platform?",
-      "additionalInfo": "Additional Information",
+      "additionalInfo": "Additional Information", 
       "additionalInfoPlaceholder": "Any additional information you'd like to share...",
+      "adminName": "Administrator Name",
+      "adminNamePlaceholder": "Administrator full name",
+      "adminEmail": "Administrator Email",
+      "adminEmailPlaceholder": "admin@yourorganization.de",
+      "adminSection": "Administrator Account",
+      "adminSectionDescription": "This person will have admin access to manage certificates for your organization",
+      "adminNote": "The administrator will receive login credentials via email once the organization application is approved. They will be able to create and manage certificates for your organization.",
+      "logoOptional": "Organization Logo (Optional)",
+      "logoSelected": "Logo selected",
+      "removeLogo": "Remove Logo",
+      "chooseLogo": "Choose Logo",
+      "logoInfo": "PNG, JPG, JPEG, or WebP (max 10MB)",
       "submit": "Submit Application",
       "submitting": "Submitting Application...",
       "required": "Required field"
@@ -179,6 +191,7 @@
       "newGallery": "New Gallery",
       "images": "Images",
       "organizations": "Organizations",
+      "applications": "Applications",
       "newOrganization": "New Organization",
       "certificates": "Certificates",
       "newCertificate": "New Certificate",
@@ -190,6 +203,7 @@
     "pages": {
       "users": "Users",
       "organizations": "Organizations",
+      "organizationApplications": "Organization Applications",
       "certificates": "Certificates",
       "help": "Help",
       "newOrganization": "New Organization",
@@ -316,7 +330,55 @@
         "organizationsError": "Failed to load organizations",
         "recipientsError": "All recipients must have a name and valid email.",
         "success": "Certificate created successfully!",
-        "error": "An error occurred."
+        "error": "An error occurred.",
+        "authenticationError": "Authentication failed. Please log in again.",
+        "permissionError": "You don't have permission to access templates."
+      }
+    },
+    "applications": {
+      "errorFetching": "Error loading applications",
+      "noApplications": "No applications available",
+      "approveSuccess": "Application approved successfully",
+      "approveError": "Error approving application",
+      "rejectSuccess": "Application rejected successfully", 
+      "rejectError": "Error rejecting application",
+      "rejectPrompt": "Please provide a reason for rejection:",
+      "stats": {
+        "total": "Total",
+        "pending": "Pending",
+        "approved": "Approved"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "table": {
+        "id": "ID",
+        "organizationName": "Organization",
+        "adminEmail": "Admin Email",
+        "submittedDate": "Submitted",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "actions": {
+        "view": "View",
+        "approve": "Approve",
+        "reject": "Reject",
+        "close": "Close"
+      },
+      "modal": {
+        "reviewTitle": "Review Application",
+        "detailsTitle": "Application Details"
+      },
+      "fields": {
+        "organizationName": "Organization Name",
+        "website": "Website",
+        "contactEmail": "Contact Email",
+        "contactPhone": "Contact Phone",
+        "adminName": "Administrator Name",
+        "adminEmail": "Administrator Email",
+        "description": "Description"
       }
     }
   },

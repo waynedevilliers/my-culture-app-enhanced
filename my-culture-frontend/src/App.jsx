@@ -12,10 +12,12 @@ import Authorize from "./routes/Authorize.jsx";
 import Organizations from "./pages/Organizations.jsx";
 import OrganizationDetails from "./pages/OrganizationDetails.jsx";
 import JoinUs from "./pages/JoinUs.jsx";
+import TestJoinUs from "./pages/TestJoinUs.jsx";
 import EmailVerified from "./pages/EmailVerified.jsx";
 import Root from "./Root.jsx";
 import Impressum from "./pages/Impressum.jsx";
 import Landing from "./pages/Landing.jsx";
+import SecureCertificateViewer from "./components/certificate/SecureCertificateViewer.jsx";
 
 // Lazy load admin components
 const AdminLayout = lazy(() => import("./AdminLayout.jsx"));
@@ -29,6 +31,7 @@ const AdminUsers = lazy(() => import("./pages/admin/Users.jsx"));
 const AdminNewsletter = lazy(() => import("./pages/admin/Newsletter.jsx"));
 const AdminNewNewsletter = lazy(() => import("./pages/admin/NewNewsletter.jsx"));
 const AdminOrganization = lazy(() => import("./pages/admin/Organizations.jsx"));
+const AdminOrganizationApplications = lazy(() => import("./pages/admin/OrganizationApplications.jsx"));
 const AdminNewOrganization = lazy(() => import("./pages/admin/NewOrganization.jsx"));
 const AdminCertificate = lazy(() => import("./pages/admin/Certificates.jsx"));
 const AdminNewCertificate = lazy(() => import("./pages/admin/NewCertificate.jsx"));
@@ -45,6 +48,7 @@ const App = () => {
             <Route path="/join-us" element={<JoinUs />} />
             <Route path="/verify-email/:token" element={<EmailVerified />} />
             <Route path="/impressum" element={<Impressum />} />
+            <Route path="/certificates/view/:certificateId" element={<SecureCertificateViewer />} />
             <Route element={<Protected />}>
               <Route path="/profile" element={<Profile />} />
             </Route>
@@ -69,6 +73,11 @@ const App = () => {
                 <Route path="/dashboard/organizations" element={
                   <Suspense fallback={<div className="loading loading-spinner loading-md"></div>}>
                     <AdminOrganization />
+                  </Suspense>
+                } />
+                <Route path="/dashboard/organization-applications" element={
+                  <Suspense fallback={<div className="loading loading-spinner loading-md"></div>}>
+                    <AdminOrganizationApplications />
                   </Suspense>
                 } />
                 <Route path="/dashboard/new-organization" element={
@@ -124,6 +133,7 @@ const App = () => {
               </Route>
             </Route>
           </Route>
+          <Route path="/test-join-us" element={<TestJoinUs />} />
         </Route>
       </>
     )

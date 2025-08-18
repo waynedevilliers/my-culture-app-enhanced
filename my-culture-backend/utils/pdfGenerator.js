@@ -1,14 +1,22 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs/promises';
 import path from 'path';
+import { generateSecureCertificatePaths } from './secureFileUtils.js';
 
 /**
- * Generate PDF from HTML certificate using Puppeteer
- * @param {string} certificateId - The certificate ID
- * @param {string} htmlContent - The complete HTML content for the certificate
- * @returns {Promise<string>} - Path to the generated PDF file
+ * Generate PDF from HTML certificate using Puppeteer with secure file path
+ * @param {Object} params - Parameters for secure PDF generation
+ * @param {number} params.certificateId - Certificate ID
+ * @param {number} params.recipientId - Recipient ID
+ * @param {string} params.recipientName - Recipient name
+ * @param {string} params.certificateTitle - Certificate title
+ * @param {number} params.organizationId - Organization ID
+ * @param {string} params.organizationName - Organization name
+ * @param {string} params.htmlContent - Complete HTML content for certificate
+ * @returns {Promise<Object>} - Object with PDF path and secure path
  */
-export async function generateCertificatePDF(certificateId, htmlContent) {
+export async function generateCertificatePDF(params) {
+  const { htmlContent, certificateId, recipientId, recipientName, certificateTitle, organizationId, organizationName } = params;
   let browser;
   
   try {
@@ -115,16 +123,30 @@ export async function generateCertificatePDF(certificateId, htmlContent) {
 
     await pdfPage.close();
 
-    // Save PDF to file system
-    const pdfDir = path.join(process.cwd(), 'public', 'certificates', 'pdfs');
+    // Generate secure file paths
+    const securePaths = generateSecureCertificatePaths({
+      organizationId,
+      organizationName,
+      certificateId,
+      certificateTitle,
+      recipientName,
+      recipientId
+    });
+    
+    // Save PDF to secure file path
+    const pdfDir = path.join(process.cwd(), 'public', 'certificates', path.dirname(securePaths.pdfPath));
     await fs.mkdir(pdfDir, { recursive: true });
     
-    const pdfPath = path.join(pdfDir, `${certificateId}.pdf`);
-    await fs.writeFile(pdfPath, pdfBuffer);
+    const fullPdfPath = path.join(process.cwd(), 'public', 'certificates', securePaths.pdfPath);
+    await fs.writeFile(fullPdfPath, pdfBuffer);
 
-    console.log(`✅ PDF generated successfully: ${pdfPath}`);
+    console.log(`✅ PDF generated successfully: ${fullPdfPath}`);
     
-    return pdfPath;
+    return {
+      fullPath: fullPdfPath,
+      securePath: securePaths.pdfPath,
+      fileName: path.basename(securePaths.pdfPath)
+    };
 
   } catch (error) {
     console.error('❌ Error generating PDF:', error);
@@ -137,12 +159,19 @@ export async function generateCertificatePDF(certificateId, htmlContent) {
 }
 
 /**
- * Generate high-quality PNG image from HTML certificate
- * @param {string} certificateId - The certificate ID
- * @param {string} htmlContent - The complete HTML content for the certificate
- * @returns {Promise<string>} - Path to the generated PNG file
+ * Generate high-quality PNG image from HTML certificate with secure file path
+ * @param {Object} params - Parameters for secure PNG generation
+ * @param {number} params.certificateId - Certificate ID
+ * @param {number} params.recipientId - Recipient ID
+ * @param {string} params.recipientName - Recipient name
+ * @param {string} params.certificateTitle - Certificate title
+ * @param {number} params.organizationId - Organization ID
+ * @param {string} params.organizationName - Organization name
+ * @param {string} params.htmlContent - Complete HTML content for certificate
+ * @returns {Promise<Object>} - Object with PNG path and secure path
  */
-export async function generateCertificatePNG(certificateId, htmlContent) {
+export async function generateCertificatePNG(params) {
+  const { htmlContent, certificateId, recipientId, recipientName, certificateTitle, organizationId, organizationName } = params;
   let browser;
   
   try {
@@ -193,16 +222,30 @@ export async function generateCertificatePNG(certificateId, htmlContent) {
       quality: 100
     });
 
-    // Save PNG to file system
-    const imgDir = path.join(process.cwd(), 'public', 'certificates', 'images');
+    // Generate secure file paths
+    const securePaths = generateSecureCertificatePaths({
+      organizationId,
+      organizationName,
+      certificateId,
+      certificateTitle,
+      recipientName,
+      recipientId
+    });
+    
+    // Save PNG to secure file path
+    const imgDir = path.join(process.cwd(), 'public', 'certificates', path.dirname(securePaths.pngPath));
     await fs.mkdir(imgDir, { recursive: true });
     
-    const imagePath = path.join(imgDir, `${certificateId}.png`);
-    await fs.writeFile(imagePath, imageBuffer);
+    const fullImagePath = path.join(process.cwd(), 'public', 'certificates', securePaths.pngPath);
+    await fs.writeFile(fullImagePath, imageBuffer);
 
-    console.log(`✅ PNG generated successfully: ${imagePath}`);
+    console.log(`✅ PNG generated successfully: ${fullImagePath}`);
     
-    return imagePath;
+    return {
+      fullPath: fullImagePath,
+      securePath: securePaths.pngPath,
+      fileName: path.basename(securePaths.pngPath)
+    };
 
   } catch (error) {
     console.error('❌ Error generating PNG:', error);
@@ -215,11 +258,11 @@ export async function generateCertificatePNG(certificateId, htmlContent) {
 }
 
 /**
- * Generate both PDF and PNG for a certificate (for backward compatibility)
+ * Generate both PDF and PNG for a certificate with secure paths
  * @param {Object} certificateData - Certificate data
- * @param {Object} recipientData - Recipient data
+ * @param {Object} recipientData - Recipient data  
  * @param {string} templateId - Template ID
- * @returns {Promise<Object>} - Paths to generated files
+ * @returns {Promise<Object>} - Secure paths to generated files
  */
 export async function generatePDF(certificateData, recipientData, templateId) {
   const { generateCertificateHTML } = await import('../controllers/generateCertificatePages.js');
@@ -235,15 +278,29 @@ export async function generatePDF(certificateData, recipientData, templateId) {
   
   // Generate HTML
   const htmlContent = await generateCertificateHTML(certificateObj);
-  const certificateId = `${Date.now()}-${recipientData.id}`;
   
-  // Generate both PDF and PNG
-  const pdfPath = await generateCertificatePDF(certificateId, htmlContent);
-  const pngPath = await generateCertificatePNG(certificateId, htmlContent);
+  // Prepare parameters for secure generation
+  const genParams = {
+    htmlContent,
+    certificateId: certificateData.id,
+    recipientId: recipientData.id,
+    recipientName: recipientData.name,
+    certificateTitle: certificateData.event,
+    organizationId: certificateData.organizationId,
+    organizationName: certificateData.organizationName
+  };
+  
+  // Generate both PDF and PNG with secure paths
+  const pdfResult = await generateCertificatePDF(genParams);
+  const pngResult = await generateCertificatePNG(genParams);
   
   return {
-    pdfPath,
-    pngPath
+    pdfPath: pdfResult.fullPath,
+    pngPath: pngResult.fullPath,
+    securePdfPath: pdfResult.securePath,
+    securePngPath: pngResult.securePath,
+    pdfFileName: pdfResult.fileName,
+    pngFileName: pngResult.fileName
   };
 }
 

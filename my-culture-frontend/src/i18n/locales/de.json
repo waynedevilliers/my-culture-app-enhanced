@@ -72,6 +72,18 @@
       "goalsPlaceholder": "Was hoffen Sie durch den Beitritt zu unserer Plattform zu erreichen?",
       "additionalInfo": "Zusätzliche Informationen",
       "additionalInfoPlaceholder": "Weitere Informationen, die Sie gerne teilen möchten...",
+      "adminName": "Administrator Name",
+      "adminNamePlaceholder": "Vollständiger Name des Administrators",
+      "adminEmail": "Administrator E-Mail",
+      "adminEmailPlaceholder": "admin@ihreorganisation.de",
+      "adminSection": "Administrator-Konto",
+      "adminSectionDescription": "Diese Person hat Admin-Zugang zur Verwaltung von Zertifikaten für Ihre Organisation",
+      "adminNote": "Der Administrator erhält Login-Daten per E-Mail, sobald der Organisationsantrag genehmigt wird. Sie können dann Zertifikate für Ihre Organisation erstellen und verwalten.",
+      "logoOptional": "Logo der Organisation (Optional)",
+      "logoSelected": "Logo ausgewählt",
+      "removeLogo": "Logo entfernen",
+      "chooseLogo": "Logo auswählen",
+      "logoInfo": "PNG, JPG, JPEG oder WebP (max 10MB)",
       "submit": "Antrag einreichen",
       "submitting": "Antrag wird eingereicht...",
       "required": "Pflichtfeld"
@@ -186,6 +198,7 @@
       "newGallery": "Neue Galerie",
       "images": "Bilder",
       "organizations": "Organisationen",
+      "applications": "Anträge",
       "newOrganization": "Neue Organisation",
       "certificates": "Zertifikate",
       "newCertificate": "Neues Zertifikat",
@@ -197,6 +210,7 @@
     "pages": {
       "users": "Benutzer",
       "organizations": "Organisationen",
+      "organizationApplications": "Organisationsanträge",
       "certificates": "Zertifikate",
       "help": "Hilfe",
       "newOrganization": "Neue Organisation",
@@ -323,7 +337,55 @@
         "organizationsError": "Fehler beim Laden der Organisationen",
         "recipientsError": "Alle Empfänger müssen einen Namen und eine gültige E-Mail-Adresse haben.",
         "success": "Zertifikat erfolgreich erstellt!",
-        "error": "Ein Fehler ist aufgetreten."
+        "error": "Ein Fehler ist aufgetreten.",
+        "authenticationError": "Authentifizierung fehlgeschlagen. Bitte melden Sie sich erneut an.",
+        "permissionError": "Sie haben keine Berechtigung, auf Vorlagen zuzugreifen."
+      }
+    },
+    "applications": {
+      "errorFetching": "Fehler beim Laden der Anträge",
+      "noApplications": "Keine Anträge vorhanden",
+      "approveSuccess": "Antrag erfolgreich genehmigt",
+      "approveError": "Fehler beim Genehmigen des Antrags",
+      "rejectSuccess": "Antrag erfolgreich abgelehnt",
+      "rejectError": "Fehler beim Ablehnen des Antrags",
+      "rejectPrompt": "Bitte geben Sie einen Grund für die Ablehnung an:",
+      "stats": {
+        "total": "Gesamt",
+        "pending": "Ausstehend",
+        "approved": "Genehmigt"
+      },
+      "status": {
+        "pending": "Ausstehend",
+        "approved": "Genehmigt",
+        "rejected": "Abgelehnt"
+      },
+      "table": {
+        "id": "ID",
+        "organizationName": "Organisation",
+        "adminEmail": "Admin E-Mail",
+        "submittedDate": "Eingereicht am",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "actions": {
+        "view": "Anzeigen",
+        "approve": "Genehmigen",
+        "reject": "Ablehnen",
+        "close": "Schließen"
+      },
+      "modal": {
+        "reviewTitle": "Antrag prüfen",
+        "detailsTitle": "Antragsdetails"
+      },
+      "fields": {
+        "organizationName": "Organisationsname",
+        "website": "Webseite",
+        "contactEmail": "Kontakt E-Mail",
+        "contactPhone": "Kontakt Telefon",
+        "adminName": "Administrator Name",
+        "adminEmail": "Administrator E-Mail",
+        "description": "Beschreibung"
       }
     }
   },

@@ -11,13 +11,15 @@ import {
   FaCheck,
   FaArrowRight,
   FaStar,
-  FaHandshake
+  FaHandshake,
+  FaUserShield
 } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const JoinUs = () => {
   const { t } = useTranslation();
+  
   const [formData, setFormData] = useState({
     organizationName: "",
     organizationType: "",
@@ -31,11 +33,14 @@ const JoinUs = () => {
     memberCount: "",
     programs: "",
     goals: "",
-    additionalInfo: ""
+    additionalInfo: "",
+    adminName: "",
+    adminEmail: ""
   });
+  
+  const [loading, setLoading] = useState(false);
   const [logo, setLogo] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   const organizationTypes = [
     "Cultural Heritage Center",
@@ -76,10 +81,10 @@ const JoinUs = () => {
   ];
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
   const handleLogoChange = (e) => {
@@ -88,13 +93,13 @@ const JoinUs = () => {
       // Validate file type
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
-        toast.error('Please select a valid image file (JPEG, JPG, PNG, or WebP)');
+        toast.warning('Please select a valid image file (JPEG, JPG, PNG, or WebP)');
         return;
       }
       
       // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
-        toast.error('File size must be less than 10MB');
+        toast.warning('File size must be less than 10MB. Please choose a smaller file.');
         return;
       }
       
@@ -104,6 +109,9 @@ const JoinUs = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setLogoPreview(e.target.result);
+      };
+      reader.onerror = () => {
+        toast.error('Failed to read the image file');
       };
       reader.readAsDataURL(file);
     }
@@ -126,7 +134,9 @@ const JoinUs = () => {
       
       // Add all form fields
       Object.keys(formData).forEach(key => {
-        formDataToSend.append(key, formData[key]);
+        if (formData[key]) {
+          formDataToSend.append(key, formData[key]);
+        }
       });
       
       // Add logo if selected
@@ -134,7 +144,7 @@ const JoinUs = () => {
         formDataToSend.append('logo', logo);
       }
       
-      const response = await axios.post(`${backendUrl}/api/organization/apply`, formDataToSend, {
+      const response = await axios.post(`${backendUrl}/api/organizations/apply`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -157,7 +167,9 @@ const JoinUs = () => {
           memberCount: "",
           programs: "",
           goals: "",
-          additionalInfo: ""
+          additionalInfo: "",
+          adminName: "",
+          adminEmail: ""
         });
         
         // Reset logo
@@ -166,7 +178,7 @@ const JoinUs = () => {
       }
     } catch (error) {
       console.error("Application submission error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -174,27 +186,28 @@ const JoinUs = () => {
 
   return (
     <main className="relative scroll-mt-24 pt-24">
-      <div className="max-w-7xl mx-auto pt-24 pb-16 min-h-screen">
+      <div className="max-w-7xl mx-auto pt-24 pb-16 min-h-screen px-4">
         {/* Hero Section */}
         <section aria-labelledby="hero-title">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-16 px-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 id="hero-title" className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-            {t('joinUs.title')}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-3">
+          <h1 id="hero-title" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-6 max-w-4xl mx-auto leading-tight">
+            <span className="whitespace-nowrap">{t('joinUs.title')}</span>
+            <br />
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               {t('joinUs.titleHighlight')}
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8 px-2">
             {t('joinUs.subtitle')}
           </p>
 
           {/* Quick Stats */}
-          <div className="flex justify-center items-center gap-8 text-sm text-gray-600">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-sm text-gray-600 px-4">
             <div className="flex items-center gap-2">
               <FaBuilding className="text-primary" />
               <span>50+ {t('joinUs.stats.organizations')}</span>
@@ -222,7 +235,7 @@ const JoinUs = () => {
           <h2 id="benefits-title" className="text-3xl font-bold text-center text-gray-800 mb-12">
             {t('joinUs.benefits.title')}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
@@ -245,7 +258,7 @@ const JoinUs = () => {
         {/* Application Form */}
         <section aria-labelledby="application-title">
         <motion.div
-          className="bg-white rounded-3xl shadow-xl p-8 md:p-12 mb-16"
+          className="bg-white rounded-3xl shadow-xl p-4 sm:p-8 md:p-12 mb-16"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -259,12 +272,16 @@ const JoinUs = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form 
+            onSubmit={handleSubmit}
+            className="space-y-6" 
+            autoComplete="off"
+          >
             {/* Basic Information */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Organization Name *
+                  {t('joinUs.form.organizationName')} *
                 </label>
                 <input
                   type="text"
@@ -272,14 +289,15 @@ const JoinUs = () => {
                   value={formData.organizationName}
                   onChange={handleChange}
                   required
+                  autoComplete="off"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Enter your organization name"
+                  placeholder={t('joinUs.form.organizationName')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Organization Type *
+                  {t('joinUs.form.organizationType')} *
                 </label>
                 <select
                   name="organizationType"
@@ -288,7 +306,7 @@ const JoinUs = () => {
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
-                  <option value="">Select organization type</option>
+                  <option value="">{t('joinUs.form.selectType')}</option>
                   {organizationTypes.map((type) => (
                     <option key={type} value={type}>
                       {type}
@@ -301,7 +319,7 @@ const JoinUs = () => {
             {/* Logo Upload */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Organization Logo (Optional)
+                {t('joinUs.form.logoOptional')}
               </label>
               <div className="space-y-4">
                 {logoPreview ? (
@@ -314,13 +332,13 @@ const JoinUs = () => {
                       />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 mb-2">Logo selected</p>
+                      <p className="text-sm text-gray-600 mb-2">{t('joinUs.form.logoSelected')}</p>
                       <button
                         type="button"
                         onClick={removeLogo}
                         className="text-red-500 hover:text-red-700 text-sm font-medium"
                       >
-                        Remove Logo
+                        {t('joinUs.form.removeLogo')}
                       </button>
                     </div>
                   </div>
@@ -345,7 +363,7 @@ const JoinUs = () => {
                           htmlFor="logo-upload"
                           className="cursor-pointer bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
                         >
-                          Choose Logo
+                          {t('joinUs.form.chooseLogo')}
                         </label>
                         <input
                           id="logo-upload"
@@ -356,7 +374,7 @@ const JoinUs = () => {
                         />
                       </div>
                       <p className="mt-2 text-sm text-gray-500">
-                        PNG, JPG, JPEG, or WebP (max 10MB)
+                        {t('joinUs.form.logoInfo')}
                       </p>
                     </div>
                   </div>
@@ -367,7 +385,7 @@ const JoinUs = () => {
             {/* Description */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Organization Description *
+                {t('joinUs.form.description')} *
               </label>
               <textarea
                 name="description"
@@ -376,47 +394,45 @@ const JoinUs = () => {
                 required
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe your organization's mission, activities, and goals..."
+                placeholder={t('joinUs.form.descriptionPlaceholder')}
               />
             </div>
 
             {/* Contact Information */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Contact Person *
+                  {t('joinUs.form.contactPerson')}
                 </label>
                 <input
                   type="text"
                   name="contactPerson"
                   value={formData.contactPerson}
                   onChange={handleChange}
-                  required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Primary contact name"
+                  placeholder={t('joinUs.form.contactPerson')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address *
+                  {t('joinUs.form.email')}
                 </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="contact@yourorganization.de"
+                  placeholder="contact@ihreorganisation.de"
                 />
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Phone Number
+                  {t('joinUs.form.phone')}
                 </label>
                 <input
                   type="tel"
@@ -424,13 +440,13 @@ const JoinUs = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="+49 xxx xxxxxxx"
+                  placeholder="+49 123 456789"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Website
+                  {t('joinUs.form.website')}
                 </label>
                 <input
                   type="url"
@@ -438,16 +454,16 @@ const JoinUs = () => {
                   value={formData.website}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="https://yourorganization.de"
+                  placeholder="https://ihreorganisation.de"
                 />
               </div>
             </div>
 
             {/* Organization Details */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Location *
+                  {t('joinUs.form.location')} *
                 </label>
                 <input
                   type="text"
@@ -456,13 +472,13 @@ const JoinUs = () => {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="City, Germany"
+                  placeholder={t('joinUs.form.locationPlaceholder')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Established Year
+                  {t('joinUs.form.establishedYear')}
                 </label>
                 <input
                   type="number"
@@ -470,7 +486,7 @@ const JoinUs = () => {
                   value={formData.establishedYear}
                   onChange={handleChange}
                   min="1900"
-                  max="2024"
+                  max="2025"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="2020"
                 />
@@ -478,7 +494,7 @@ const JoinUs = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Member Count
+                  {t('joinUs.form.memberCount')}
                 </label>
                 <input
                   type="text"
@@ -486,7 +502,7 @@ const JoinUs = () => {
                   value={formData.memberCount}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="50-100 members"
+                  placeholder={t('joinUs.form.memberCountPlaceholder')}
                 />
               </div>
             </div>
@@ -494,7 +510,7 @@ const JoinUs = () => {
             {/* Programs and Goals */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Current Programs & Activities
+                {t('joinUs.form.programs')}
               </label>
               <textarea
                 name="programs"
@@ -502,13 +518,13 @@ const JoinUs = () => {
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe your current programs, workshops, events, or activities..."
+                placeholder={t('joinUs.form.programsPlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Goals for Joining Our Platform
+                {t('joinUs.form.goals')}
               </label>
               <textarea
                 name="goals"
@@ -516,13 +532,13 @@ const JoinUs = () => {
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="What do you hope to achieve by joining our platform?"
+                placeholder={t('joinUs.form.goalsPlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Additional Information
+                {t('joinUs.form.additionalInfo')}
               </label>
               <textarea
                 name="additionalInfo"
@@ -530,8 +546,57 @@ const JoinUs = () => {
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Any additional information you'd like to share..."
+                placeholder={t('joinUs.form.additionalInfoPlaceholder')}
               />
+            </div>
+
+            {/* Admin User Information */}
+            <div className="border-t pt-6">
+              <div className="flex items-center gap-3 mb-6">
+                <FaUserShield className="text-2xl text-primary" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">{t('joinUs.form.adminSection')}</h3>
+                  <p className="text-gray-600">{t('joinUs.form.adminSectionDescription')}</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    {t('joinUs.form.adminName')} *
+                  </label>
+                  <input
+                    type="text"
+                    name="adminName"
+                    value={formData.adminName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder={t('joinUs.form.adminNamePlaceholder')}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    {t('joinUs.form.adminEmail')} *
+                  </label>
+                  <input
+                    type="email"
+                    name="adminEmail"
+                    value={formData.adminEmail}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder={t('joinUs.form.adminEmailPlaceholder')}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>{t('joinUs.form.required')}:</strong> {t('joinUs.form.adminNote')}
+                </p>
+              </div>
             </div>
 
             {/* Submit Button */}
@@ -544,11 +609,11 @@ const JoinUs = () => {
                 {loading ? (
                   <>
                     <div className="loading loading-spinner loading-sm"></div>
-                    <span>Submitting Application...</span>
+                    <span>{t('joinUs.form.submitting')}</span>
                   </>
                 ) : (
                   <>
-                    <span>Submit Application</span>
+                    <span>{t('joinUs.form.submit')}</span>
                     <FaArrowRight />
                   </>
                 )}
@@ -569,7 +634,7 @@ const JoinUs = () => {
           <h2 id="process-title" className="text-3xl font-bold text-gray-800 mb-12">
             {t('joinUs.process.title')}
           </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1

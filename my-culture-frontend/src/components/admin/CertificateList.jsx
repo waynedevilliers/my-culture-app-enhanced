@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../contexts/UserContext";
+import { FaEye, FaEnvelope, FaDownload, FaTrash, FaFileAlt, FaShield, FaExclamationTriangle } from "react-icons/fa6";
 
 const CertificatesList = () => {
   const { t } = useTranslation();
+  const { user } = useUser();
   const [certificates, setCertificates] = useState([]);
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
@@ -37,7 +40,12 @@ const CertificatesList = () => {
 
   console.log('certificates',certificates);
 
-  const handleSendCertificate = async (certificateId) => {
+  const handleSendCertificate = async (certificateId, certificate) => {
+    // Enhanced security check
+    if (user?.access === 'admin' && certificate.issuedFrom !== user?.organizationName) {
+      toast.error('You can only send certificates from your organization');
+      return;
+    }
     try {
       // Fetch certificate details first to get recipients
       const response = await axios.get(`${import.meta.env.VITE_BACKEND}/api/certificates/${certificateId}`, {
@@ -77,7 +85,12 @@ const CertificatesList = () => {
   };
   
 
-  const handleGenerateCertificatePage = (certificateId) => {
+  const handleGenerateCertificatePage = (certificateId, certificate) => {
+    // Enhanced security check
+    if (user?.access === 'admin' && certificate.issuedFrom !== user?.organizationName) {
+      toast.error('You can only generate certificates from your organization');
+      return;
+    }
     axios
       .post(
         `${import.meta.env.VITE_BACKEND}/api/certificates/generate-certificate/${certificateId}`,
@@ -96,35 +109,60 @@ const CertificatesList = () => {
       });
   };
 
-  const handleViewCertificate = async (certificateId) => {
+  const handleViewCertificate = async (certificateId, certificate) => {
     try {
+      // Enhanced security check
+      if (user?.access === 'admin' && certificate.issuedFrom !== user?.organizationName) {
+        toast.error('You can only view certificates from your organization');
+        return;
+      }
+
       const response = await axios.get(`${import.meta.env.VITE_BACKEND}/api/certificates/${certificateId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
   
-      const certificate = response.data;
+      const certificateData = response.data;
   
-      if (!certificate.recipients || certificate.recipients.length === 0) {
+      if (!certificateData.recipients || certificateData.recipients.length === 0) {
         toast.error(t("admin.certificates.noRecipientsError"));
         return;
       }
   
-      const firstRecipient = certificate.recipients[0];
-      if (firstRecipient.recipientUrl) {
-        window.open(firstRecipient.recipientUrl, "_blank");
+      // Open secure certificate viewer
+      const firstRecipient = certificateData.recipients[0];
+      if (firstRecipient) {
+        // Create a secure viewing URL 
+        const viewerUrl = `/certificates/view/${certificateId}?recipient=${firstRecipient.id}`;
+        window.open(viewerUrl, '_blank', 'noopener,noreferrer');
       } else {
-        toast.error(t("admin.certificates.urlNotFound"));
+        toast.error(t("admin.certificates.noRecipientsError"));
       }
     } catch (error) {
-      toast.error(t("admin.certificates.viewError"));
+      if (error.response?.status === 403) {
+        toast.error('Access denied: You don\'t have permission to view this certificate');
+      } else if (error.response?.status === 404) {
+        toast.error('Certificate not found');
+      } else {
+        toast.error(t("admin.certificates.viewError"));
+      }
       console.error(error);
     }
   };
   
 
   const handleDelete = (certificate) => {
+    // Enhanced security check
+    if (user?.access === 'admin' && certificate.issuedFrom !== user?.organizationName) {
+      toast.error('You can only delete certificates from your organization');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete "${certificate.title}"?`)) {
+      return;
+    }
+
     axios
       .delete(`${import.meta.env.VITE_BACKEND}/api/certificates/${certificate.id}`, {
         headers: {
@@ -146,6 +184,25 @@ const CertificatesList = () => {
 
   return (
     <div className="overflow-x-auto flex flex-col max-w-screen-xl w-full justify-center items-center gap-4">
+      {/* Access Level Indicator */}
+      <div className="w-full max-w-screen-xl">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <FaShield className={`text-lg ${user?.access === 'superAdmin' ? 'text-purple-600' : 'text-blue-600'}`} />
+            <span className="text-sm font-medium">
+              {user?.access === 'superAdmin' 
+                ? 'System-wide certificate access' 
+                : `Organization: ${user?.organizationName || 'Unknown'}`}
+            </span>
+          </div>
+          {certificates.length === 0 && (
+            <div className="text-sm text-gray-500 flex items-center gap-1">
+              <FaExclamationTriangle className="text-yellow-500" />
+              No certificates found
+            </div>
+          )}
+        </div>
+      </div>
       <label className="input input-bordered flex items-center gap-2 w-full">
         {t("admin.tables.search")}{" "}
         <input
@@ -163,7 +220,8 @@ const CertificatesList = () => {
             <th className="hidden sm:table-cell">{t("admin.tables.issuedDate")}</th>
             <th className="hidden md:table-cell">{t("admin.tables.recipients")}</th>
             <th className="hidden md:table-cell">{t("admin.tables.issuedFrom")}</th>
-            <th></th>
+            <th className="hidden lg:table-cell">Access</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -186,34 +244,57 @@ const CertificatesList = () => {
                 )}
               </td>
               <td className="hidden md:table-cell">{certificate.issuedFrom}</td>
+              {/* Access Level Column */}
+              <td className="hidden lg:table-cell">
+                {(() => {
+                  const hasAccess = user?.access === 'superAdmin' || certificate.issuedFrom === user?.organizationName;
+                  return (
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      hasAccess 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {hasAccess ? '✓ Full Access' : '✗ Limited Access'}
+                    </span>
+                  );
+                })()
+              </td>
               <td className="text-right">
                 {/* Generate Certificate Button */}
                 <button
-                  className="btn btn-ghost btn-xs mr-2"
-                  onClick={() => handleGenerateCertificatePage(certificate.id)}
+                  className="btn btn-ghost btn-xs mr-2 tooltip"
+                  onClick={() => handleGenerateCertificatePage(certificate.id, certificate)}
+                  data-tip="Generate certificate page"
                 >
-                  {t("admin.certificates.generate")}
+                  <FaFileAlt className="w-3 h-3" />
+                  <span className="hidden sm:inline ml-1">{t("admin.certificates.generate")}</span>
                 </button>
                 {/* View Certificate Button */}
                 <button
-                  className="btn btn-ghost btn-xs mr-2"
-                  onClick={() => handleViewCertificate(certificate.id)}
+                  className="btn btn-ghost btn-xs mr-2 tooltip"
+                  onClick={() => handleViewCertificate(certificate.id, certificate)}
+                  data-tip="View certificate"
                 >
-                  {t("admin.certificates.view")}
+                  <FaEye className="w-3 h-3" />
+                  <span className="hidden sm:inline ml-1">{t("admin.certificates.view")}</span>
                 </button>
                 {/* Send Email Button */}
                 <button
-                  className="btn btn-ghost btn-xs mr-2"
-                  onClick={() => handleSendCertificate(certificate.id)}
+                  className="btn btn-ghost btn-xs mr-2 tooltip"
+                  onClick={() => handleSendCertificate(certificate.id, certificate)}
+                  data-tip="Send via email"
                 >
-                  {t("admin.certificates.send")}
+                  <FaEnvelope className="w-3 h-3" />
+                  <span className="hidden sm:inline ml-1">{t("admin.certificates.send")}</span>
                 </button>
                 {/* Delete Button */}
                 <button
-                  className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                  className="btn btn-ghost btn-xs hover:bg-transparent hover:text-red-600 transform duration-300 transition-colors tooltip"
                   onClick={() => handleDelete(certificate)}
+                  data-tip="Delete certificate"
                 >
-                  {t("admin.tables.delete")}
+                  <FaTrash className="w-3 h-3" />
+                  <span className="hidden sm:inline ml-1">{t("admin.tables.delete")}</span>
                 </button>
               </td>
             </tr>
@@ -244,6 +325,20 @@ const CertificatesList = () => {
           »
         </button>
       </div>
+      
+      {/* Email Sender Modal */}
+      <CertificateEmailSender
+        certificate={selectedCertificate}
+        isOpen={emailSenderOpen}
+        onClose={() => {
+          setEmailSenderOpen(false);
+          setSelectedCertificate(null);
+        }}
+        onSent={(recipientCount) => {
+          toast.success(`Certificate sent successfully to ${recipientCount} recipients!`);
+          // Optionally refresh the list or update UI
+        }}
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@
     "server:basic": "node --watch --env-file=.env index.js",
     "seed": "node --env-file=.env seed.js",
     "seed:organizations": "node --env-file=.env seedOrganizations.js",
+    "seed:users": "node --env-file=.env seedUsers.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

@@ -12,14 +12,16 @@ import {
   FaChartBar,
   FaInfo,
   FaMusic,
-  FaImages, FaBarsStaggered, FaNewspaper, FaUserPen,
+  FaImages, FaBarsStaggered, FaNewspaper, FaUserPen, FaBuilding, FaClipboardCheck, FaBell,
 } from "react-icons/fa6";
 import { useState } from "react";
+import NotificationCenter from '../notification/NotificationCenter';
 
 const Navigation = () => {
   const { logout } = useUser();
   const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
+  const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
 
   const drawerHandler = () => {
     setIsChecked(!isChecked);
@@ -28,7 +30,20 @@ const Navigation = () => {
   return (
     <nav className="drawer max-w-screen-xl">
       <input id="dashboard-drawer" checked={isChecked} onChange={drawerHandler} type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex justify-end items-center m-4">
+      <div className="drawer-content flex justify-end items-center m-4 gap-2">
+        {/* Notification Bell */}
+        <button 
+          onClick={() => setNotificationCenterOpen(true)}
+          className="btn btn-ghost btn-circle relative"
+          title="Notifications"
+        >
+          <FaBell className="text-xl" />
+          {/* Notification Badge - would be dynamic based on unread count */}
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            2
+          </span>
+        </button>
+        
         <label htmlFor="dashboard-drawer" className="btn btn-ghost drawer-button lg:hidden">
           <FaBarsStaggered className="text-2xl" /> </label>
       </div>
@@ -95,6 +110,35 @@ const Navigation = () => {
               <span className="text-2xl">
                 <FaUserPen />
               </span> {t('admin.navigation.subscribers')} </NavLink>
+          </li>
+          <li>
+            <details>
+              <summary>
+                <span className="text-2xl">
+                  <FaBuilding />
+                </span> {t('admin.navigation.organizations')}
+              </summary>
+              <ul className="flex flex-col gap-4 mt-4">
+                <li>
+                  <NavLink to="/dashboard/organizations" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
+                    <span className="text-2xl">
+                      <FaChartBar />
+                    </span> {t('admin.navigation.overview')} </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/organization-applications" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
+                    <span className="text-2xl">
+                      <FaClipboardCheck />
+                    </span> {t('admin.navigation.applications')} </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/dashboard/new-organization" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : ""}>
+                    <span className="text-2xl">
+                      <FaPlus />
+                    </span> {t('admin.navigation.newOrganization')} </NavLink>
+                </li>
+              </ul>
+            </details>
           </li>
           <li>
             <details>
@@ -208,6 +252,12 @@ const Navigation = () => {
           </li>
         </ul>
       </div>
+      
+      {/* Notification Center Modal */}
+      <NotificationCenter
+        isOpen={notificationCenterOpen}
+        onClose={() => setNotificationCenterOpen(false)}
+      />
     </nav>
   );
 };
