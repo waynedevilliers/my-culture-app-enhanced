@@ -74,18 +74,6 @@ app.listen(PORT, async () => {
     timestamp: new Date().toISOString(),
   });
 
-  // Load API routes conditionally
-  try {
-    const routesModule = await import('./routes/index.js');
-    app.use('/api', routesModule.default);
-    logger.info('API routes loaded successfully');
-  } catch (error) {
-    logger.warn('API routes not loaded:', error.message);
-    app.use('/api', (req, res) => {
-      res.status(503).json({ message: 'API temporarily unavailable' });
-    });
-  }
-
   // Initialize database connection for production
   if (process.env.NODE_ENV === 'production') {
     try {
@@ -95,6 +83,19 @@ app.listen(PORT, async () => {
     } catch (error) {
       logger.error('Database initialization failed:', error);
     }
+  }
+
+  // Load API routes (works in both dev and production)
+  try {
+    const routesModule = await import('./routes/index.js');
+    app.use('/api', routesModule.default);
+    logger.info('API routes loaded and mounted successfully');
+  } catch (error) {
+    logger.error('API routes failed to load:', error.message);
+    logger.error('Stack trace:', error.stack);
+    app.use('/api', (req, res) => {
+      res.status(503).json({ message: 'API temporarily unavailable', error: error.message });
+    });
   }
 
   // Start the cleanup scheduler

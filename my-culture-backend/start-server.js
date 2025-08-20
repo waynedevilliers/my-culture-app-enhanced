@@ -30,7 +30,7 @@ async function startServer() {
   // Start the server with the default port first
   console.log(`🚀 Starting server on port ${defaultPort}...`);
   
-  const serverProcess = spawn('node', ['--watch', '--env-file=.env', 'index.js'], {
+  const serverProcess = spawn('node', ['--watch', '--env-file=.env', 'api/index.js'], {
     stdio: 'inherit',
     env: { ...process.env, PORT: defaultPort }
   });
@@ -41,7 +41,7 @@ async function startServer() {
       console.log(`❌ Port ${defaultPort} is still in use, trying port ${fallbackPort}...`);
       
       // Try the fallback port
-      const fallbackProcess = spawn('node', ['--watch', '--env-file=.env', 'index.js'], {
+      const fallbackProcess = spawn('node', ['--watch', '--env-file=.env', 'api/index.js'], {
         stdio: 'inherit',
         env: { ...process.env, PORT: fallbackPort }
       });

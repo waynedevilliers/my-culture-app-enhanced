@@ -22,7 +22,7 @@ const router = Router();
  *             properties:
  *               retentionDays:
  *                 type: integer
- *                 description: Number of days to retain files (default: 30)
+ *                 description: "Number of days to retain files (default: 30)"
  *                 minimum: 1
  *                 maximum: 365
  *                 example: 30
