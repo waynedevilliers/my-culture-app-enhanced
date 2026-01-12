@@ -1,0 +1,49 @@
+# Vercel Environment Variables Configuration
+# Copy these to: https://vercel.com/wblack2050-2932s-projects/my-culture-backend/settings/environment-variables
+
+## Required Environment Variables for Production:
+
+1. BLOB_READ_WRITE_TOKEN
+   Value: [GET FROM VERCEL BLOB STORE - see step 1]
+   Environment: Production, Preview
+
+2. DB
+   Value: postgresql://myDb_owner:UYBMFLlDz3n1@ep-long-hill-a206b5rz-pooler.eu-central-1.aws.neon.tech/myDb?sslmode=require&channel_binding=require
+   Environment: Production, Preview
+
+3. NODE_ENV
+   Value: production
+   Environment: Production
+
+4. SECRET
+   Value: BANANAS
+   Environment: Production, Preview
+
+5. EMAIL_PORT
+   Value: 587
+   Environment: Production, Preview
+
+6. EMAIL_HOST
+   Value: mail.gmx.net
+   Environment: Production, Preview
+
+7. EMAIL_USER
+   Value: grow2050@gmx.de
+   Environment: Production, Preview
+
+8. EMAIL_PASS
+   Value: UJXC26XTDOUJYG74OMIZ
+   Environment: Production, Preview
+
+9. EMAIL_FROM
+   Value: grow2050@gmx.de
+   Environment: Production, Preview
+
+10. URL
+    Value: https://my-culture-backend-dqhhfw88y-wblack2050-2932s-projects.vercel.app
+    Environment: Production, Preview
+
+## Note:
+- All these variables need to be set for the production deployment to work
+- Vercel automatically sets NODE_ENV=production in production environment
+- The BLOB_READ_WRITE_TOKEN is the most important new addition

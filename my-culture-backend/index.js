@@ -62,8 +62,9 @@ app.get('/health', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorHandler);
 
-const __dirname = path.resolve(); 
+const __dirname = path.resolve();
 app.use("/certificates", express.static(path.join(__dirname, "public", "certificates")));
+app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 app.use("/images", express.static(path.join(__dirname, "../my-culture-frontend/public/images")));
 
 app.listen(PORT, async () => {
@@ -74,15 +75,16 @@ app.listen(PORT, async () => {
     timestamp: new Date().toISOString(),
   });
 
-  // Initialize database connection for production
-  if (process.env.NODE_ENV === 'production') {
-    try {
-      const { initializeDatabase } = await import('./db.js');
-      await initializeDatabase();
-      logger.info('Database initialized successfully');
-    } catch (error) {
-      logger.error('Database initialization failed:', error);
-    }
+  // Initialize database connection (all environments)
+  try {
+    console.log('🔌 Connecting to database...');
+    const { initializeDatabase } = await import('./db.js');
+    await initializeDatabase();
+    console.log('✅ Database connected successfully!');
+    logger.info('Database initialized successfully');
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+    logger.error('Database initialization failed:', error);
   }
 
   // Load API routes (works in both dev and production)
