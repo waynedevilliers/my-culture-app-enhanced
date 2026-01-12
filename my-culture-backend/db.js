@@ -106,23 +106,18 @@ if (sequelize && User && Event && Image && Location && Organization && Blog && C
 const initializeDatabase = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Database connection established successfully.");
-    
+    console.log("   ✓ Database authentication successful");
+
     // Only sync in development or when explicitly needed
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
       await sequelize.sync({ force: false });
-      console.log("Database synchronized successfully.");
+      console.log("   ✓ Database tables synchronized");
     }
   } catch (error) {
-    console.error("Database connection failed:", error.message);
+    console.error("   ✗ Database connection failed:", error.message);
     throw error;
   }
 };
-
-// For serverless environments, we don't sync at startup
-if (process.env.NODE_ENV !== 'production') {
-  initializeDatabase().catch(console.error);
-}
 
 export {
   sequelize,
