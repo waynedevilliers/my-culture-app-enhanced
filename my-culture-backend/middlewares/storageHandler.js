@@ -1,4 +1,3 @@
-import multer from 'multer';
 import localFileUploader from './localFileUploader.js';
 import fileUploader from './fileUploader.js';
 import localFileUrl from './localFileUrl.js';
@@ -36,7 +35,16 @@ export const fileUrlGenerator = isProduction
  * Abstracts away the difference between local and Vercel storage
  */
 export const getFileUrl = (req) => {
-  return isProduction ? req.vercelBlobURL : req.localFileURL;
+  if (!req) {
+    return null;
+  }
+  const vercelUrl = req.vercelBlobURL;
+  const localUrl = req.localFileURL;
+
+  if (isProduction) {
+    return vercelUrl || null;
+  }
+  return localUrl || null;
 };
 
 export default {

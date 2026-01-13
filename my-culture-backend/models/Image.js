@@ -10,17 +10,20 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isValidUrl(value) {
+        isUrl: true, // Use Sequelize's built-in URL validator
+        isCustomValidUrl(value) { // Renamed for clarity, combines custom checks
           // Allow localhost URLs for local development
-          const localhostRegex = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/;
+          const localhostRegex = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/[-a-zA-Z0-9()@:%_\+.~#?&//=]*)?$/;
           const isLocalhost = localhostRegex.test(value);
 
-          // Allow regular URLs (Sequelize's isUrl validator)
-          const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-          const isValidUrl = urlRegex.test(value);
+          // Allow Vercel Blob URLs
+          const vercelBlobRegex = /^blob:https?:\/\//; 
+          const isVercelBlob = vercelBlobRegex.test(value);
+          
+          const isStandardUrlValid = /^(https?:\/\/[^\s$.?#][^\s]*)$/i.test(value); 
 
-          if (!isLocalhost && !isValidUrl) {
-            throw new Error('URL must be a valid HTTP/HTTPS URL');
+          if (!isLocalhost && !isVercelBlob && !isStandardUrlValid) {
+            throw new Error('URL must be a valid HTTP/HTTPS URL, localhost URL, or Vercel Blob URL.');
           }
         },
       },

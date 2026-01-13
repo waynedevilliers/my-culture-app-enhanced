@@ -109,7 +109,7 @@ const initializeDatabase = async () => {
     console.log("   ✓ Database authentication successful");
 
     // Only sync in development or when explicitly needed
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'development') { // Sync only in development
       await sequelize.sync({ force: false });
       console.log("   ✓ Database tables synchronized");
     }

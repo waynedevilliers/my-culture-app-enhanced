@@ -16,7 +16,7 @@
    Environment: Production
 
 4. SECRET
-   Value: BANANAS
+   Value: <GENERATE_A_STRONG_RANDOM_SECRET_32+_CHARS>  # e.g. a 32+ character, high-entropy random string
    Environment: Production, Preview
 
 5. EMAIL_PORT
