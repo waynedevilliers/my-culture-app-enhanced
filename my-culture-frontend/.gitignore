@@ -25,5 +25,6 @@ package-lock.json
 *.sw?
 
 # Environment Files
+.env
 .env.local
 .vercel

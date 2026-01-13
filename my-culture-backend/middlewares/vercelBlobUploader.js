@@ -15,7 +15,7 @@ const vercelBlobUploader = asyncWrapper(async (req, res, next) => {
 
   // Check if Vercel Blob token is configured
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    throw new Error('BLOB_READ_WRITE_TOKEN is not configured. Please set it in Vercel environment variables.');
+    throw new Error('BLOB_READ_WRITE_TOKEN is not configured. Please set it in your environment variables.');
   }
 
   // Generate unique filename
