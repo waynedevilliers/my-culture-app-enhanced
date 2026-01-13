@@ -13,11 +13,11 @@ export default (sequelize) => {
         isUrl: true, // Use Sequelize's built-in URL validator
         isCustomValidUrl(value) { // Renamed for clarity, combines custom checks
           // Allow localhost URLs for local development
-          const localhostRegex = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/[-a-zA-Z0-9()@:%_\+.~#?&//=]*)?$/;
+          const localhostRegex = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/[-a-zA-Z0-9()@:%_\+.~#?&=\/]*)?$/;
           const isLocalhost = localhostRegex.test(value);
 
-          // Allow Vercel Blob URLs
-          const vercelBlobRegex = /^blob:https?:\/\//; 
+          // Allow Vercel Blob Storage URLs (e.g., https://<id>.public.blob.vercel-storage.com/...)
+          const vercelBlobRegex = /^https:\/\/[^\/]+\.public\.blob\.vercel-storage\.com\//;
           const isVercelBlob = vercelBlobRegex.test(value);
           
           const isStandardUrlValid = /^(https?:\/\/[^\s$.?#][^\s]*)$/i.test(value); 
