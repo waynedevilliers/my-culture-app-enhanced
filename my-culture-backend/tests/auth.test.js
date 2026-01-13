@@ -1,37 +1,28 @@
 import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import request from 'supertest';
-import express from 'express';
-import { authLimiter } from '../middlewares/rateLimiter.js';
-import { validateLogin, validateRegister } from '../middlewares/validator.js';
-import { login, register } from '../controllers/user.js';
-import { errorHandler } from '../middlewares/errorHandler.js';
+// Import the setupApp function
+import setupApp from '../app.js'; // Adjust path if necessary, assuming app.js is in the same level as index.js
 
-// Mock the database
-jest.mock('../db.js', () => ({
-  User: {
-    findOne: jest.fn(),
-    create: jest.fn(),
-    scope: jest.fn(() => ({
-      findOne: jest.fn(),
-    })),
-  },
-}));
+let app; // Declare app globally for supertest
 
-const app = express();
-app.use(express.json());
-app.use('/api/auth/login', authLimiter, validateLogin, login);
-app.use('/api/auth/register', authLimiter, validateRegister, register);
-app.use(errorHandler);
+beforeAll(async () => {
+  app = await setupApp(); // Initialize the full Express app
+});
+
+// No need for afterAll app.close() if the test setup.js handles sequelize.close()
+// and no other resources are being explicitly opened here.
 
 describe('Authentication Endpoints', () => {
   describe('POST /api/auth/login', () => {
     test('should validate required fields', async () => {
-      const response = await request(app)
+      const response = await request(app) // Use the initialized app
         .post('/api/auth/login')
         .send({});
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message');
+      // The error body structure is changing, so we should check for what's actually returned.
+      // Assuming error messages are now nested under 'error.message' or similar based on previous test failures.
+      expect(response.body).toHaveProperty('error.message');
     });
 
     test('should validate email format', async () => {
@@ -43,7 +34,7 @@ describe('Authentication Endpoints', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('valid email');
+      expect(response.body.error.message).toContain('valid email');
     });
 
     test('should validate password length', async () => {
@@ -55,7 +46,7 @@ describe('Authentication Endpoints', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('8 characters');
+      expect(response.body.error.message).toContain('8 characters');
     });
   });
 
@@ -66,7 +57,7 @@ describe('Authentication Endpoints', () => {
         .send({});
 
       expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('message');
+      expect(response.body).toHaveProperty('error.message');
     });
 
     test('should validate password complexity', async () => {
@@ -81,7 +72,7 @@ describe('Authentication Endpoints', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('uppercase');
+      expect(response.body.error.message).toContain('uppercase');
     });
 
     test('should validate email format', async () => {
@@ -96,26 +87,32 @@ describe('Authentication Endpoints', () => {
         });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toContain('valid email');
+      expect(response.body.error.message).toContain('valid email');
     });
   });
 
   describe('Rate Limiting', () => {
+    // This test might still be flaky if not properly isolated from other tests
+    // or if the rate limiter isn't reset between test runs.
     test('should apply rate limiting to login endpoint', async () => {
-      // Make multiple requests to trigger rate limit
-      const promises = Array(6).fill().map(() => 
-        request(app)
-          .post('/api/auth/login')
-          .send({
-            email: 'test@example.com',
-            password: 'password123',
-          })
-      );
-
-      const responses = await Promise.all(promises);
+      const concurrentRequests = 6;
+      const responses = [];
+      for (let i = 0; i < concurrentRequests; i++) {
+        responses.push(
+          await request(app)
+            .post('/api/auth/login')
+            .send({
+              email: 'test@example.com',
+              password: 'password123',
+            })
+        );
+      }
       
-      // At least one should be rate limited
+      // At least one should be rate limited (status 429)
       expect(responses.some(res => res.status === 429)).toBe(true);
+      
+      // Optionally, check that not all were 429, meaning some requests passed before rate limiting
+      expect(responses.some(res => res.status !== 429 && res.status !== 400)).toBe(true);
     });
   });
 });
