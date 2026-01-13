@@ -32,7 +32,7 @@
    Environment: Production, Preview
 
 8. EMAIL_PASS
-   Value: UJXC26XTDOUJYG74OMIZ
+   Value: your-email-app-password
    Environment: Production, Preview
 
 9. EMAIL_FROM
@@ -40,7 +40,7 @@
    Environment: Production, Preview
 
 10. URL
-    Value: https://my-culture-backend-dqhhfw88y-wblack2050-2932s-projects.vercel.app
+    Value: https://my-culture-backend.vercel.app
     Environment: Production, Preview
 
 ## Note:
