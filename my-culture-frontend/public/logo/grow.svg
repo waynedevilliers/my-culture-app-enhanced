@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="200"
+   height="80"
+   viewBox="0 0 400 100"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="grow.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="9.105"
+     inkscape:cx="100"
+     inkscape:cy="41.295991"
+     inkscape:window-width="1920"
+     inkscape:window-height="1200"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <style
+     id="style1">
+       .text { font-family: 'Arial Rounded MT Bold', sans-serif; font-size: 64px; fill: #2e7d32; }
+       .leaf { fill: #66bb6a; }
+    </style>
+  <text
+     class="text"
+     x="83.745186"
+     y="66.705109"
+     id="text1"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:SourceCodeVF;-inkscape-font-specification:SourceCodeVF"
+       id="tspan1">gr w</tspan></text>
+  <g
+     id="g1"
+     transform="matrix(1.3807432,0,0,1.298737,-61.902572,-16.21536)">
+    <path
+       class="leaf"
+       d="m 157.96815,53.83855 c 5,-20 25,-20 30,0 -5,-10 -25,-10 -30,0 z"
+       id="path1" />
+    <circle
+       cx="172.96815"
+       cy="58.838551"
+       r="5"
+       fill="#388e3c"
+       id="circle1" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:SourceCodeVF;-inkscape-font-specification:SourceCodeVF;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;opacity:0.737139;fill:#ff0000;stroke-width:2"
+     x="105.87589"
+     y="-3.2015388"
+     id="text2"><tspan
+       sodipodi:role="line"
+       id="tspan2"
+       style="stroke-width:2"
+       x="105.87589"
+       y="-3.2015388">SourceCodeVF</tspan></text>
+</svg>
