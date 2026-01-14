@@ -27,3 +27,4 @@ dist-ssr
 *.local
 package-lock.json
 .vercel
+tests/test-db.js
