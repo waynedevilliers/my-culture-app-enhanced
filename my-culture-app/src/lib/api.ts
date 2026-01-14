@@ -1,14 +1,14 @@
 // API response utilities
 // Standardized response formatting for all API routes
 
-import type { ApiResponse, PaginatedResponse } from './types';
+import type { ApiResponse, PaginatedResponse } from "./types";
 
 /**
  * Create success response
  */
 export function successResponse<T>(
   data: T,
-  message = 'Success'
+  message = "Success"
 ): ApiResponse<T> {
   return {
     success: true,
@@ -71,9 +71,9 @@ export function extractUserFromHeaders(headers: Headers): {
   email: string;
   role: string;
 } | null {
-  const userId = headers.get('x-user-id');
-  const email = headers.get('x-user-email');
-  const role = headers.get('x-user-role');
+  const userId = headers.get("x-user-id");
+  const email = headers.get("x-user-email");
+  const role = headers.get("x-user-role");
 
   if (!userId || !email || !role) {
     return null;

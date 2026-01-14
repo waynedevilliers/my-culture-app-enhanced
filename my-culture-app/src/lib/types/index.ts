@@ -1,9 +1,9 @@
 // Type definitions for myCultureApp - derived from Prisma schema
 // This file provides TypeScript types for all database entities
 
-export type Role = 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'USER';
-export type CertificateStatus = 'DRAFT' | 'GENERATED' | 'SENT' | 'DOWNLOADED';
-export type EventStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'CANCELLED';
+export type Role = "SUPER_ADMIN" | "ADMIN" | "MODERATOR" | "USER";
+export type CertificateStatus = "DRAFT" | "GENERATED" | "SENT" | "DOWNLOADED";
+export type EventStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED" | "CANCELLED";
 
 // User type
 export interface User {

@@ -1,11 +1,12 @@
 // Authentication utilities
 // Provides JWT token generation, verification, and password hashing
 
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import type { JwtPayload, User } from './types';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import type { JwtPayload, User } from "./types";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET =
+  process.env.JWT_SECRET || "your-secret-key-change-in-production";
 const BCRYPT_ROUNDS = 10;
 
 /**
@@ -17,7 +18,7 @@ export function generateToken(user: User): string {
     email: user.email,
     role: user.role,
     iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60), // 7 days
+    exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // 7 days
   };
 
   return jwt.sign(payload, JWT_SECRET);
@@ -45,7 +46,10 @@ export async function hashPassword(password: string): Promise<string> {
 /**
  * Compare password with hash
  */
-export async function comparePassword(password: string, hash: string): Promise<boolean> {
+export async function comparePassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
 
@@ -55,8 +59,8 @@ export async function comparePassword(password: string, hash: string): Promise<b
 export function extractTokenFromHeader(authHeader?: string): string | null {
   if (!authHeader) return null;
 
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2 || parts[0] !== 'Bearer') {
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "Bearer") {
     return null;
   }
 
