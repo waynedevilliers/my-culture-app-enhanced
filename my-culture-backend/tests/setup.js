@@ -1,17 +1,21 @@
-import { jest } from '@jest/globals';
 
-// Set test environment variables
-process.env.NODE_ENV = 'test';
-process.env.SECRET = 'test-jwt-secret-key-for-testing-only';
-process.env.DB = 'postgres://test:test@localhost:5432/test_db';
+import { sequelize } from '../db.js';
+import setupApp from '../app.js';
+import supertest from 'supertest';
 
-// Mock console methods for cleaner test output
-global.console = {
-  ...console,
-  log: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-};
+let request;
+let server;
 
-// Global test timeout
-jest.setTimeout(30000);
+beforeAll(async () => {
+  const app = await setupApp();
+  server = app.listen(4000); // Use a different port for testing
+  request = supertest(app);
+  await sequelize.sync({ force: true });
+});
+
+afterAll(async () => {
+  await new Promise(resolve => server.close(resolve));
+  await sequelize.close();
+});
+
+export { request };
