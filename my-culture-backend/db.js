@@ -15,27 +15,30 @@ import NewsletterModel from "./models/Newsletter.js";
 import CertificateModel from "./models/Certificate.js";
 import CertificateRecipientModel from "./models/CertificateRecipient.js";
 
-// Check for database connection string
-const dbConnectionString = process.env.DATABASE_URL || process.env.DB;
-if (!dbConnectionString) {
-  console.error('Database connection string not found. Please set DATABASE_URL or DB environment variable.');
-  // In serverless, don't exit - just log the error
-  if (process.env.NODE_ENV !== 'production') {
-    process.exit(1);
-  }
-}
+let sequelize;
 
-let sequelize = null;
-if (dbConnectionString) {
-  sequelize = new Sequelize(dbConnectionString, { 
-    logging: false,
-    dialectOptions: process.env.NODE_ENV === 'production' ? {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    } : {}
-  });
+if (process.env.NODE_ENV === 'test') {
+  sequelize = new Sequelize('sqlite::memory:', { logging: false });
+} else {
+  const dbConnectionString = process.env.DATABASE_URL || process.env.DB;
+  if (!dbConnectionString) {
+    console.error('Database connection string not found. Please set DATABASE_URL or DB environment variable.');
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+  }
+
+  if (dbConnectionString) {
+    sequelize = new Sequelize(dbConnectionString, {
+      logging: false,
+      dialectOptions: process.env.NODE_ENV === 'production' ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      } : {}
+    });
+  }
 }
 
 let User, Event, Image, Location, Testimonial, Category, Gallery, Organization, Blog, EventCategory, ImageGallery, Subscriber, Newsletter, Certificate, CertificateRecipient;
@@ -106,23 +109,18 @@ if (sequelize && User && Event && Image && Location && Organization && Blog && C
 const initializeDatabase = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Database connection established successfully.");
-    
+    console.log("   ✓ Database authentication successful");
+
     // Only sync in development or when explicitly needed
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development') { // Sync only in development
       await sequelize.sync({ force: false });
-      console.log("Database synchronized successfully.");
+      console.log("   ✓ Database tables synchronized");
     }
   } catch (error) {
-    console.error("Database connection failed:", error.message);
+    console.error("   ✗ Database connection failed:", error.message);
     throw error;
   }
 };
-
-// For serverless environments, we don't sync at startup
-if (process.env.NODE_ENV !== 'production') {
-  initializeDatabase().catch(console.error);
-}
 
 export {
   sequelize,

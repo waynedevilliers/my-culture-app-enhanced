@@ -5,6 +5,7 @@ import { Image } from "../db.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import { getFileUrl } from "../middlewares/storageHandler.js";
 
 export const findPublishedOrganizations = asyncWrapper(async (req, res) => {
   const publishedOrganizations = await Organization.findAll({
@@ -127,8 +128,8 @@ export const applyForOrganization = asyncWrapper(async (req, res) => {
     additionalInfo
   } = body;
   
-  // Get logo URL from cloudinary upload if available
-  const logo = req.cloudinaryURL || null;
+  // Get logo URL from storage (local or Vercel Blob based on environment)
+  const logo = getFileUrl(req) || null;
 
   // Generate email verification token
   const emailVerificationToken = crypto.randomBytes(32).toString('hex');
