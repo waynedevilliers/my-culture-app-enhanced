@@ -1,64 +1,66 @@
 // Zod schema validation for myCultureApp
 // Used for input validation and type safety
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // Auth schemas
 export const LoginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export const RegisterSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+export const RegisterSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 // User schemas
 export const CreateUserSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'MODERATOR', 'USER']).default('USER'),
+  email: z.string().email("Invalid email address"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  role: z.enum(["SUPER_ADMIN", "ADMIN", "MODERATOR", "USER"]).default("USER"),
 });
 
 export const UpdateUserSchema = z.object({
-  email: z.string().email('Invalid email address').optional(),
+  email: z.string().email("Invalid email address").optional(),
   firstName: z.string().min(1).optional(),
   lastName: z.string().min(1).optional(),
   newsletter: z.boolean().optional(),
   verified: z.boolean().optional(),
-  role: z.enum(['SUPER_ADMIN', 'ADMIN', 'MODERATOR', 'USER']).optional(),
+  role: z.enum(["SUPER_ADMIN", "ADMIN", "MODERATOR", "USER"]).optional(),
 });
 
 // Organization schemas
 export const CreateOrganizationSchema = z.object({
-  name: z.string().min(1, 'Organization name is required'),
-  email: z.string().email('Invalid email address'),
+  name: z.string().min(1, "Organization name is required"),
+  email: z.string().email("Invalid email address"),
   description: z.string().optional(),
-  website: z.string().url('Invalid URL').optional().or(z.literal('')),
+  website: z.string().url("Invalid URL").optional().or(z.literal("")),
   userId: z.number().int().positive(),
 });
 
 export const UpdateOrganizationSchema = z.object({
   name: z.string().min(1).optional(),
-  email: z.string().email('Invalid email address').optional(),
+  email: z.string().email("Invalid email address").optional(),
   description: z.string().optional(),
-  website: z.string().url('Invalid URL').optional().or(z.literal('')),
+  website: z.string().url("Invalid URL").optional().or(z.literal("")),
   verified: z.boolean().optional(),
   approvalStatus: z.string().optional(),
 });
 
 // Event schemas
 export const CreateEventSchema = z.object({
-  title: z.string().min(1, 'Event title is required'),
+  title: z.string().min(1, "Event title is required"),
   description: z.string().optional(),
   content: z.string().optional(),
   date: z.coerce.date(),
@@ -83,7 +85,7 @@ export const UpdateEventSchema = z.object({
   endDate: z.coerce.date().optional(),
   location: z.string().optional(),
   capacity: z.number().int().positive().optional(),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED', 'CANCELLED']).optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "CANCELLED"]).optional(),
   published: z.boolean().optional(),
   price: z.number().positive().optional(),
   discountedPrice: z.number().positive().optional(),
@@ -94,13 +96,16 @@ export const UpdateEventSchema = z.object({
 
 // Category schemas
 export const CreateCategorySchema = z.object({
-  name: z.string().min(1, 'Category name is required'),
-  slug: z.string().min(1, 'Slug is required').regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format'),
+  name: z.string().min(1, "Category name is required"),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format"),
 });
 
 // Location schemas
 export const CreateLocationSchema = z.object({
-  name: z.string().min(1, 'Location name is required'),
+  name: z.string().min(1, "Location name is required"),
   address: z.string().optional(),
   city: z.string().optional(),
   postalCode: z.string().optional(),
@@ -112,19 +117,26 @@ export const CreateLocationSchema = z.object({
 
 // Certificate schemas
 export const CreateCertificateSchema = z.object({
-  title: z.string().min(1, 'Certificate title is required'),
+  title: z.string().min(1, "Certificate title is required"),
   template: z.string().optional(),
   recipientName: z.string().optional(),
-  recipientEmail: z.string().email('Invalid email address').optional().or(z.literal('')),
+  recipientEmail: z
+    .string()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
   userId: z.number().int().positive(),
   organizationId: z.number().int().positive(),
 });
 
 // Blog schemas
 export const CreateBlogSchema = z.object({
-  title: z.string().min(1, 'Blog title is required'),
-  slug: z.string().min(1, 'Slug is required').regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format'),
-  content: z.string().min(1, 'Content is required'),
+  title: z.string().min(1, "Blog title is required"),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format"),
+  content: z.string().min(1, "Content is required"),
   excerpt: z.string().optional(),
   userId: z.number().int().positive(),
   categoryId: z.number().int().positive().optional(),
@@ -132,7 +144,10 @@ export const CreateBlogSchema = z.object({
 
 export const UpdateBlogSchema = z.object({
   title: z.string().min(1).optional(),
-  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format').optional(),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format")
+    .optional(),
   content: z.string().min(1).optional(),
   excerpt: z.string().optional(),
   published: z.boolean().optional(),
@@ -141,7 +156,7 @@ export const UpdateBlogSchema = z.object({
 
 // Gallery schemas
 export const CreateGallerySchema = z.object({
-  name: z.string().min(1, 'Gallery name is required'),
+  name: z.string().min(1, "Gallery name is required"),
   description: z.string().optional(),
   userId: z.number().int().positive(),
   organizationId: z.number().int().positive().optional(),
@@ -155,15 +170,15 @@ export const UpdateGallerySchema = z.object({
 
 // Subscriber schemas
 export const CreateSubscriberSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email("Invalid email address"),
   name: z.string().optional(),
 });
 
 // Testimonial schemas
 export const CreateTestimonialSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  message: z.string().min(10, "Message must be at least 10 characters"),
   rating: z.number().int().min(1).max(5).optional(),
 });
 
@@ -177,7 +192,7 @@ export const PaginationSchema = z.object({
 export const SearchSchema = z.object({
   q: z.string().optional(),
   sortBy: z.string().optional(),
-  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 
 // Export types from schemas
