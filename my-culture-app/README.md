@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My Culture App (Next.js)
 
-## Getting Started
+The replacement for `my-culture-backend` (Express) and `my-culture-frontend`
+(Vite + React): one Next.js 16 project with pages and API together. The old
+folders stay in the repository as a reference until every page and route has
+been moved here.
 
-First, run the development server:
+## Status
+
+| Area | State |
+| --- | --- |
+| Database schema (Prisma, PostgreSQL) | Done: `prisma/schema.prisma` |
+| Admin login (`POST /api/auth/login`) | Done |
+| Current admin (`GET /api/auth/me`) | Done |
+| Health check (`GET /api/health`) | Done |
+| Pages and the other API routes | Not moved yet |
+
+## Who can log in
+
+Only admins and super admins. There is no public sign-up: visitors browse
+organisations, apply through "Join us" and open certificates through their
+private link, without an account. Any other account gets the same "Invalid
+email or password" answer as a wrong password.
+
+## How login works
+
+1. `POST /api/auth/login` with `{ "email", "password" }` returns a token
+   (valid 7 days).
+2. The client sends it as `Authorization: Bearer <token>`.
+3. `src/proxy.ts` checks the token and role for every protected `/api` route
+   (`PROTECTED_ROUTES`), removes any `x-user-*` headers a client sent, and
+   passes the verified user to the route handler as `x-user-id`,
+   `x-user-email` and `x-user-role`.
+4. Route handlers read them with `extractUserFromHeaders` from `src/lib/api.ts`.
+
+`JWT_SECRET` has no default: without it (or if it is shorter than 32
+characters) no token can be signed or verified.
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd my-culture-app
+npm ci
+cp .env.example .env.local      # fill in DATABASE_URL and JWT_SECRET
+npm run db:push                 # create the tables
+SEED_ADMIN_PASSWORD='...' npm run prisma:seed   # optional sample data and super admin
+npm run dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The seed can be run more than once without creating duplicates, and never
+changes an existing admin's password.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test             # Vitest, no database or server needed (Prisma is mocked)
+npx tsc --noEmit     # types
+npm run lint         # ESLint
+npm run build        # production build
+```
 
-## Learn More
+## Layout
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+prisma/schema.prisma      database tables
+prisma/seed.ts            sample data
+src/proxy.ts              auth and role check for /api routes
+src/app/api/              route handlers
+src/lib/auth.ts           tokens and password hashing
+src/lib/api.ts            response helpers
+src/lib/validation.ts     Zod schemas
+tests/                    Vitest tests
+```
