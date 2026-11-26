@@ -1,4 +1,4 @@
-import { put } from '@vercel/blob';
+import { put as blobPut } from '@vercel/blob';
 import asyncWrapper from '../utils/asyncWrapper.js';
 import { assertValidFolder, generateUploadFilename } from '../utils/uploadFilename.js';
 
@@ -7,8 +7,9 @@ import { assertValidFolder, generateUploadFilename } from '../utils/uploadFilena
  * and sets req.vercelBlobURL. Continues without error when no file was uploaded.
  *
  * @param {string} folder
+ * @param {{ put?: typeof blobPut }} [deps] injectable for tests
  */
-export const createVercelBlobUploader = (folder) => {
+export const createVercelBlobUploader = (folder, { put = blobPut } = {}) => {
   assertValidFolder(folder);
 
   return asyncWrapper(async (req, res, next) => {

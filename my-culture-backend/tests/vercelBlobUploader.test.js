@@ -1,8 +1,8 @@
 import { jest } from '@jest/globals';
-import { put } from '@vercel/blob';
-import { createVercelBlobUploader } from '../middlewares/vercelBlobUploader.js';
+import { createVercelBlobUploader as createUploader } from '../middlewares/vercelBlobUploader.js';
 
-jest.mock('@vercel/blob', () => ({ put: jest.fn() }));
+const put = jest.fn();
+const createVercelBlobUploader = (folder) => createUploader(folder, { put });
 
 const ORIGINAL_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 
@@ -83,5 +83,9 @@ describe('vercelBlobUploader', () => {
 
   it('rejects an unsafe folder name', () => {
     expect(() => createVercelBlobUploader('a/b')).toThrow('Invalid upload folder');
+  });
+
+  it('uses the real Vercel Blob client by default', () => {
+    expect(typeof createUploader('images')).toBe('function');
   });
 });

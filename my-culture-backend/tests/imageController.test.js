@@ -1,8 +1,8 @@
 import { jest } from '@jest/globals';
-import { Image } from '../db.js';
-import { imageHandler } from '../controllers/image.js';
+import { createImageHandler } from '../controllers/image.js';
 
-jest.mock('../db.js', () => ({ Image: { create: jest.fn() } }));
+const Image = { create: jest.fn() };
+const imageHandler = createImageHandler(Image);
 
 const makeRes = () => {
   const res = {};

@@ -18,9 +18,10 @@ export const isProduction = process.env.NODE_ENV === 'production';
  * - urlGenerator: sets the file URL on req (read it with getFileUrl)
  *
  * @param {string} folder single path segment, for example "images"
+ * @param {boolean} [production] defaults to NODE_ENV === 'production'
  * @returns {{ uploader: import('multer').Multer, urlGenerator: Function }}
  */
-export const createStorage = (folder) => (isProduction
+export const createStorage = (folder, production = isProduction) => (production
   ? { uploader: fileUploader, urlGenerator: createVercelBlobUploader(folder) }
   : { uploader: createLocalFileUploader(folder), urlGenerator: createLocalFileUrl(folder) });
 
@@ -36,13 +37,14 @@ export const fileUrlGenerator = organizationStorage.urlGenerator;
  * Get the uploaded file's URL, whichever storage handled it.
  *
  * @param {object} [req]
+ * @param {boolean} [production] defaults to NODE_ENV === 'production'
  * @returns {string|null}
  */
-export const getFileUrl = (req) => {
+export const getFileUrl = (req, production = isProduction) => {
   if (!req) {
     return null;
   }
-  return (isProduction ? req.vercelBlobURL : req.localFileURL) || null;
+  return (production ? req.vercelBlobURL : req.localFileURL) || null;
 };
 
 export default {
