@@ -1,25 +1,33 @@
-import asyncWrapper from '../utils/asyncWrapper.js';
+import { assertValidFolder } from '../utils/uploadFilename.js';
 
 /**
- * Middleware to construct local file URL after file upload
- * Works similar to cloudUploader but for local filesystem
+ * Build the public URL of a file saved by the local uploader.
+ *
+ * @param {string} folder
+ * @param {string} filename
+ * @param {NodeJS.ProcessEnv} [env]
+ * @returns {string}
  */
-const localFileUrl = asyncWrapper(async (req, res, next) => {
-  // If no file uploaded, continue without error (for optional uploads)
-  if (!req.file) {
-    return next();
-  }
+export const buildLocalFileUrl = (folder, filename, env = process.env) => {
+  const baseUrl = (env.URL || `http://localhost:${env.PORT || 3000}`).replace(/\/+$/, '');
+  return `${baseUrl}/uploads/${assertValidFolder(folder)}/${encodeURIComponent(filename)}`;
+};
 
-  // Construct the URL for the uploaded file
-  // In development: http://localhost:3000/uploads/organizations/filename.jpg
-  // In production: https://your-domain.com/uploads/organizations/filename.jpg
-  const baseUrl = process.env.URL || `http://localhost:${process.env.PORT || 3000}`;
-  const fileUrl = `${baseUrl}/uploads/organizations/${req.file.filename}`;
+/**
+ * Create middleware that sets req.localFileURL after a local upload.
+ * Continues without error when no file was uploaded (optional uploads).
+ *
+ * @param {string} folder
+ */
+export const createLocalFileUrl = (folder) => {
+  assertValidFolder(folder);
 
-  // Store the URL in req for use in controllers
-  req.localFileURL = fileUrl;
+  return (req, res, next) => {
+    if (req.file) {
+      req.localFileURL = buildLocalFileUrl(folder, req.file.filename);
+    }
+    next();
+  };
+};
 
-  next();
-});
-
-export default localFileUrl;
+export default createLocalFileUrl('organizations');

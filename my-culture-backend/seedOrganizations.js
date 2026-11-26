@@ -1,14 +1,10 @@
 import dotenv from 'dotenv';
 import { User, Organization, Image } from './db.js';
+import { getSeedImageUrl } from './utils/seedImages.js';
 
 // Load environment variables
 dotenv.config();
 
-// Base URL for local images (will be set based on environment)
-const getImageUrl = (filename) => {
-  const baseUrl = process.env.URL || 'http://localhost:3000';
-  return `${baseUrl}/uploads/organizations/${filename}`;
-};
 
 const organizationData = [
   {
@@ -18,7 +14,7 @@ const organizationData = [
     phone: "+49 30 1234567",
     email: "info@berlin-heritage.de",
     published: true,
-    imagePath: getImageUrl("berlin-heritage.png")
+    imagePath: getSeedImageUrl("berlin-heritage.png")
   },
   {
     name: "Münchener Internationale Musikakademie",
@@ -27,7 +23,7 @@ const organizationData = [
     phone: "+49 89 2345678",
     email: "contact@munich-music.org",
     published: true,
-    imagePath: getImageUrl("munich-music.png")
+    imagePath: getSeedImageUrl("munich-music.png")
   },
   {
     name: "Hamburger Zeitgenössisches Kunstkollektiv",
@@ -36,7 +32,7 @@ const organizationData = [
     phone: "+49 40 3456789",
     email: "hello@hamburg-arts.com",
     published: true,
-    imagePath: getImageUrl("hamburg-arts.png")
+    imagePath: getSeedImageUrl("hamburg-arts.png")
   },
   {
     name: "Kölner Gemeinschaftstheater",
@@ -45,7 +41,7 @@ const organizationData = [
     phone: "+49 221 4567890",
     email: "tickets@cologne-theater.org",
     published: true,
-    imagePath: getImageUrl("cologne-theater.jpg")
+    imagePath: getSeedImageUrl("cologne-theater.jpg")
   },
   {
     name: "Frankfurter Tanz- und Bewegungsstudio",
@@ -54,7 +50,7 @@ const organizationData = [
     phone: "+49 69 5678901",
     email: "studio@frankfurt-dance.de",
     published: true,
-    imagePath: getImageUrl("frankfurt-dance.jpg")
+    imagePath: getSeedImageUrl("frankfurt-dance.jpg")
   },
   {
     name: "Stuttgarter Multikulturelles Zentrum",
@@ -63,7 +59,7 @@ const organizationData = [
     phone: "+49 711 6789012",
     email: "welcome@stuttgart-multicultural.org",
     published: true,
-    imagePath: getImageUrl("stuttgart-multicultural.png")
+    imagePath: getSeedImageUrl("stuttgart-multicultural.png")
   },
   {
     name: "Dresdner Jugend-Kulturinitiative",
@@ -72,7 +68,7 @@ const organizationData = [
     phone: "+49 351 7890123",
     email: "youth@dresden-youth.de",
     published: false,
-    imagePath: getImageUrl("berlin-heritage.png") // Reusing image
+    imagePath: getSeedImageUrl("berlin-heritage.png") // Reusing image
   },
   {
     name: "Nürnberger Traditionelle Handwerkszunft",
@@ -81,7 +77,7 @@ const organizationData = [
     phone: "+49 911 8901234",
     email: "guild@nuremberg-crafts.org",
     published: true,
-    imagePath: getImageUrl("munich-music.png") // Reusing image
+    imagePath: getSeedImageUrl("munich-music.png") // Reusing image
   }
 ];
 
