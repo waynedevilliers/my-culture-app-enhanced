@@ -10,10 +10,15 @@ been moved here.
 | Area | State |
 | --- | --- |
 | Database schema (Prisma, PostgreSQL) | Done: `prisma/schema.prisma` |
-| Admin login (`POST /api/auth/login`) | Done |
-| Current admin (`GET /api/auth/me`) | Done |
+| Admin login (`POST /api/auth/login`), current admin (`GET /api/auth/me`) | Done |
 | Health check (`GET /api/health`) | Done |
-| Pages and the other API routes | Not moved yet |
+| All pages and the dashboard (moved from `my-culture-frontend`) | Done, pixel-identical to the old app |
+| Other API routes (organisations, events, locations, certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
+
+The pages were moved without changing markup, classes or CSS: Tailwind 3 +
+DaisyUI 4 with the same `myCulture` theme. Old and new were compared with
+full-page screenshots at 1440x900 and 375x667 on 9 pages (public pages,
+dashboard, event and newsletter editors): no pixel differs.
 
 ## Who can log in
 
@@ -65,9 +70,34 @@ npm run build        # production build
 prisma/schema.prisma      database tables
 prisma/seed.ts            sample data
 src/proxy.ts              auth and role check for /api routes
-src/app/api/              route handlers
-src/lib/auth.ts           tokens and password hashing
-src/lib/api.ts            response helpers
-src/lib/validation.ts     Zod schemas
-tests/                    Vitest tests
+src/app/                  routes: (site)/ public pages, dashboard/ admin pages, api/ route handlers
+src/views/                page components moved from the old app (was src/pages)
+src/components/ sections/ contexts/ hooks/ services/ utils/ schemas/ i18n/
+                          moved from the old app unchanged
+src/lib/router.tsx        React Router API (Link, NavLink, useNavigate...) on top of
+                          Next.js navigation, so moved components work unchanged
+src/lib/                  auth, API helpers, validation
+tests/                    API tests (Node)
+src/tests/                UI tests moved from the old app (jsdom)
 ```
+
+## Tests
+
+`npm test` runs two Vitest projects: `api` (55 tests) and `ui` (213 tests
+moved from the old app). Every UI test that passed in the old app passes
+here; 74 UI tests already failed in the old app and still do, in
+`CertificateEmailSender`, `validation`, `SecureCertificateViewer`,
+`UserFeedback`, `ErrorBoundary`, `Pagination` and `useFormValidation`.
+They are fixed in a follow-up.
+
+## Changes made while moving
+
+- `CertificateList.jsx` used `CertificateEmailSender` without importing it,
+  and `UserFeedback.jsx` used an icon that does not exist in react-icons 6;
+  both crashed when shown.
+- Super admins can open the dashboard (before, only `admin` could).
+- BlockNote 0.21 to 0.24: 0.21 does not work with React 19, which Next.js 16
+  needs. The editor looks the same.
+- `react-leaflet` 4 to 5 for React 19.
+- The unused sign-up function was removed from `UserContext`.
+- `/test-join-us` (a leftover test page) was not moved.
