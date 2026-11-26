@@ -27,3 +27,6 @@ dist-ssr
 *.local
 package-lock.json
 .vercel
+
+# Local deployment notes with secrets
+VERCEL_ENV_SETUP.txt
