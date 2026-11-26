@@ -10,8 +10,8 @@ vi.mock('react-toastify', () => ({
     info: vi.fn(),
     success: vi.fn(),
     loading: vi.fn(),
-    update: vi.fn()
-  }
+    update: vi.fn(),
+  },
 }));
 
 // Mock window.addEventListener
@@ -25,11 +25,11 @@ const originalRemoveEventListener = window.removeEventListener;
 beforeEach(() => {
   // Reset mocks
   vi.clearAllMocks();
-  
+
   // Mock window methods
   window.addEventListener = mockAddEventListener;
   window.removeEventListener = mockRemoveEventListener;
-  
+
   // Clear error log
   errorHandlingService.clearErrorLog();
 });
@@ -44,13 +44,15 @@ describe('ErrorHandlingService', () => {
   describe('parseApiError', () => {
     test('should parse network errors correctly', () => {
       const networkError = {
-        message: 'Network Error'
+        message: 'Network Error',
       };
 
       const result = errorHandlingService.parseApiError(networkError);
 
       expect(result.type).toBe('warning');
-      expect(result.userMessage).toBe('Unable to connect to the server. Please check your internet connection.');
+      expect(result.userMessage).toBe(
+        'Unable to connect to the server. Please check your internet connection.'
+      );
       expect(result.shouldRetry).toBe(true);
     });
 
@@ -58,14 +60,16 @@ describe('ErrorHandlingService', () => {
       const authError = {
         response: {
           status: 401,
-          data: { message: 'Unauthorized access' }
-        }
+          data: { message: 'Unauthorized access' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(authError);
 
       expect(result.type).toBe('warning');
-      expect(result.userMessage).toBe('Your session has expired. Please log in again.');
+      expect(result.userMessage).toBe(
+        'Your session has expired. Please log in again.'
+      );
       expect(result.statusCode).toBe(401);
       expect(result.requiresReauth).toBe(true);
       expect(result.shouldRetry).toBe(false);
@@ -75,14 +79,16 @@ describe('ErrorHandlingService', () => {
       const forbiddenError = {
         response: {
           status: 403,
-          data: { message: 'Access forbidden' }
-        }
+          data: { message: 'Access forbidden' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(forbiddenError);
 
       expect(result.type).toBe('error');
-      expect(result.userMessage).toBe('You don\'t have permission to perform this action.');
+      expect(result.userMessage).toBe(
+        "You don't have permission to perform this action."
+      );
       expect(result.statusCode).toBe(403);
       expect(result.shouldRetry).toBe(false);
     });
@@ -91,8 +97,8 @@ describe('ErrorHandlingService', () => {
       const notFoundError = {
         response: {
           status: 404,
-          data: { message: 'Resource not found' }
-        }
+          data: { message: 'Resource not found' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(notFoundError);
@@ -107,8 +113,8 @@ describe('ErrorHandlingService', () => {
       const validationError = {
         response: {
           status: 422,
-          data: { message: 'Validation failed' }
-        }
+          data: { message: 'Validation failed' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(validationError);
@@ -123,14 +129,16 @@ describe('ErrorHandlingService', () => {
       const rateLimitError = {
         response: {
           status: 429,
-          data: { message: 'Too many requests' }
-        }
+          data: { message: 'Too many requests' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(rateLimitError);
 
       expect(result.type).toBe('warning');
-      expect(result.userMessage).toBe('Too many requests. Please wait a moment before trying again.');
+      expect(result.userMessage).toBe(
+        'Too many requests. Please wait a moment before trying again.'
+      );
       expect(result.statusCode).toBe(429);
       expect(result.shouldRetry).toBe(true);
     });
@@ -139,14 +147,16 @@ describe('ErrorHandlingService', () => {
       const serverError = {
         response: {
           status: 500,
-          data: { message: 'Internal server error' }
-        }
+          data: { message: 'Internal server error' },
+        },
       };
 
       const result = errorHandlingService.parseApiError(serverError);
 
       expect(result.type).toBe('error');
-      expect(result.userMessage).toBe('A server error occurred. Please try again later.');
+      expect(result.userMessage).toBe(
+        'A server error occurred. Please try again later.'
+      );
       expect(result.statusCode).toBe(500);
       expect(result.shouldRetry).toBe(true);
     });
@@ -157,7 +167,7 @@ describe('ErrorHandlingService', () => {
       const zodErrors = [
         { path: ['name'], message: 'Name is required' },
         { path: ['email'], message: 'Invalid email format' },
-        { path: [], message: 'General validation error' }
+        { path: [], message: 'General validation error' },
       ];
 
       const result = errorHandlingService.handleValidationErrors(zodErrors);
@@ -172,7 +182,7 @@ describe('ErrorHandlingService', () => {
       const objectErrors = {
         name: 'Name is required',
         email: 'Invalid email',
-        general: 'General error'
+        general: 'General error',
       };
 
       const result = errorHandlingService.handleValidationErrors(objectErrors);
@@ -193,13 +203,13 @@ describe('ErrorHandlingService', () => {
     });
 
     test('should show appropriate toast messages', () => {
-      const errors = [
-        { path: ['name'], message: 'Name is required' }
-      ];
+      const errors = [{ path: ['name'], message: 'Name is required' }];
 
       errorHandlingService.handleValidationErrors(errors);
 
-      expect(toast.error).toHaveBeenCalledWith('Please check the form for errors.');
+      expect(toast.error).toHaveBeenCalledWith(
+        'Please check the form for errors.'
+      );
     });
   });
 
@@ -254,7 +264,7 @@ describe('ErrorHandlingService', () => {
     test('should handle file size errors (413)', () => {
       const sizeError = {
         response: { status: 413 },
-        config: { data: { size: 15000000 } }
+        config: { data: { size: 15000000 } },
       };
 
       errorHandlingService.handleFileUploadError(sizeError, 'test.jpg');
@@ -266,7 +276,7 @@ describe('ErrorHandlingService', () => {
 
     test('should handle unsupported file type errors (415)', () => {
       const typeError = {
-        response: { status: 415 }
+        response: { status: 415 },
       };
 
       errorHandlingService.handleFileUploadError(typeError, 'test.exe');
@@ -278,7 +288,7 @@ describe('ErrorHandlingService', () => {
 
     test('should handle other upload errors', () => {
       const genericError = {
-        response: { status: 500 }
+        response: { status: 500 },
       };
 
       errorHandlingService.handleFileUploadError(genericError, 'test.jpg');
@@ -300,7 +310,8 @@ describe('ErrorHandlingService', () => {
     });
 
     test('should retry on failure and eventually succeed', async () => {
-      const operation = vi.fn()
+      const operation = vi
+        .fn()
         .mockRejectedValueOnce(new Error('Fail 1'))
         .mockRejectedValueOnce(new Error('Fail 2'))
         .mockResolvedValue('success');
@@ -323,7 +334,7 @@ describe('ErrorHandlingService', () => {
 
     test('should not retry non-retryable errors', async () => {
       const nonRetryableError = {
-        response: { status: 404 }
+        response: { status: 404 },
       };
       const operation = vi.fn().mockRejectedValue(nonRetryableError);
 
@@ -342,7 +353,7 @@ describe('ErrorHandlingService', () => {
 
       const result = await errorHandlingService.withProgress(operation, {
         loadingMessage: 'Loading test...',
-        successMessage: 'Test completed!'
+        successMessage: 'Test completed!',
       });
 
       expect(result).toBe('result');
@@ -351,7 +362,7 @@ describe('ErrorHandlingService', () => {
         render: 'Test completed!',
         type: 'success',
         isLoading: false,
-        autoClose: 5000
+        autoClose: 5000,
       });
     });
 
@@ -362,7 +373,7 @@ describe('ErrorHandlingService', () => {
 
       await expect(
         errorHandlingService.withProgress(operation, {
-          errorMessage: 'Test failed!'
+          errorMessage: 'Test failed!',
         })
       ).rejects.toEqual(error);
 
@@ -371,7 +382,7 @@ describe('ErrorHandlingService', () => {
         render: 'Test failed!',
         type: 'error',
         isLoading: false,
-        autoClose: 5000
+        autoClose: 5000,
       });
     });
   });
