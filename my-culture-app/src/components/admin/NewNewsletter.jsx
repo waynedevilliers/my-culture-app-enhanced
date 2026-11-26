@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import BlockNoteEditor from '../editor/Editor.tsx';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from "@/lib/router";
+import { useNavigate } from '@/lib/router';
 
 const NewNewsletter = () => {
   const navigate = useNavigate();
@@ -13,14 +13,14 @@ const NewNewsletter = () => {
 
   const handleChange = (e) => {
     setSubject(e.target.value);
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
-      url: `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/newsletters`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/newsletters`,
       data: {
         subject: subject,
         content: localStorage.getItem('htmlContent').toString(),
@@ -29,8 +29,8 @@ const NewNewsletter = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      }
-    }
+      },
+    };
 
     try {
       await axios.post(payload.url, payload.data, payload.config);
@@ -38,22 +38,38 @@ const NewNewsletter = () => {
       setSubject('');
       localStorage.setItem('editorContent', []);
       localStorage.setItem('htmlContent', '');
-      navigate("/dashboard/newsletter")
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      navigate('/dashboard/newsletter');
+    } catch {
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <form className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10" onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10"
+      onSubmit={handleSubmit}
+    >
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         Titel
-        <input type="text" name="title" className="grow" placeholder="Neuer Newsletter" value={subject} onChange={handleChange} />
+        <input
+          type="text"
+          name="title"
+          className="grow"
+          placeholder="Neuer Newsletter"
+          value={subject}
+          onChange={handleChange}
+        />
       </label>
       <BlockNoteEditor />
-      <button type="submit" className="btn btn-base-100 rounded-none" disabled={loading}>Speichern</button>
+      <button
+        type="submit"
+        className="btn btn-base-100 rounded-none"
+        disabled={loading}
+      >
+        Speichern
+      </button>
     </form>
   );
 };

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import OrganizationCard from "./OrganizationCards";
-import axios from "axios";
+import OrganizationCard from './OrganizationCards';
+import axios from 'axios';
 
 const OrganizationList = () => {
   const { t } = useTranslation();
@@ -15,12 +15,12 @@ const OrganizationList = () => {
     const fetchOrganizations = async () => {
       try {
         const response = await axios.get(
-          `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/organizations/published`
+          `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/published`
         );
         const data = response.data || [];
         setOrganizations(data);
       } catch (err) {
-        console.error("Error fetching organizations:", err);
+        console.error('Error fetching organizations:', err);
       } finally {
         setLoading(false);
       }
@@ -29,10 +29,7 @@ const OrganizationList = () => {
   }, []);
 
   return (
-    <section
-      id="organization-section"
-      className="py-16 px-4"
-    >
+    <section id="organization-section" className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -81,13 +78,15 @@ const OrganizationList = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-fr">
             {organizations && organizations.length > 0 ? (
-              organizations.slice(0, 4).map((organization, index) => (
-                <OrganizationCard
-                  key={organization.id}
-                  organization={organization}
-                  index={index}
-                />
-              ))
+              organizations
+                .slice(0, 4)
+                .map((organization, index) => (
+                  <OrganizationCard
+                    key={organization.id}
+                    organization={organization}
+                    index={index}
+                  />
+                ))
             ) : (
               <motion.div
                 className="col-span-full text-center py-16"

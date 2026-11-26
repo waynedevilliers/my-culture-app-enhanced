@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import axios from "axios";
-import UpdateOrganizationModal from "./UpdateOrganizationModal";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import UpdateOrganizationModal from './UpdateOrganizationModal';
+import { useTranslation } from 'react-i18next';
 
 const OrganizationList = () => {
   const { t } = useTranslation();
@@ -18,11 +18,16 @@ const OrganizationList = () => {
 
   const fetchOrganizations = () => {
     axios
-      .get((process.env.NEXT_PUBLIC_BACKEND ?? "") + "/api/organizations?page=" + page, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get(
+        (process.env.NEXT_PUBLIC_BACKEND ?? '') +
+          '/api/organizations?page=' +
+          page,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
       .then(({ data }) => {
         setOrganizations(data.results);
         setPages(data.totalPages);
@@ -46,11 +51,11 @@ const OrganizationList = () => {
 
     axios
       .put(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/organizations/${organization.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/${organization.id}`,
         data,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       )
@@ -65,10 +70,10 @@ const OrganizationList = () => {
   const handleDelete = (organizationId) => {
     axios
       .delete(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/organizations/${organizationId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/${organizationId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       )
@@ -88,14 +93,21 @@ const OrganizationList = () => {
   return (
     <div className="overflow-x-auto flex flex-col max-w-screen-xl w-full justify-center items-center gap-4">
       <label className="input input-bordered flex items-center gap-2 w-full">
-        {t('admin.tables.search')} <input type="search" className="grow" placeholder={t('admin.tables.searchPlaceholder')} />
+        {t('admin.tables.search')}{' '}
+        <input
+          type="search"
+          className="grow"
+          placeholder={t('admin.tables.searchPlaceholder')}
+        />
       </label>
       <table className="table table-xs table-zebra mb-4">
         <thead className="bg-secondary text-white">
           <tr>
             <th></th>
             <th>{t('admin.tables.name')}</th>
-            <th className="hidden sm:table-cell">{t('admin.tables.published')}</th>
+            <th className="hidden sm:table-cell">
+              {t('admin.tables.published')}
+            </th>
             <th className="hidden sm:table-cell"></th>
             <th></th>
           </tr>
@@ -114,7 +126,9 @@ const OrganizationList = () => {
                     }}
                     type="button"
                   >
-                    {organization.published ? t('admin.tables.no') : t('admin.tables.yes')}
+                    {organization.published
+                      ? t('admin.tables.no')
+                      : t('admin.tables.yes')}
                   </button>
                 </th>
                 <th className="hidden sm:table-cell">
@@ -143,7 +157,7 @@ const OrganizationList = () => {
       <div className="join">
         <button
           className={
-            hasPreviousPage ? "join-item btn" : "join-item btn btn-disabled"
+            hasPreviousPage ? 'join-item btn' : 'join-item btn btn-disabled'
           }
           onClick={() => setPage(page - 1)}
         >
@@ -156,8 +170,8 @@ const OrganizationList = () => {
               key={pageNumber}
               className={
                 page === pageNumber
-                  ? "join-item btn btn-md btn-active"
-                  : "join-item btn btn-md"
+                  ? 'join-item btn btn-md btn-active'
+                  : 'join-item btn btn-md'
               }
               onClick={() => setPage(pageNumber)}
             >
@@ -167,7 +181,7 @@ const OrganizationList = () => {
 
         <button
           className={
-            hasNextPage ? "join-item btn" : "join-item btn btn-disabled"
+            hasNextPage ? 'join-item btn' : 'join-item btn btn-disabled'
           }
           onClick={() => setPage(page + 1)}
         >

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Link } from "@/lib/router";
-import { FaLocationDot, FaCalendar, FaArrowRight } from "react-icons/fa6";
-import { motion } from "framer-motion";
+import { Link } from '@/lib/router';
+import { FaLocationDot, FaCalendar, FaArrowRight } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 function OrganizationCard({ organization, index = 0 }) {
   const { t } = useTranslation();
-  
+
   return (
     <motion.article
       className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full"
@@ -29,7 +29,13 @@ function OrganizationCard({ organization, index = 0 }) {
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                 <div className="text-center text-gray-500">
-                  <div className="text-4xl mb-2" role="img" aria-label="Building">🏢</div>
+                  <div
+                    className="text-4xl mb-2"
+                    role="img"
+                    aria-label="Building"
+                  >
+                    🏢
+                  </div>
                   <div className="text-sm font-medium">{organization.name}</div>
                 </div>
               </div>
@@ -39,7 +45,9 @@ function OrganizationCard({ organization, index = 0 }) {
 
             {/* Floating badge */}
             <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-              <span className="text-xs font-medium text-primary">{t('organizations.featured')}</span>
+              <span className="text-xs font-medium text-primary">
+                {t('organizations.featured')}
+              </span>
             </div>
 
             {/* Title overlay on hover */}

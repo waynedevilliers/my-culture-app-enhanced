@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import HeroSection from "../sections/HeroSection";
-import OrganizationList from "../components/organization/OrganizationsList.jsx";
+import HeroSection from '../sections/HeroSection';
+import OrganizationList from '../components/organization/OrganizationsList.jsx';
 
 const Landing = () => {
   return (

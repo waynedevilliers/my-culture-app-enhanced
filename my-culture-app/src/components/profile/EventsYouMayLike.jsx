@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { FaTicket } from "react-icons/fa6";
-import { toast } from "react-toastify";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { FaTicket } from 'react-icons/fa6';
+import { toast } from 'react-toastify';
 
 const EventsYouMayLike = () => {
   const [randomEvent, setRandomEvent] = useState(null);
@@ -12,7 +12,7 @@ const EventsYouMayLike = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/events/next`
+          `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/events/next`
         );
         const data = response.data || [];
 
@@ -20,9 +20,9 @@ const EventsYouMayLike = () => {
           const randomIndex = Math.floor(Math.random() * data.length);
           setRandomEvent(data[randomIndex]);
         }
-      } catch (err) {
+      } catch {
         toast.error(
-          "Es gab ein Problem beim Abrufen der Veranstaltungen. Bitte versuchen Sie es später erneut."
+          'Es gab ein Problem beim Abrufen der Veranstaltungen. Bitte versuchen Sie es später erneut.'
         );
       }
     };
@@ -45,16 +45,16 @@ const EventsYouMayLike = () => {
                 {randomEvent.title}
               </h3>
               <p className="absolute -top-2 left bg-primary text-xs text-neutral p-1 px-2 font-bold mt-2">
-                {new Date(randomEvent.date).toLocaleDateString("de-DE", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}{" "}
-                um{" "}
-                {new Date(randomEvent.date).toLocaleTimeString("de-DE", {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                {new Date(randomEvent.date).toLocaleDateString('de-DE', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}{' '}
+                um{' '}
+                {new Date(randomEvent.date).toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
                 })}
               </p>
             </div>

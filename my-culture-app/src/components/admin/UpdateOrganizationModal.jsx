@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "react-toastify";
-import axios from "axios";
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const UpdateOrganizationModal = ({ organization, onClose, onUpdated }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: organization.name || "",
-    description: organization.description || "",
-    website: organization.website || "",
-    phone: organization.phone || "",
-    email: organization.email || "",
+    name: organization.name || '',
+    description: organization.description || '',
+    website: organization.website || '',
+    phone: organization.phone || '',
+    email: organization.email || '',
     published: organization.published || false,
     image: null,
   });
 
   const handleChange = (e) => {
     setFormData((prevState) =>
-      e.target.type === "file"
+      e.target.type === 'file'
         ? { ...prevState, [e.target.name]: e.target.files[0] }
         : {
             ...prevState,
             [e.target.name]:
-              e.target.type === "checkbox" ? e.target.checked : e.target.value,
+              e.target.type === 'checkbox' ? e.target.checked : e.target.value,
           }
     );
   };
@@ -44,15 +44,15 @@ const UpdateOrganizationModal = ({ organization, onClose, onUpdated }) => {
 
       if (formData.image) {
         const imageData = new FormData();
-        imageData.append("image", formData.image);
-        imageData.append("name", formData.image.name);
+        imageData.append('image', formData.image);
+        imageData.append('name', formData.image.name);
 
         const uploadResponse = await axios.post(
-          (process.env.NEXT_PUBLIC_BACKEND ?? "") + "/api/file/upload",
+          (process.env.NEXT_PUBLIC_BACKEND ?? '') + '/api/file/upload',
           imageData,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           }
         );
@@ -71,20 +71,20 @@ const UpdateOrganizationModal = ({ organization, onClose, onUpdated }) => {
       };
 
       await axios.put(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/organizations/${organization.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/${organization.id}`,
         updatePayload,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       );
 
-      toast.success("Organization updated successfully");
+      toast.success('Organization updated successfully');
       onUpdated();
       onClose();
-    } catch (err) {
-      toast.error("Failed to update organization");
+    } catch {
+      toast.error('Failed to update organization');
     } finally {
       setLoading(false);
     }
@@ -178,7 +178,7 @@ const UpdateOrganizationModal = ({ organization, onClose, onUpdated }) => {
               className="btn btn-base-100 rounded-none"
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>

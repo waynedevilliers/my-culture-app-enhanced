@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Header from './sections/Header.jsx';
 import Footer from './sections/Footer.jsx';

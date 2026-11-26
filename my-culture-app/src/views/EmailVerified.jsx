@@ -1,9 +1,14 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from "@/lib/router";
+import { useParams, useNavigate } from '@/lib/router';
 import { motion } from 'framer-motion';
-import { FaCheck, FaExclamationTriangle, FaHome, FaSignInAlt } from 'react-icons/fa';
+import {
+  FaCheck,
+  FaExclamationTriangle,
+  FaHome,
+  FaSignInAlt,
+} from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
@@ -18,9 +23,12 @@ const EmailVerified = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND ?? "") || "http://localhost:3001";
-        const response = await axios.get(`${backendUrl}/api/organization/verify-email/${token}`);
-        
+        const backendUrl =
+          (process.env.NEXT_PUBLIC_BACKEND ?? '') || 'http://localhost:3001';
+        const response = await axios.get(
+          `${backendUrl}/api/organization/verify-email/${token}`
+        );
+
         if (response.status === 200) {
           setVerificationStatus('success');
           setOrganizationData(response.data.organization);
@@ -69,7 +77,9 @@ const EmailVerified = () => {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <FaExclamationTriangle className="text-3xl text-red-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">{t('emailVerification.failed.title')}</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            {t('emailVerification.failed.title')}
+          </h1>
           <p className="text-gray-600 mb-6">
             {t('emailVerification.failed.message')}
           </p>
@@ -98,13 +108,19 @@ const EmailVerified = () => {
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <FaCheck className="text-3xl text-green-600" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">{t('emailVerification.success.title')}</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          {t('emailVerification.success.title')}
+        </h1>
         <p className="text-gray-600 mb-6">
-          {t('emailVerification.success.message', { organizationName: organizationData?.name })}
+          {t('emailVerification.success.message', {
+            organizationName: organizationData?.name,
+          })}
         </p>
-        
+
         <div className="bg-blue-50 rounded-xl p-4 mb-6">
-          <h3 className="font-semibold text-blue-800 mb-2">{t('emailVerification.success.adminAccount.title')}</h3>
+          <h3 className="font-semibold text-blue-800 mb-2">
+            {t('emailVerification.success.adminAccount.title')}
+          </h3>
           <p className="text-sm text-blue-700">
             {t('emailVerification.success.adminAccount.description')}
           </p>

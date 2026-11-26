@@ -1,17 +1,22 @@
-"use client";
+'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { getUserInitials } from '../utils/userUtils.js';
 
-const API = process.env.NEXT_PUBLIC_BACKEND ?? "";
+const API = process.env.NEXT_PUBLIC_BACKEND ?? '';
 
 // The API uses ADMIN / SUPER_ADMIN; the UI was written for admin / superAdmin.
-const UI_ROLES = { ADMIN: 'admin', SUPER_ADMIN: 'superAdmin', MODERATOR: 'moderator', USER: 'user' };
+const UI_ROLES = {
+  ADMIN: 'admin',
+  SUPER_ADMIN: 'superAdmin',
+  MODERATOR: 'moderator',
+  USER: 'user',
+};
 
 export const DASHBOARD_ROLES = ['admin', 'superAdmin'];
 
-export function toUiUser(apiUser) {
+function toUiUser(apiUser) {
   if (!apiUser) return null;
   return { ...apiUser, role: UI_ROLES[apiUser.role] ?? apiUser.role };
 }
@@ -31,37 +36,38 @@ export function UserProvider({ children }) {
     try {
       const response = await axios.post(API + '/api/auth/login', payload);
       setUser(toUiUser(response.data.data.user));
-      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem('token', response.data.data.token);
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Login failed. Please try again.' 
+      return {
+        success: false,
+        error:
+          error.response?.data?.message || 'Login failed. Please try again.',
       };
     }
   }
 
   async function logout() {
     setUser(null);
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
   }
 
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
-      axios.get(API + '/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then(({ data }) => {
-        setUser(toUiUser(data.data));
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => setIsLoading(false));
+      axios
+        .get(API + '/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then(({ data }) => {
+          setUser(toUiUser(data.data));
+        })
+        .catch(() => {
+          setUser(null);
+        })
+        .finally(() => setIsLoading(false));
     } else {
       setUser(null);
       setIsLoading(false);
@@ -72,10 +78,12 @@ export function UserProvider({ children }) {
     if (user) {
       setInitials(getUserInitials(user.firstName, user.lastName));
     } else setInitials(null);
-  }, [user])
+  }, [user]);
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isLoading, initials, setUser }}>
+    <UserContext.Provider
+      value={{ user, login, logout, isLoading, initials, setUser }}
+    >
       {children}
     </UserContext.Provider>
   );

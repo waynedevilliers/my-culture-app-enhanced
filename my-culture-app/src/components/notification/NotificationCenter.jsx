@@ -1,34 +1,28 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { useUser } from '../../contexts/UserContext';
 import notificationService from '../../services/notificationService';
 import {
   FaBell,
   FaEnvelope,
-  FaCheck,
   FaXmark,
   FaSpinner,
   FaGear,
   FaEye,
   FaTrash,
   FaFilter,
-  FaBellSlash
+  FaBellSlash,
 } from 'react-icons/fa6';
 
 const NotificationCenter = ({ isOpen, onClose }) => {
-  const { t } = useTranslation();
-  const { user } = useUser();
-  
   const [notifications, setNotifications] = useState([]);
   const [preferences, setPreferences] = useState({
     certificateEmails: true,
     applicationUpdates: true,
     systemNotifications: true,
     newsletterEmails: true,
-    emailDeliveryReceipts: false
+    emailDeliveryReceipts: false,
   });
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('notifications'); // 'notifications' or 'preferences'
@@ -51,10 +45,11 @@ const NotificationCenter = ({ isOpen, onClose }) => {
           id: 1,
           type: 'certificate_sent',
           title: 'Certificate sent successfully',
-          message: 'Certificate "Music Achievement Award" was sent to 3 recipients',
+          message:
+            'Certificate "Music Achievement Award" was sent to 3 recipients',
           timestamp: new Date().toISOString(),
           read: false,
-          status: 'success'
+          status: 'success',
         },
         {
           id: 2,
@@ -63,8 +58,8 @@ const NotificationCenter = ({ isOpen, onClose }) => {
           message: 'Your organization application has been approved',
           timestamp: new Date(Date.now() - 86400000).toISOString(),
           read: true,
-          status: 'info'
-        }
+          status: 'info',
+        },
       ]);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -87,7 +82,8 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
   const updatePreferences = async (newPreferences) => {
     try {
-      const result = await notificationService.updateNotificationPreferences(newPreferences);
+      const result =
+        await notificationService.updateNotificationPreferences(newPreferences);
       if (result.success) {
         setPreferences(newPreferences);
         toast.success('Notification preferences updated');
@@ -101,27 +97,23 @@ const NotificationCenter = ({ isOpen, onClose }) => {
   };
 
   const markAsRead = (notificationId) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
-      )
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
     );
   };
 
   const deleteNotification = (notificationId) => {
-    setNotifications(prev => 
-      prev.filter(n => n.id !== notificationId)
-    );
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
     toast.success('Notification deleted');
   };
 
   const getFilteredNotifications = () => {
-    if (filter === 'unread') return notifications.filter(n => !n.read);
-    if (filter === 'read') return notifications.filter(n => n.read);
+    if (filter === 'unread') return notifications.filter((n) => !n.read);
+    if (filter === 'read') return notifications.filter((n) => n.read);
     return notifications;
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   if (!isOpen) return null;
 
@@ -133,16 +125,17 @@ const NotificationCenter = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-3">
             <FaBell className="w-6 h-6 text-primary" />
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Notification Center</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Notification Center
+              </h2>
               {unreadCount > 0 && (
-                <p className="text-sm text-gray-600">{unreadCount} unread notifications</p>
+                <p className="text-sm text-gray-600">
+                  {unreadCount} unread notifications
+                </p>
               )}
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="btn btn-ghost btn-sm"
-          >
+          <button onClick={onClose} className="btn btn-ghost btn-sm">
             <FaXmark className="w-5 h-5" />
           </button>
         </div>
@@ -157,7 +150,8 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            Notifications {unreadCount > 0 && (
+            Notifications{' '}
+            {unreadCount > 0 && (
               <span className="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded-full">
                 {unreadCount}
               </span>
@@ -206,7 +200,9 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                   <div className="text-center py-8">
                     <FaBellSlash className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600">
-                      {filter === 'unread' ? 'No unread notifications' : 'No notifications found'}
+                      {filter === 'unread'
+                        ? 'No unread notifications'
+                        : 'No notifications found'}
                     </p>
                   </div>
                 ) : (
@@ -223,12 +219,17 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <div className={`w-2 h-2 rounded-full ${
-                                notification.status === 'success' ? 'bg-green-500' :
-                                notification.status === 'error' ? 'bg-red-500' :
-                                notification.status === 'warning' ? 'bg-yellow-500' :
-                                'bg-blue-500'
-                              }`} />
+                              <div
+                                className={`w-2 h-2 rounded-full ${
+                                  notification.status === 'success'
+                                    ? 'bg-green-500'
+                                    : notification.status === 'error'
+                                      ? 'bg-red-500'
+                                      : notification.status === 'warning'
+                                        ? 'bg-yellow-500'
+                                        : 'bg-blue-500'
+                                }`}
+                              />
                               <h4 className="font-semibold text-gray-800">
                                 {notification.title}
                               </h4>
@@ -242,7 +243,9 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                               {notification.message}
                             </p>
                             <p className="text-xs text-gray-500">
-                              {new Date(notification.timestamp).toLocaleString()}
+                              {new Date(
+                                notification.timestamp
+                              ).toLocaleString()}
                             </p>
                           </div>
                           <div className="flex gap-1 ml-4">
@@ -256,7 +259,9 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                               </button>
                             )}
                             <button
-                              onClick={() => deleteNotification(notification.id)}
+                              onClick={() =>
+                                deleteNotification(notification.id)
+                              }
                               className="btn btn-ghost btn-xs text-red-500"
                               title="Delete"
                             >
@@ -273,18 +278,27 @@ const NotificationCenter = ({ isOpen, onClose }) => {
           ) : (
             /* Preferences Tab */
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Email Notification Preferences</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Email Notification Preferences
+              </h3>
               <div className="space-y-4">
                 <label className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium text-gray-700">Certificate Email Notifications</span>
-                    <p className="text-sm text-gray-600">Receive emails when certificates are sent or generated</p>
+                    <span className="font-medium text-gray-700">
+                      Certificate Email Notifications
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Receive emails when certificates are sent or generated
+                    </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={preferences.certificateEmails}
                     onChange={(e) => {
-                      const newPrefs = { ...preferences, certificateEmails: e.target.checked };
+                      const newPrefs = {
+                        ...preferences,
+                        certificateEmails: e.target.checked,
+                      };
                       setPreferences(newPrefs);
                       updatePreferences(newPrefs);
                     }}
@@ -294,14 +308,21 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
                 <label className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium text-gray-700">Application Updates</span>
-                    <p className="text-sm text-gray-600">Get notified about organization application status changes</p>
+                    <span className="font-medium text-gray-700">
+                      Application Updates
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Get notified about organization application status changes
+                    </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={preferences.applicationUpdates}
                     onChange={(e) => {
-                      const newPrefs = { ...preferences, applicationUpdates: e.target.checked };
+                      const newPrefs = {
+                        ...preferences,
+                        applicationUpdates: e.target.checked,
+                      };
                       setPreferences(newPrefs);
                       updatePreferences(newPrefs);
                     }}
@@ -311,14 +332,21 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
                 <label className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium text-gray-700">System Notifications</span>
-                    <p className="text-sm text-gray-600">Important system updates and maintenance notices</p>
+                    <span className="font-medium text-gray-700">
+                      System Notifications
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Important system updates and maintenance notices
+                    </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={preferences.systemNotifications}
                     onChange={(e) => {
-                      const newPrefs = { ...preferences, systemNotifications: e.target.checked };
+                      const newPrefs = {
+                        ...preferences,
+                        systemNotifications: e.target.checked,
+                      };
                       setPreferences(newPrefs);
                       updatePreferences(newPrefs);
                     }}
@@ -328,14 +356,21 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
                 <label className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium text-gray-700">Newsletter Emails</span>
-                    <p className="text-sm text-gray-600">Receive newsletters and community updates</p>
+                    <span className="font-medium text-gray-700">
+                      Newsletter Emails
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Receive newsletters and community updates
+                    </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={preferences.newsletterEmails}
                     onChange={(e) => {
-                      const newPrefs = { ...preferences, newsletterEmails: e.target.checked };
+                      const newPrefs = {
+                        ...preferences,
+                        newsletterEmails: e.target.checked,
+                      };
                       setPreferences(newPrefs);
                       updatePreferences(newPrefs);
                     }}
@@ -345,14 +380,21 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
                 <label className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium text-gray-700">Email Delivery Receipts</span>
-                    <p className="text-sm text-gray-600">Get confirmation when emails are successfully delivered</p>
+                    <span className="font-medium text-gray-700">
+                      Email Delivery Receipts
+                    </span>
+                    <p className="text-sm text-gray-600">
+                      Get confirmation when emails are successfully delivered
+                    </p>
                   </div>
                   <input
                     type="checkbox"
                     checked={preferences.emailDeliveryReceipts}
                     onChange={(e) => {
-                      const newPrefs = { ...preferences, emailDeliveryReceipts: e.target.checked };
+                      const newPrefs = {
+                        ...preferences,
+                        emailDeliveryReceipts: e.target.checked,
+                      };
                       setPreferences(newPrefs);
                       updatePreferences(newPrefs);
                     }}
@@ -365,10 +407,14 @@ const NotificationCenter = ({ isOpen, onClose }) => {
                 <div className="flex items-start gap-2">
                   <FaEnvelope className="w-5 h-5 text-blue-600 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-blue-800 mb-1">Email Delivery Information</h4>
+                    <h4 className="font-medium text-blue-800 mb-1">
+                      Email Delivery Information
+                    </h4>
                     <p className="text-sm text-blue-700">
-                      All critical notifications (like certificate deliveries and account security) will always be sent 
-                      regardless of these preferences to ensure platform security and functionality.
+                      All critical notifications (like certificate deliveries
+                      and account security) will always be sent regardless of
+                      these preferences to ensure platform security and
+                      functionality.
                     </p>
                   </div>
                 </div>
@@ -379,10 +425,7 @@ const NotificationCenter = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="p-4 border-t bg-gray-50 flex justify-end">
-          <button
-            onClick={onClose}
-            className="btn btn-primary"
-          >
+          <button onClick={onClose} className="btn btn-primary">
             Close
           </button>
         </div>

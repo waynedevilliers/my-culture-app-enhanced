@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { FaDownload, FaFilePdf, FaImage, FaSpinner } from 'react-icons/fa6';
 import axios from 'axios';
 
-const CertificateDownload = ({ certificateId, title = "Certificate" }) => {
+const CertificateDownload = ({ certificateId, title = 'Certificate' }) => {
   const [downloading, setDownloading] = useState({
     pdf: false,
-    png: false
+    png: false,
   });
 
   const downloadFile = async (type) => {
@@ -16,36 +16,35 @@ const CertificateDownload = ({ certificateId, title = "Certificate" }) => {
       return;
     }
 
-    setDownloading(prev => ({ ...prev, [type]: true }));
+    setDownloading((prev) => ({ ...prev, [type]: true }));
 
     try {
-      const endpoint = `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/certificates/${certificateId}/${type}`;
-      
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/certificates/${certificateId}/${type}`;
+
       const response = await axios.get(endpoint, {
         responseType: 'blob',
-        timeout: 60000 // 60 seconds timeout for PDF generation
+        timeout: 60000, // 60 seconds timeout for PDF generation
       });
 
       // Create blob URL and trigger download
-      const blob = new Blob([response.data], { 
-        type: type === 'pdf' ? 'application/pdf' : 'image/png' 
+      const blob = new Blob([response.data], {
+        type: type === 'pdf' ? 'application/pdf' : 'image/png',
       });
-      
+
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.${type}`;
-      
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Clean up blob URL
       window.URL.revokeObjectURL(url);
-
     } catch (error) {
       console.error(`Error downloading ${type.toUpperCase()}:`, error);
-      
+
       let errorMessage = `Failed to download ${type.toUpperCase()}`;
       if (error.response?.status === 404) {
         errorMessage = 'Certificate not found';
@@ -54,10 +53,10 @@ const CertificateDownload = ({ certificateId, title = "Certificate" }) => {
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       alert(errorMessage);
     } finally {
-      setDownloading(prev => ({ ...prev, [type]: false }));
+      setDownloading((prev) => ({ ...prev, [type]: false }));
     }
   };
 
@@ -76,9 +75,7 @@ const CertificateDownload = ({ certificateId, title = "Certificate" }) => {
           ) : (
             <FaFilePdf />
           )}
-          <span>
-            {downloading.pdf ? 'Generating PDF...' : 'Download PDF'}
-          </span>
+          <span>{downloading.pdf ? 'Generating PDF...' : 'Download PDF'}</span>
         </button>
 
         {/* PNG Download Button */}
@@ -93,9 +90,7 @@ const CertificateDownload = ({ certificateId, title = "Certificate" }) => {
           ) : (
             <FaImage />
           )}
-          <span>
-            {downloading.png ? 'Generating PNG...' : 'Download PNG'}
-          </span>
+          <span>{downloading.png ? 'Generating PNG...' : 'Download PNG'}</span>
         </button>
       </div>
 

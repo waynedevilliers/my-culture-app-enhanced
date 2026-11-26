@@ -1,12 +1,12 @@
 // Authentication utilities
 // Provides JWT token generation, verification, and password hashing
 
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import type { JwtPayload, User } from "./types";
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import type { JwtPayload, User } from './types';
 
 const BCRYPT_ROUNDS = 10;
-const TOKEN_LIFETIME = "7d";
+const TOKEN_LIFETIME = '7d';
 const MIN_SECRET_LENGTH = 32;
 
 /**
@@ -26,7 +26,9 @@ export function getJwtSecret(): string {
 /**
  * Generate JWT token
  */
-export function generateToken(user: Pick<User, "id" | "email" | "role">): string {
+export function generateToken(
+  user: Pick<User, 'id' | 'email' | 'role'>
+): string {
   const payload = {
     userId: user.id,
     email: user.email,
@@ -34,7 +36,7 @@ export function generateToken(user: Pick<User, "id" | "email" | "role">): string
   };
 
   return jwt.sign(payload, getJwtSecret(), {
-    algorithm: "HS256",
+    algorithm: 'HS256',
     expiresIn: TOKEN_LIFETIME,
   });
 }
@@ -46,7 +48,7 @@ export function generateToken(user: Pick<User, "id" | "email" | "role">): string
 export function verifyToken(token: string): JwtPayload | null {
   try {
     return jwt.verify(token, getJwtSecret(), {
-      algorithms: ["HS256"],
+      algorithms: ['HS256'],
     }) as JwtPayload;
   } catch {
     return null;
@@ -73,20 +75,15 @@ export async function comparePassword(
 /**
  * Extract token from Authorization header
  */
-export function extractTokenFromHeader(authHeader?: string | null): string | null {
+export function extractTokenFromHeader(
+  authHeader?: string | null
+): string | null {
   if (!authHeader) return null;
 
-  const parts = authHeader.split(" ");
-  if (parts.length !== 2 || parts[0] !== "Bearer" || !parts[1]) {
+  const parts = authHeader.split(' ');
+  if (parts.length !== 2 || parts[0] !== 'Bearer' || !parts[1]) {
     return null;
   }
 
   return parts[1];
-}
-
-/**
- * Create Authorization header
- */
-export function createAuthHeader(token: string): string {
-  return `Bearer ${token}`;
 }

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import CertificateList from "../../components/admin/CertificateList";
-import { useTranslation } from "react-i18next";
+import CertificateList from '../../components/admin/CertificateList';
+import { useTranslation } from 'react-i18next';
 const Certificate = () => {
   const { t } = useTranslation();
-  
+
   return (
     <section
       id="dashboard-events"

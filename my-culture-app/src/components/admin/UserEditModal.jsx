@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
     firstName: '',
     lastName: '',
     email: '',
-    role: 'user'
+    role: 'user',
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -22,61 +22,62 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         email: user.email || '',
-        role: user.role || 'user'
+        role: user.role || 'user',
       });
     }
   }, [user]);
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.firstName.trim()) {
       newErrors.firstName = t('admin.forms.validation.required');
     }
-    
+
     if (!formData.lastName.trim()) {
       newErrors.lastName = t('admin.forms.validation.required');
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = t('admin.forms.validation.required');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = t('admin.forms.validation.invalidEmail');
     }
-    
+
     if (!formData.role) {
       newErrors.role = t('admin.forms.validation.required');
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
-      const response = await axios.put(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/users/${user.id}`,
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/users/${user.id}`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
-      
+
       toast.success(t('admin.messages.userUpdateSuccess'));
       onSuccess();
     } catch (error) {
-      const errorMessage = error.response?.data?.message || t('admin.messages.userUpdateFailed');
+      const errorMessage =
+        error.response?.data?.message || t('admin.messages.userUpdateFailed');
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -85,16 +86,16 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
   };
@@ -105,7 +106,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
         <h2 className="text-lg font-semibold mb-4">
           {t('admin.forms.editUser')}
         </h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -123,7 +124,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
               <span className="text-error text-sm">{errors.firstName}</span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t('admin.tables.lastName')}
@@ -140,7 +141,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
               <span className="text-error text-sm">{errors.lastName}</span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t('admin.tables.email')}
@@ -157,7 +158,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
               <span className="text-error text-sm">{errors.email}</span>
             )}
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t('admin.tables.access')}
@@ -176,7 +177,7 @@ const UserEditModal = ({ user, onClose, onSuccess }) => {
               <span className="text-error text-sm">{errors.role}</span>
             )}
           </div>
-          
+
           <div className="flex justify-end gap-2 pt-4">
             <button
               type="button"

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Navigation from '../../components/admin/Navigation.jsx';
 

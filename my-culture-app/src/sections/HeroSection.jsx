@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { FaAngleDown, FaAward, FaUsers, FaGlobe } from "react-icons/fa6";
-import { Link } from "react-scroll";
-import { motion } from "framer-motion";
+import { FaAngleDown, FaAward, FaUsers, FaGlobe } from 'react-icons/fa6';
+import { Link } from 'react-scroll';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const HeroSection = () => {
   const { t } = useTranslation();
-  
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-4 py-16 pt-24 md:pt-16">
       {/* Background decoration */}
@@ -20,7 +20,7 @@ const HeroSection = () => {
         className="relative z-10 text-center max-w-5xl mx-auto"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
+        transition={{ duration: 1.2, ease: 'easeOut' }}
       >
         {/* Main heading */}
         <motion.h1
@@ -54,17 +54,23 @@ const HeroSection = () => {
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaAward className="text-3xl text-primary mb-2" />
             <div className="text-2xl font-bold text-gray-800">1000+</div>
-            <div className="text-sm text-gray-600">{t('hero.stats.certificates')}</div>
+            <div className="text-sm text-gray-600">
+              {t('hero.stats.certificates')}
+            </div>
           </div>
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaUsers className="text-3xl text-secondary mb-2" />
             <div className="text-2xl font-bold text-gray-800">50+</div>
-            <div className="text-sm text-gray-600">{t('hero.stats.organizations')}</div>
+            <div className="text-sm text-gray-600">
+              {t('hero.stats.organizations')}
+            </div>
           </div>
           <div className="flex flex-col items-center p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm">
             <FaGlobe className="text-3xl text-primary mb-2" />
             <div className="text-2xl font-bold text-gray-800">25+</div>
-            <div className="text-sm text-gray-600">{t('hero.stats.members')}</div>
+            <div className="text-sm text-gray-600">
+              {t('hero.stats.members')}
+            </div>
           </div>
         </motion.div>
 
