@@ -1,0 +1,317 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum CertificateStatus {
+  DRAFT
+  GENERATED
+  SENT
+  DOWNLOADED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  CANCELLED
+}
+
+// User model
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  firstName String
+  lastName  String
+  password  String
+  role      Role    @default(USER)
+  newsletter Boolean @default(false)
+  verified  Boolean @default(false)
+  
+  // Relations
+  organizations Organization[]
+  events        Event[]
+  certificates  Certificate[]
+  certificateRecipients CertificateRecipient[]
+  blogs         Blog[]
+  galleries     Gallery[]
+  images        Image[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Organization model
+model Organization {
+  id              Int     @id @default(autoincrement())
+  name            String
+  email           String  @unique
+  description     String?
+  website         String?
+  verified        Boolean @default(false)
+  approvalStatus  String  @default("pending")
+  
+  userId          Int
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  events          Event[]
+  certificates    Certificate[]
+  galleries       Gallery[]
+  images          Image[]
+  locations       Location[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Event model
+model Event {
+  id              Int     @id @default(autoincrement())
+  title           String
+  description     String?
+  content         String?
+  date            DateTime
+  startDate       DateTime?
+  endDate         DateTime?
+  locationString  String?
+  capacity        Int?
+  status          EventStatus @default(DRAFT)
+  published       Boolean @default(false)
+  price           Decimal?
+  discountedPrice Decimal?
+  abendkassePrice Decimal?
+  
+  userId          Int
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  organizationId  Int?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  locationId      Int?
+  location        Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  
+  // Relations
+  categories      EventCategory[]
+  images          Image[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Category model
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  slug  String  @unique
+  
+  // Relations
+  events EventCategory[]
+  blogs  Blog[]
+  
+  createdAt DateTime @default(now())
+}
+
+// EventCategory model
+model EventCategory {
+  id        Int @id @default(autoincrement())
+  eventId   Int
+  categoryId Int
+  
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  category  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  @@unique([eventId, categoryId])
+}
+
+// Location model
+model Location {
+  id              Int     @id @default(autoincrement())
+  name            String
+  address         String?
+  city            String?
+  postalCode      String?
+  country         String?
+  latitude        Decimal?
+  longitude       Decimal?
+  
+  organizationId  Int?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  // Relations
+  events          Event[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Certificate model
+model Certificate {
+  id              String  @id @default(cuid())
+  title           String
+  template        String?
+  recipientName   String?
+  recipientEmail  String?
+  pdfUrl          String?
+  status          CertificateStatus @default(DRAFT)
+  issued          Boolean @default(false)
+  
+  userId          Int
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  organizationId  Int
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  recipients      CertificateRecipient[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// CertificateRecipient model
+model CertificateRecipient {
+  id              Int     @id @default(autoincrement())
+  name            String
+  email           String
+  recipientCode   String  @unique
+  pdfUrl          String?
+  downloaded      Boolean @default(false)
+  downloadedAt    DateTime?
+  
+  certificateId   String
+  certificate     Certificate @relation(fields: [certificateId], references: [id], onDelete: Cascade)
+  
+  userId          Int?
+  user            User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Blog model
+model Blog {
+  id              Int     @id @default(autoincrement())
+  title           String
+  slug            String  @unique
+  content         String
+  excerpt         String?
+  published       Boolean @default(false)
+  
+  userId          Int
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  categoryId      Int?
+  category        Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  // Relations
+  images          Image[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Gallery model
+model Gallery {
+  id              Int     @id @default(autoincrement())
+  name            String
+  description     String?
+  published       Boolean @default(false)
+  
+  userId          Int
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  organizationId  Int?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  // Relations
+  images          Image[]
+  imageGalleries  ImageGallery[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Image model
+model Image {
+  id              String  @id @default(cuid())
+  publicId        String?
+  url             String
+  secureUrl       String?
+  fileName        String?
+  size            Int?
+  width           Int?
+  height          Int?
+  
+  userId          Int?
+  user            User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  organizationId  Int?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  
+  eventId         Int?
+  event           Event? @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  blogId          Int?
+  blog            Blog? @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  
+  galleryId       Int?
+  gallery         Gallery? @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  imageGalleries  ImageGallery[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ImageGallery model (Junction table)
+model ImageGallery {
+  id        Int @id @default(autoincrement())
+  imageId   String
+  galleryId Int
+  order     Int @default(0)
+  
+  image     Image   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  gallery   Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  
+  @@unique([imageId, galleryId])
+}
+
+// Newsletter/Subscriber model
+model Subscriber {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String?
+  subscribed Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Testimonial model
+model Testimonial {
+  id        Int     @id @default(autoincrement())
+  name      String
+  email     String?
+  message   String
+  rating    Int?
+  published Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
