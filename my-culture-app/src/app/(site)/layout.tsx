@@ -1,5 +1,9 @@
-import Layout from "@/Layout.jsx";
+import Layout from '@/Layout.jsx';
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default function SiteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <Layout>{children}</Layout>;
 }

@@ -1,19 +1,21 @@
-"use client";
+'use client';
 
-import { FaFacebook, FaInstagram, FaEnvelope, FaPhone } from "react-icons/fa6";
-import { Link } from "@/lib/router";
-import { useTranslation } from "react-i18next";
+import { FaFacebook, FaInstagram, FaEnvelope, FaPhone } from 'react-icons/fa6';
+import { Link } from '@/lib/router';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
   const { t } = useTranslation();
-  
+
   return (
     <footer className="w-full text-gray-800">
       <div className="border-t-4 border-primary px-4">
         <div className="max-w-screen-xl mx-auto md:px-12 lg:px-16 py-8">
           <div className="flex flex-col md:flex-row justify-between gap-8 text-center md:text-left">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-primary">{t('footer.stayConnected')}</h1>
+              <h1 className="text-4xl font-bold text-primary">
+                {t('footer.stayConnected')}
+              </h1>
               <p className="text-lg font-medium mt-2">
                 {t('footer.connectDescription')}
               </p>
@@ -44,12 +46,22 @@ const Footer = () => {
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 mt-8 text-center md:text-left">
             <div>
-              <p className="text-lg font-bold text-primary">{t('footer.socialMedia')}</p>
+              <p className="text-lg font-bold text-primary">
+                {t('footer.socialMedia')}
+              </p>
               <div className="flex justify-center md:justify-start gap-4 mt-2 text-2xl">
-                <a href="https://facebook.com" className="hover:text-primary">
+                <a
+                  href="https://facebook.com"
+                  aria-label="Facebook"
+                  className="hover:text-primary"
+                >
                   <FaFacebook />
                 </a>
-                <a href="https://instagram.com" className="hover:text-primary">
+                <a
+                  href="https://instagram.com"
+                  aria-label="Instagram"
+                  className="hover:text-primary"
+                >
                   <FaInstagram />
                 </a>
               </div>
@@ -68,8 +80,9 @@ const Footer = () => {
         <div className="w-full border-t-2 border-primary">
           <div className="max-w-screen-xl mx-auto px-4 md:px-12 lg:px-16 py-4 flex flex-col md:flex-row justify-between items-center text-sm text-center md:text-left">
             <div className="font-medium">
-              &copy; {new Date().getFullYear()}{" "}
-              <span className="text-primary underline">Culture Academy</span>. {t('footer.copyright')}
+              &copy; {new Date().getFullYear()}{' '}
+              <span className="text-primary underline">Culture Academy</span>.{' '}
+              {t('footer.copyright')}
             </div>
 
             <nav className="flex justify-center md:justify-start gap-4 mt-4 md:mt-0">

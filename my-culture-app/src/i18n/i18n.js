@@ -8,11 +8,11 @@ import en from './locales/en.json';
 
 const resources = {
   de: {
-    translation: de
+    translation: de,
   },
   en: {
-    translation: en
-  }
+    translation: en,
+  },
 };
 
 i18n
@@ -25,15 +25,13 @@ i18n
     resources,
     lng: 'de', // Default language (German as primary)
     fallbackLng: 'de', // Fallback language
-    
+
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
     },
 
     interpolation: {
-      escapeValue: false // React already does escaping
-    }
+      escapeValue: false, // React already does escaping
+    },
   });
-
-export default i18n;

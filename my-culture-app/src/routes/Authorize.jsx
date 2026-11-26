@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import { useUser } from '../contexts/UserContext.jsx';
-import { Navigate } from "@/lib/router";
+import { Navigate } from '@/lib/router';
 
 const Authorize = ({ roles, children }) => {
   const { user } = useUser();

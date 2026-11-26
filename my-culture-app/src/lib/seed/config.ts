@@ -3,7 +3,7 @@
 
 const MIN_PASSWORD_LENGTH = 12;
 
-export interface SeedAdminConfig {
+interface SeedAdminConfig {
   email: string;
   password: string;
 }
@@ -24,7 +24,7 @@ export function readSeedAdminConfig(
   }
 
   return {
-    email: env.SEED_ADMIN_EMAIL || "admin@myculture.app",
+    email: env.SEED_ADMIN_EMAIL || 'admin@myculture.app',
     password,
   };
 }

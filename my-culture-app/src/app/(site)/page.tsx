@@ -1,4 +1,4 @@
-import Landing from "@/views/Landing.jsx";
+import Landing from '@/views/Landing.jsx';
 
 export default function Page() {
   return <Landing />;

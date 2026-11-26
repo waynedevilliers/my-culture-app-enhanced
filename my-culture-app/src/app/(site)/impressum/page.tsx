@@ -1,4 +1,4 @@
-import Impressum from "@/views/Impressum.jsx";
+import Impressum from '@/views/Impressum.jsx';
 
 export default function Page() {
   return <Impressum />;

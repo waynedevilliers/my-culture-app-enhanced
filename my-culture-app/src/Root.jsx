@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { UserProvider } from './contexts/UserContext.jsx';
 import { Slide, ToastContainer } from 'react-toastify';

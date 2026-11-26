@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import axios from "axios";
-import { useUser } from "../../contexts/UserContext";
-import { toast } from "react-toastify";
+import { useState } from 'react';
+import axios from 'axios';
+import { useUser } from '../../contexts/UserContext';
+import { toast } from 'react-toastify';
 
 const NewsletterSubscription = () => {
   const { user, setUser } = useUser();
@@ -13,21 +13,18 @@ const NewsletterSubscription = () => {
     setLoading(true);
     try {
       const payload = {
-        url: `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/subscribers/remove`,
+        url: `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/subscribers/remove`,
         config: {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         },
       };
-      await axios.get(
-        payload.url,
-        payload.config,
-      );
+      await axios.get(payload.url, payload.config);
       setUser({ ...user, newsletter: false });
-      toast.success("Erfolgreich vom Newsletter abgemeldet.");
-    } catch (error) {
-      toast.error("Fehler beim Abmelden. Bitte versuchen Sie es erneut.");
+      toast.success('Erfolgreich vom Newsletter abgemeldet.');
+    } catch {
+      toast.error('Fehler beim Abmelden. Bitte versuchen Sie es erneut.');
     } finally {
       setLoading(false);
     }
@@ -42,20 +39,20 @@ const NewsletterSubscription = () => {
         },
         config: {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
-        }
-      }
+        },
+      };
 
       await axios.post(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/subscribers/add`,
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/subscribers/add`,
         payload.data,
         payload.config
       );
       setUser({ ...user, newsletter: true });
-      toast.success("Erfolgreich für den Newsletter angemeldet.");
-    } catch (error) {
-      toast.error("Fehler beim Anmelden. Bitte versuchen Sie es erneut.");
+      toast.success('Erfolgreich für den Newsletter angemeldet.');
+    } catch {
+      toast.error('Fehler beim Anmelden. Bitte versuchen Sie es erneut.');
     } finally {
       setLoading(false);
     }
@@ -72,9 +69,14 @@ const NewsletterSubscription = () => {
               Newsletter-Abonnement
             </h2>
             <p className="text-center">
-              {user.newsletter
-                ? ("Sie sind für den Newsletter angemeldet.")
-                : (<>Sie sind <span className="text-red-600">nicht</span> für den Newsletter angemeldet.</>)}
+              {user.newsletter ? (
+                'Sie sind für den Newsletter angemeldet.'
+              ) : (
+                <>
+                  Sie sind <span className="text-red-600">nicht</span> für den
+                  Newsletter angemeldet.
+                </>
+              )}
             </p>
             <div className="flex flex-col gap-4">
               {user.newsletter ? (

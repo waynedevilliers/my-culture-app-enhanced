@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import OrganizationCard from "../components/organization/OrganizationCards";
-import axios from "axios";
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import OrganizationCard from '../components/organization/OrganizationCards';
+import axios from 'axios';
 
 const Organizations = () => {
   const { t } = useTranslation();
@@ -15,12 +15,12 @@ const Organizations = () => {
     const fetchOrganizations = async () => {
       try {
         const response = await axios.get(
-          `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/organizations/published`
+          `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/published`
         );
         const data = response.data || [];
         setOrganizations(data);
       } catch (err) {
-        console.error("Error fetching organizations:", err);
+        console.error('Error fetching organizations:', err);
       } finally {
         setLoading(false);
       }
@@ -34,10 +34,10 @@ const Organizations = () => {
         {/* Page header */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800">
-            {t("organizations.title")}
+            {t('organizations.title')}
           </h1>
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-            {t("organizations.subtitle")}
+            {t('organizations.subtitle')}
           </p>
         </header>
 
@@ -79,10 +79,10 @@ const Organizations = () => {
                 >
                   <div className="text-gray-400 text-6xl mb-4">🏢</div>
                   <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                    {t("organizations.noOrganizations")}
+                    {t('organizations.noOrganizations')}
                   </h3>
                   <p className="text-gray-500">
-                    {t("organizations.checkBackSoon")}
+                    {t('organizations.checkBackSoon')}
                   </p>
                 </motion.div>
               )}
@@ -101,16 +101,16 @@ const Organizations = () => {
           >
             <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                {t("organizations.joinCommunity")}
+                {t('organizations.joinCommunity')}
               </h3>
               <p className="text-gray-600 mb-6">
-                {t("organizations.joinDescription")}
+                {t('organizations.joinDescription')}
               </p>
               <a
                 href="/join-us"
                 className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
-                {t("organizations.getStartedToday")}
+                {t('organizations.getStartedToday')}
               </a>
             </div>
           </motion.div>

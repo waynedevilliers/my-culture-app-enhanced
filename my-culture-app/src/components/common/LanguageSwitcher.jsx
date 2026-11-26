@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useTranslation } from 'react-i18next';
 import { FaGlobe } from 'react-icons/fa6';
@@ -15,7 +15,9 @@ const LanguageSwitcher = () => {
     <button
       onClick={toggleLanguage}
       className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-secondary hover:text-primary transition-colors duration-300"
-      title={i18n.language === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'}
+      title={
+        i18n.language === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'
+      }
     >
       <FaGlobe className="text-lg" />
       <span className="font-semibold">

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useUser } from "../../contexts/UserContext";
-import { FaUserAlt } from "react-icons/fa";
+import { useUser } from '../../contexts/UserContext';
+import { FaUserAlt } from 'react-icons/fa';
 
 const ProfileHeader = () => {
   const { user } = useUser();

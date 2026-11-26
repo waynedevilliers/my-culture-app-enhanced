@@ -1,23 +1,21 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const { t } = useTranslation();
   const [users, setUsers] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [subscribers, setSubscribers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const fetchUsers = async () => {
     const payload = {
-      url: `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/users`,
+      url: `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/users`,
       config: {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       },
     };
@@ -30,16 +28,17 @@ const Dashboard = () => {
           setUsers(res.data);
         })
         .catch(() => {
-          toast.error("Something went wrong. Please try again later.");
+          toast.error('Something went wrong. Please try again later.');
         });
     } catch {
-      toast.error("Something went wrong. Please try again later.");
+      toast.error('Something went wrong. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  {/*
+  {
+    /*
   const fetchEvents = async () => {
     const payload = {
       url: `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/events`,
@@ -66,9 +65,11 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
-*/}
+*/
+  }
 
-{/*
+  {
+    /*
   const fetchSubscribers = async () => {
     const payload = {
       url: `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api/subscribers`,
@@ -95,7 +96,8 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
-   */}
+   */
+  }
 
   useEffect(() => {
     void fetchUsers();

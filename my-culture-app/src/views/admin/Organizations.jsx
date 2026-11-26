@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import OrganizationList from "../../components/admin/OrganizationList";
-import { useTranslation } from "react-i18next";
+import OrganizationList from '../../components/admin/OrganizationList';
+import { useTranslation } from 'react-i18next';
 const Organization = () => {
   const { t } = useTranslation();
-  
+
   return (
     <section
       id="dashboard-events"

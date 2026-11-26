@@ -1,0 +1,7 @@
+# Prose keeps its line breaks.
+*.md
+package-lock.json
+# Static files served as they are.
+public/
+# Translations: keys and wording are edited by hand.
+src/i18n/locales/

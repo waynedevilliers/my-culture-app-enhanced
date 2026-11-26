@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Header from "./sections/admin/Header.jsx";
-import NavigationSidebar from "./components/admin/NavigationSidebar.jsx";
+import Header from './sections/admin/Header.jsx';
+import NavigationSidebar from './components/admin/NavigationSidebar.jsx';
 
 const AdminLayout = ({ children }) => {
   return (
@@ -12,9 +12,7 @@ const AdminLayout = ({ children }) => {
           <NavigationSidebar />
         </div>
         <div className="flex-1 h-full overflow-y-auto relative">
-          <main className="relative">
-            {children}
-          </main>
+          <main className="relative">{children}</main>
         </div>
       </div>
     </>

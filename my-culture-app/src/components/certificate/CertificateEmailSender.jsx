@@ -1,31 +1,27 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
 import { useUser } from '../../contexts/UserContext';
 import notificationService from '../../services/notificationService';
 import {
-  FaEnvelope,
   FaPaperPlane,
   FaSpinner,
-  FaCheck,
   FaTriangleExclamation,
   FaPlus,
   FaTrash,
   FaCopy,
   FaEye,
-  FaXmark
+  FaXmark,
 } from 'react-icons/fa6';
 
 const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
-  const { t } = useTranslation();
   const { user } = useUser();
-  
+
   const [sending, setSending] = useState(false);
   const [recipients, setRecipients] = useState([]);
   const [customEmails, setCustomEmails] = useState(['']);
-  const [includeOriginalRecipients, setIncludeOriginalRecipients] = useState(true);
+  const [includeOriginalRecipients] = useState(true);
   const [customMessage, setCustomMessage] = useState('');
   const [includeDownloadLink, setIncludeDownloadLink] = useState(true);
   const [priority, setPriority] = useState('normal');
@@ -34,50 +30,57 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
   // Initialize recipients when certificate changes
   useEffect(() => {
     if (certificate?.recipients) {
-      setRecipients(certificate.recipients.map(r => ({ ...r, selected: true })));
+      setRecipients(
+        certificate.recipients.map((r) => ({ ...r, selected: true }))
+      );
     }
   }, [certificate]);
 
   // Check access permissions
-  const hasAccess = user?.access === 'superAdmin' || certificate?.issuedFrom === user?.organizationName;
+  const hasAccess =
+    user?.access === 'superAdmin' ||
+    certificate?.issuedFrom === user?.organizationName;
 
   const handleRecipientToggle = (index, checked) => {
-    setRecipients(prev => 
-      prev.map((recipient, i) => 
+    setRecipients((prev) =>
+      prev.map((recipient, i) =>
         i === index ? { ...recipient, selected: checked } : recipient
       )
     );
   };
 
   const handleCustomEmailChange = (index, value) => {
-    setCustomEmails(prev => 
-      prev.map((email, i) => i === index ? value : email)
+    setCustomEmails((prev) =>
+      prev.map((email, i) => (i === index ? value : email))
     );
   };
 
   const addCustomEmail = () => {
-    setCustomEmails(prev => [...prev, '']);
+    setCustomEmails((prev) => [...prev, '']);
   };
 
   const removeCustomEmail = (index) => {
     if (customEmails.length > 1) {
-      setCustomEmails(prev => prev.filter((_, i) => i !== index));
+      setCustomEmails((prev) => prev.filter((_, i) => i !== index));
     }
   };
 
   const validateForm = () => {
-    const selectedRecipients = recipients.filter(r => r.selected);
-    const validCustomEmails = customEmails.filter(email => email.trim());
-    
+    const selectedRecipients = recipients.filter((r) => r.selected);
+    const validCustomEmails = customEmails.filter((email) => email.trim());
+
     if (selectedRecipients.length === 0 && validCustomEmails.length === 0) {
       toast.error('Please select at least one recipient');
       return false;
     }
 
     // Validate custom emails
-    const emailValidation = notificationService.validateEmails(validCustomEmails);
+    const emailValidation =
+      notificationService.validateEmails(validCustomEmails);
     if (emailValidation.invalid.length > 0) {
-      toast.error(`Invalid email addresses: ${emailValidation.invalid.join(', ')}`);
+      toast.error(
+        `Invalid email addresses: ${emailValidation.invalid.join(', ')}`
+      );
       return false;
     }
 
@@ -92,12 +95,12 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
 
       // Collect all recipient emails
       const selectedRecipientEmails = recipients
-        .filter(r => r.selected)
-        .map(r => r.email);
-      
-      const validCustomEmails = customEmails.filter(email => email.trim());
-      
-      const allEmails = includeOriginalRecipients 
+        .filter((r) => r.selected)
+        .map((r) => r.email);
+
+      const validCustomEmails = customEmails.filter((email) => email.trim());
+
+      const allEmails = includeOriginalRecipients
         ? [...selectedRecipientEmails, ...validCustomEmails]
         : validCustomEmails;
 
@@ -110,18 +113,19 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
         {
           includeDownloadLink,
           customMessage: customMessage.trim() || null,
-          priority
+          priority,
         }
       );
 
       if (result.success) {
-        toast.success(`Certificate sent successfully to ${uniqueEmails.length} recipients`);
+        toast.success(
+          `Certificate sent successfully to ${uniqueEmails.length} recipients`
+        );
         onSent?.(uniqueEmails.length);
         onClose();
       } else {
         toast.error(result.error);
       }
-
     } catch (error) {
       console.error('Error sending certificate:', error);
       toast.error('Failed to send certificate. Please try again.');
@@ -132,10 +136,13 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
 
   const copyRecipientsToCustom = () => {
     const recipientEmails = recipients
-      .filter(r => r.selected)
-      .map(r => r.email);
-    
-    setCustomEmails([...customEmails.filter(e => e.trim()), ...recipientEmails]);
+      .filter((r) => r.selected)
+      .map((r) => r.email);
+
+    setCustomEmails([
+      ...customEmails.filter((e) => e.trim()),
+      ...recipientEmails,
+    ]);
   };
 
   if (!isOpen || !certificate) return null;
@@ -146,7 +153,9 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Send Certificate via Email</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Send Certificate via Email
+            </h2>
             <p className="text-gray-600 mt-1">{certificate.title}</p>
           </div>
           <button
@@ -166,7 +175,8 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
               <span className="font-medium">Access Denied</span>
             </div>
             <p className="text-red-700 mt-1">
-              You don't have permission to send this certificate. You can only send certificates from your organization.
+              You don&apos;t have permission to send this certificate. You can
+              only send certificates from your organization.
             </p>
           </div>
         )}
@@ -176,7 +186,9 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
           {recipients.length > 0 && (
             <div>
               <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg font-semibold text-gray-800">Original Recipients</h3>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Original Recipients
+                </h3>
                 <button
                   onClick={copyRecipientsToCustom}
                   className="btn btn-ghost btn-sm"
@@ -191,19 +203,27 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
                   <label
                     key={recipient.id || index}
                     className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${
-                      recipient.selected ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'
+                      recipient.selected
+                        ? 'border-primary bg-primary/5'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={recipient.selected}
-                      onChange={(e) => handleRecipientToggle(index, e.target.checked)}
+                      onChange={(e) =>
+                        handleRecipientToggle(index, e.target.checked)
+                      }
                       className="checkbox checkbox-primary"
                       disabled={!hasAccess}
                     />
                     <div>
-                      <div className="font-medium text-gray-800">{recipient.name}</div>
-                      <div className="text-sm text-gray-600">{recipient.email}</div>
+                      <div className="font-medium text-gray-800">
+                        {recipient.name}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {recipient.email}
+                      </div>
                     </div>
                   </label>
                 ))}
@@ -213,14 +233,18 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
 
           {/* Custom Recipients */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">Additional Recipients</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">
+              Additional Recipients
+            </h3>
             <div className="space-y-3">
               {customEmails.map((email, index) => (
                 <div key={index} className="flex gap-2">
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => handleCustomEmailChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleCustomEmailChange(index, e.target.value)
+                    }
                     placeholder="email@example.com"
                     className="input input-bordered flex-1"
                     disabled={!hasAccess}
@@ -251,8 +275,10 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
 
           {/* Email Options */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Email Options</h3>
-            
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Email Options
+            </h3>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Include Download Link */}
               <label className="flex items-center gap-3">
@@ -268,7 +294,9 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
 
               {/* Priority */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Priority
+                </label>
                 <select
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
@@ -306,8 +334,8 @@ const CertificateEmailSender = ({ certificate, isOpen, onClose, onSent }) => {
         <div className="flex justify-between items-center p-6 border-t bg-gray-50">
           <div className="text-sm text-gray-600">
             {(() => {
-              const selectedCount = recipients.filter(r => r.selected).length;
-              const customCount = customEmails.filter(e => e.trim()).length;
+              const selectedCount = recipients.filter((r) => r.selected).length;
+              const customCount = customEmails.filter((e) => e.trim()).length;
               const total = selectedCount + customCount;
               return `Sending to ${total} recipient${total !== 1 ? 's' : ''}`;
             })()}

@@ -15,7 +15,7 @@ afterEach(() => {
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: vi.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
       onchange: null,
@@ -65,6 +65,8 @@ beforeAll(() => {
       readText: vi.fn(() => Promise.resolve('')),
     },
     writable: true,
+    // user-event replaces the clipboard in userEvent.setup().
+    configurable: true,
   });
 
   // Mock window.open

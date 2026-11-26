@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
 import { useTranslation } from 'react-i18next';
 
-const Pagination = ({ 
-  page, 
-  totalPages, 
-  hasNextPage, 
-  hasPreviousPage, 
+const Pagination = ({
+  page,
+  totalPages,
+  hasNextPage,
+  hasPreviousPage,
   onPageChange,
   loading = false,
   showInfo = true,
-  totalCount = 0
+  totalCount = 0,
 }) => {
   const { t } = useTranslation();
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -42,9 +42,9 @@ const Pagination = ({
           {t('admin.pagination.showing', { page, totalPages, totalCount })}
         </div>
       )}
-      
+
       <div className="join">
-        <button 
+        <button
           className={`join-item btn ${!hasPreviousPage || loading ? 'btn-disabled' : ''}`}
           onClick={handlePrevious}
           disabled={!hasPreviousPage || loading}
@@ -65,7 +65,7 @@ const Pagination = ({
           </button>
         ))}
 
-        <button 
+        <button
           className={`join-item btn ${!hasNextPage || loading ? 'btn-disabled' : ''}`}
           onClick={handleNext}
           disabled={!hasNextPage || loading}

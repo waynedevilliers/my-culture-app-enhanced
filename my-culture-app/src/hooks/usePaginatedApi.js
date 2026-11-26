@@ -11,45 +11,71 @@ export const usePaginatedApi = (endpoint, options = {}) => {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [hasPreviousPage, setHasPreviousPage] = useState(false);
 
-  const { 
-    limit = 10, 
-    searchParams: rawSearchParams = {}, 
+  const {
+    limit = 10,
+    searchParams: rawSearchParams = {},
     includeAuth = true,
     onError,
-    onSuccess 
+    onSuccess,
   } = options;
 
   // Memoize searchParams to prevent infinite re-renders
-  const searchParams = useMemo(() => rawSearchParams, [JSON.stringify(rawSearchParams)]);
-  
+  const searchParams = useMemo(
+    () => rawSearchParams,
+    [JSON.stringify(rawSearchParams)]
+  );
+
   // Use ref to store the latest values to avoid dependency issues
-  const optionsRef = useRef({ endpoint, limit, searchParams, includeAuth, onError, onSuccess });
-  optionsRef.current = { endpoint, limit, searchParams, includeAuth, onError, onSuccess };
+  const optionsRef = useRef({
+    endpoint,
+    limit,
+    searchParams,
+    includeAuth,
+    onError,
+    onSuccess,
+  });
+  optionsRef.current = {
+    endpoint,
+    limit,
+    searchParams,
+    includeAuth,
+    onError,
+    onSuccess,
+  };
 
   const fetchData = useCallback(async (pageNumber) => {
     setLoading(true);
     try {
-      const { endpoint, limit, searchParams, includeAuth, onError, onSuccess } = optionsRef.current;
-      
+      const { endpoint, limit, searchParams, includeAuth, onSuccess } =
+        optionsRef.current;
+
       const params = new URLSearchParams({
         page: pageNumber,
         limit,
-        ...searchParams
+        ...searchParams,
       });
 
-      const config = includeAuth ? {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      } : {};
+      const config = includeAuth
+        ? {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        : {};
 
       const response = await axios.get(
-        `${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api${endpoint}?${params}`,
+        `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api${endpoint}?${params}`,
         config
       );
 
-      const { results, totalPages: pages, totalCount: count, hasNextPage: next, hasPreviousPage: prev } = response.data;
-      
+      const {
+        results,
+        totalPages: pages,
+        totalCount: count,
+        hasNextPage: next,
+        hasPreviousPage: prev,
+      } = response.data;
+
       setData(results || []);
       setTotalPages(pages || 1);
       setTotalCount(count || 0);
@@ -58,13 +84,14 @@ export const usePaginatedApi = (endpoint, options = {}) => {
 
       if (onSuccess) onSuccess(response.data);
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error fetching data';
+      const errorMessage =
+        error.response?.data?.message || 'Error fetching data';
       if (onError) {
         onError(error);
       } else {
         toast.error(errorMessage);
       }
-      
+
       // Reset to safe state on error
       setData([]);
       setTotalPages(1);
@@ -80,11 +107,14 @@ export const usePaginatedApi = (endpoint, options = {}) => {
     fetchData(page);
   }, [fetchData, page, endpoint, limit, searchParams, includeAuth]);
 
-  const goToPage = useCallback((newPage) => {
-    if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
-      setPage(newPage);
-    }
-  }, [page, totalPages]);
+  const goToPage = useCallback(
+    (newPage) => {
+      if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
+        setPage(newPage);
+      }
+    },
+    [page, totalPages]
+  );
 
   const nextPage = useCallback(() => {
     if (hasNextPage) goToPage(page + 1);
@@ -98,23 +128,32 @@ export const usePaginatedApi = (endpoint, options = {}) => {
     fetchData(page);
   }, [fetchData, page]);
 
-  const deleteItem = useCallback(async (id) => {
-    try {
-      const { endpoint, includeAuth } = optionsRef.current;
-      const config = includeAuth ? {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      } : {};
+  const deleteItem = useCallback(
+    async (id) => {
+      try {
+        const { endpoint, includeAuth } = optionsRef.current;
+        const config = includeAuth
+          ? {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+            }
+          : {};
 
-      await axios.delete(`${(process.env.NEXT_PUBLIC_BACKEND ?? "")}/api${endpoint}/${id}`, config);
-      toast.success("Item deleted successfully");
-      refresh();
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Failed to delete item';
-      toast.error(errorMessage);
-    }
-  }, [refresh]);
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api${endpoint}/${id}`,
+          config
+        );
+        toast.success('Item deleted successfully');
+        refresh();
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || 'Failed to delete item';
+        toast.error(errorMessage);
+      }
+    },
+    [refresh]
+  );
 
   return {
     data,
@@ -129,6 +168,6 @@ export const usePaginatedApi = (endpoint, options = {}) => {
     nextPage,
     previousPage,
     refresh,
-    deleteItem
+    deleteItem,
   };
 };

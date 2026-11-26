@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 class NotificationService {
   constructor() {
-    this.baseUrl = (process.env.NEXT_PUBLIC_BACKEND ?? "");
+    this.baseUrl = process.env.NEXT_PUBLIC_BACKEND ?? '';
     this.apiClient = axios.create({
       baseURL: this.baseUrl,
       timeout: 30000, // 30 seconds timeout for email operations
@@ -27,32 +27,35 @@ class NotificationService {
    */
   async sendCertificate(certificateId, recipientEmails = [], options = {}) {
     try {
-      const { 
+      const {
         includeDownloadLink = true,
         customMessage = null,
-        priority = 'normal' // 'high', 'normal', 'low'
+        priority = 'normal', // 'high', 'normal', 'low'
       } = options;
 
-      const response = await this.apiClient.post(`/api/certificates/send-certificate/${certificateId}`, {
-        recipientEmails,
-        includeDownloadLink,
-        customMessage,
-        priority
-      });
+      const response = await this.apiClient.post(
+        `/api/certificates/send-certificate/${certificateId}`,
+        {
+          recipientEmails,
+          includeDownloadLink,
+          customMessage,
+          priority,
+        }
+      );
 
       return {
         success: true,
         data: response.data,
-        message: response.data.message || 'Certificate sent successfully'
+        message: response.data.message || 'Certificate sent successfully',
       };
     } catch (error) {
       console.error('Error sending certificate:', error);
-      
+
       let errorMessage = 'Failed to send certificate';
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.status === 403) {
-        errorMessage = 'You don\'t have permission to send this certificate';
+        errorMessage = "You don't have permission to send this certificate";
       } else if (error.response?.status === 404) {
         errorMessage = 'Certificate not found';
       } else if (error.response?.status === 429) {
@@ -61,7 +64,7 @@ class NotificationService {
 
       return {
         success: false,
-        error: errorMessage
+        error: errorMessage,
       };
     }
   }
@@ -71,24 +74,28 @@ class NotificationService {
    */
   async sendBulkCertificates(certificateIds, options = {}) {
     try {
-      const response = await this.apiClient.post('/api/certificates/send-bulk', {
-        certificateIds,
-        ...options
-      });
+      const response = await this.apiClient.post(
+        '/api/certificates/send-bulk',
+        {
+          certificateIds,
+          ...options,
+        }
+      );
 
       return {
         success: true,
         data: response.data,
         sentCount: response.data.sentCount || 0,
         failedCount: response.data.failedCount || 0,
-        message: response.data.message || 'Bulk certificates sent'
+        message: response.data.message || 'Bulk certificates sent',
       };
     } catch (error) {
       console.error('Error sending bulk certificates:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to send bulk certificates'
+        error:
+          error.response?.data?.message || 'Failed to send bulk certificates',
       };
     }
   }
@@ -96,24 +103,31 @@ class NotificationService {
   /**
    * Send organization application notification
    */
-  async sendApplicationNotification(applicationId, type = 'approved', customMessage = null) {
+  async sendApplicationNotification(
+    applicationId,
+    type = 'approved',
+    customMessage = null
+  ) {
     try {
-      const response = await this.apiClient.post(`/api/organizations/applications/${applicationId}/notify`, {
-        type, // 'approved', 'rejected', 'pending'
-        customMessage
-      });
+      const response = await this.apiClient.post(
+        `/api/organizations/applications/${applicationId}/notify`,
+        {
+          type, // 'approved', 'rejected', 'pending'
+          customMessage,
+        }
+      );
 
       return {
         success: true,
         data: response.data,
-        message: response.data.message || 'Notification sent successfully'
+        message: response.data.message || 'Notification sent successfully',
       };
     } catch (error) {
       console.error('Error sending application notification:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to send notification'
+        error: error.response?.data?.message || 'Failed to send notification',
       };
     }
   }
@@ -123,21 +137,24 @@ class NotificationService {
    */
   async sendNewsletter(newsletterId, recipientGroups = ['all']) {
     try {
-      const response = await this.apiClient.post(`/api/newsletter/send/${newsletterId}`, {
-        recipientGroups
-      });
+      const response = await this.apiClient.post(
+        `/api/newsletter/send/${newsletterId}`,
+        {
+          recipientGroups,
+        }
+      );
 
       return {
         success: true,
         data: response.data,
-        message: response.data.message || 'Newsletter sent successfully'
+        message: response.data.message || 'Newsletter sent successfully',
       };
     } catch (error) {
       console.error('Error sending newsletter:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to send newsletter'
+        error: error.response?.data?.message || 'Failed to send newsletter',
       };
     }
   }
@@ -147,18 +164,20 @@ class NotificationService {
    */
   async getEmailStatus(emailId) {
     try {
-      const response = await this.apiClient.get(`/api/emails/status/${emailId}`);
-      
+      const response = await this.apiClient.get(
+        `/api/emails/status/${emailId}`
+      );
+
       return {
         success: true,
-        data: response.data
+        data: response.data,
       };
     } catch (error) {
       console.error('Error getting email status:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to get email status'
+        error: error.response?.data?.message || 'Failed to get email status',
       };
     }
   }
@@ -168,19 +187,21 @@ class NotificationService {
    */
   async getNotificationPreferences(userId = null) {
     try {
-      const url = userId ? `/api/users/${userId}/notifications` : '/api/users/notifications';
+      const url = userId
+        ? `/api/users/${userId}/notifications`
+        : '/api/users/notifications';
       const response = await this.apiClient.get(url);
-      
+
       return {
         success: true,
-        data: response.data
+        data: response.data,
       };
     } catch (error) {
       console.error('Error getting notification preferences:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to get preferences'
+        error: error.response?.data?.message || 'Failed to get preferences',
       };
     }
   }
@@ -190,19 +211,22 @@ class NotificationService {
    */
   async updateNotificationPreferences(preferences) {
     try {
-      const response = await this.apiClient.put('/api/users/notifications', preferences);
-      
+      const response = await this.apiClient.put(
+        '/api/users/notifications',
+        preferences
+      );
+
       return {
         success: true,
         data: response.data,
-        message: 'Notification preferences updated successfully'
+        message: 'Notification preferences updated successfully',
       };
     } catch (error) {
       console.error('Error updating notification preferences:', error);
-      
+
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to update preferences'
+        error: error.response?.data?.message || 'Failed to update preferences',
       };
     }
   }
@@ -214,10 +238,10 @@ class NotificationService {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const results = {
       valid: [],
-      invalid: []
+      invalid: [],
     };
 
-    emails.forEach(email => {
+    emails.forEach((email) => {
       if (typeof email === 'string' && emailRegex.test(email.trim())) {
         results.valid.push(email.trim());
       } else {
@@ -231,13 +255,16 @@ class NotificationService {
   /**
    * Show appropriate toast notification based on result
    */
-  showNotificationResult(result, defaultSuccessMessage = 'Operation completed successfully') {
+  showNotificationResult(
+    result,
+    defaultSuccessMessage = 'Operation completed successfully'
+  ) {
     if (result.success) {
       toast.success(result.message || defaultSuccessMessage);
     } else {
       toast.error(result.error || 'Operation failed');
     }
-    
+
     return result;
   }
 }

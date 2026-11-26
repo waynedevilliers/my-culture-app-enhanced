@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { ErrorBoundaryFallback } from './feedback/UserFeedback';
@@ -7,14 +7,14 @@ import errorHandlingService from '../services/errorHandlingService';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      hasError: false, 
+    this.state = {
+      hasError: false,
       error: null,
-      errorInfo: null
+      errorInfo: null,
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error) {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
@@ -23,14 +23,14 @@ class ErrorBoundary extends React.Component {
     // Log the error
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Log to our error handling service
     errorHandlingService.logError('React Error Boundary', error, {
       type: 'react_error',
       componentStack: errorInfo.componentStack,
-      errorBoundary: this.constructor.name
+      errorBoundary: this.constructor.name,
     });
 
     // Call onError prop if provided
@@ -40,12 +40,12 @@ class ErrorBoundary extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({ 
-      hasError: false, 
+    this.setState({
+      hasError: false,
       error: null,
-      errorInfo: null 
+      errorInfo: null,
     });
-    
+
     // Call onReset prop if provided
     if (this.props.onReset) {
       this.props.onReset();
@@ -57,7 +57,7 @@ class ErrorBoundary extends React.Component {
       // Use custom fallback if provided, otherwise use default
       if (this.props.fallback) {
         return this.props.fallback(
-          this.state.error, 
+          this.state.error,
           this.handleReset,
           this.state.errorInfo
         );
@@ -86,7 +86,7 @@ export const withErrorBoundary = (Component, errorBoundaryProps = {}) => {
   );
 
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 };
 
@@ -97,12 +97,12 @@ export const useErrorHandler = () => {
   const handleError = React.useCallback((error, context = {}) => {
     // Handle the error using our error handling service
     const errorInfo = errorHandlingService.handleApiError(error, context);
-    
+
     // Optionally throw the error to let error boundaries catch it
     if (context.throwToErrorBoundary) {
       throw error;
     }
-    
+
     return errorInfo;
   }, []);
 
@@ -124,9 +124,12 @@ export const AsyncErrorBoundary = ({ children, onError }) => {
     };
 
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
-    
+
     return () => {
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener(
+        'unhandledrejection',
+        handleUnhandledRejection
+      );
     };
   }, [onError]);
 
@@ -135,12 +138,7 @@ export const AsyncErrorBoundary = ({ children, onError }) => {
   };
 
   if (error) {
-    return (
-      <ErrorBoundaryFallback
-        error={error}
-        resetError={handleReset}
-      />
-    );
+    return <ErrorBoundaryFallback error={error} resetError={handleReset} />;
   }
 
   return children;

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useNavigate } from "@/lib/router";
+import { useNavigate } from '@/lib/router';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 
@@ -24,7 +24,7 @@ const NewOrganization = () => {
     setForm((prevState) =>
       e.target.type === 'file'
         ? { ...prevState, [e.target.name]: e.target.files[0] }
-        : { ...prevState, [e.target.name]: e.target.value },
+        : { ...prevState, [e.target.name]: e.target.value }
     );
   };
 
@@ -52,11 +52,11 @@ const NewOrganization = () => {
         imageData.append('name', form.image.name);
 
         const uploadResponse = await axios.post(
-          (process.env.NEXT_PUBLIC_BACKEND ?? "") + '/api/file/upload',
+          (process.env.NEXT_PUBLIC_BACKEND ?? '') + '/api/file/upload',
           imageData,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           }
         );
@@ -76,20 +76,19 @@ const NewOrganization = () => {
 
       // Send request to create organization
       await axios.post(
-        (process.env.NEXT_PUBLIC_BACKEND ?? "") + '/api/organizations',
+        (process.env.NEXT_PUBLIC_BACKEND ?? '') + '/api/organizations',
         organizationPayload,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       );
 
       toast.success(t('admin.messages.organizationCreateSuccess'));
-      navigate("/dashboard/organizations");
-
+      navigate('/dashboard/organizations');
     } catch (error) {
-      toast.error(error.response?.data?.message || "An error occurred.");
+      toast.error(error.response?.data?.message || 'An error occurred.');
       console.error(error);
     } finally {
       setLoading(false);
@@ -97,31 +96,80 @@ const NewOrganization = () => {
   };
 
   return (
-    <form className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10" onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col w-full max-w-screen-xl m-auto gap-4 mb-10"
+      onSubmit={handleSubmit}
+    >
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         {t('admin.forms.name')}
-        <input type="text" name="name" className="grow" placeholder={t('admin.forms.namePlaceholder')} value={form.name} onChange={handleChange} required />
+        <input
+          type="text"
+          name="name"
+          className="grow"
+          placeholder={t('admin.forms.namePlaceholder')}
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         {t('admin.forms.description')}
-        <input type="text" name="description" className="grow" placeholder={t('admin.forms.descriptionPlaceholder')} value={form.description} onChange={handleChange} required />
+        <input
+          type="text"
+          name="description"
+          className="grow"
+          placeholder={t('admin.forms.descriptionPlaceholder')}
+          value={form.description}
+          onChange={handleChange}
+          required
+        />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         {t('admin.forms.website')}
-        <input type="url" name="website" className="grow" placeholder={t('admin.forms.websitePlaceholder')} value={form.website} onChange={handleChange} />
+        <input
+          type="url"
+          name="website"
+          className="grow"
+          placeholder={t('admin.forms.websitePlaceholder')}
+          value={form.website}
+          onChange={handleChange}
+        />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         {t('admin.forms.phone')}
-        <input type="tel" name="phone" className="grow" placeholder={t('admin.forms.phonePlaceholder')} value={form.phone} onChange={handleChange} />
+        <input
+          type="tel"
+          name="phone"
+          className="grow"
+          placeholder={t('admin.forms.phonePlaceholder')}
+          value={form.phone}
+          onChange={handleChange}
+        />
       </label>
       <label className="input input-bordered flex items-center gap-2 rounded-none">
         {t('admin.forms.email')}
-        <input type="email" name="email" className="grow" placeholder={t('admin.forms.emailPlaceholder')} value={form.email} onChange={handleChange} />
+        <input
+          type="email"
+          name="email"
+          className="grow"
+          placeholder={t('admin.forms.emailPlaceholder')}
+          value={form.email}
+          onChange={handleChange}
+        />
       </label>
       <label className="input input-bordered flex items-center rounded-none px-0">
-        <input type="file" name="image" className="file-input file-input-md w-full max-w-xs rounded-none" onChange={handleChange} />
+        <input
+          type="file"
+          name="image"
+          className="file-input file-input-md w-full max-w-xs rounded-none"
+          onChange={handleChange}
+        />
       </label>
-      <button type="submit" className="btn btn-base-100 rounded-none" disabled={loading}>
+      <button
+        type="submit"
+        className="btn btn-base-100 rounded-none"
+        disabled={loading}
+      >
         {loading ? t('admin.forms.saving') : t('admin.forms.save')}
       </button>
     </form>
@@ -129,4 +177,3 @@ const NewOrganization = () => {
 };
 
 export default NewOrganization;
-
