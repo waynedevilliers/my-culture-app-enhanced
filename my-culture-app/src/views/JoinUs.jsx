@@ -134,8 +134,7 @@ const JoinUs = () => {
     setLoading(true);
 
     try {
-      const backendUrl =
-        (process.env.NEXT_PUBLIC_BACKEND ?? '') || 'http://localhost:3001';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND ?? '';
 
       // Create FormData for file upload
       const formDataToSend = new FormData();
@@ -163,9 +162,7 @@ const JoinUs = () => {
       );
 
       if (response.status === 201) {
-        toast.success(
-          'Application submitted successfully! Please check your email to verify your account and activate your organization.'
-        );
+        toast.success(response.data.message);
 
         // Reset form
         setFormData({
