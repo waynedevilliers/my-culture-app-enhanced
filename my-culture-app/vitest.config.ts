@@ -1,13 +1,16 @@
 import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  plugins: [react()],
   test: {
     globals: true,
     environment: "node",
-    setupFiles: [],
+    include: ["tests/**/*.test.ts"],
+    // Tests never touch a real database: Prisma is mocked per test file.
+    env: {
+      JWT_SECRET: "test-secret-that-is-at-least-32-characters-long",
+      DATABASE_URL: "postgresql://test:test@127.0.0.1:1/never-used",
+    },
   },
   resolve: {
     alias: {

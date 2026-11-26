@@ -1,360 +1,153 @@
-// Authentication endpoint tests
+// Auth endpoint tests. Prisma is mocked, so no database or server is needed.
 
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  afterAll,
-  beforeEach,
-} from "vitest";
-import { prisma } from "@/lib/prisma";
-import { generateToken, hashPassword } from "@/lib/auth";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-/**
- * Clean up test data
- */
-async function cleanupTestData() {
-  try {
-    await prisma.user.deleteMany({});
-  } catch (error) {
-    console.error("Cleanup error:", error);
-  }
-}
+const { findUnique } = vi.hoisted(() => ({ findUnique: vi.fn() }));
+vi.mock("@/lib/prisma", () => ({ prisma: { user: { findUnique } } }));
 
-/**
- * Create test user
- */
-async function createTestUser(data = {}) {
-  return prisma.user.create({
-    data: {
-      email: "existing@example.com",
-      firstName: "Test",
-      lastName: "User",
-      password: await hashPassword("password123"),
-      role: "USER",
-      verified: false,
-      newsletter: false,
-      ...data,
-    },
-  });
-}
+import { POST as loginRoute } from "@/app/api/auth/login/route";
+import { GET as meRoute } from "@/app/api/auth/me/route";
+import { hashPassword, verifyToken } from "@/lib/auth";
 
-describe("Authentication Endpoints", () => {
-  beforeAll(async () => {
-    // Clean up before running tests
-    await cleanupTestData();
+const PASSWORD = "Correct-Horse-1";
+let passwordHash: string;
+
+const dbUser = (overrides: Record<string, unknown> = {}) => ({
+  id: 1,
+  email: "admin@example.com",
+  firstName: "Ada",
+  lastName: "Admin",
+  password: passwordHash,
+  role: "ADMIN",
+  verified: true,
+  newsletter: false,
+  createdAt: new Date("2026-01-01T00:00:00Z"),
+  updatedAt: new Date("2026-01-01T00:00:00Z"),
+  ...overrides,
+});
+
+const loginRequest = (body: unknown) =>
+  new Request("http://localhost:3000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: typeof body === "string" ? body : JSON.stringify(body),
   });
 
-  afterAll(async () => {
-    // Clean up after tests
-    await cleanupTestData();
+beforeAll(async () => {
+  passwordHash = await hashPassword(PASSWORD);
+});
+
+beforeEach(() => {
+  findUnique.mockReset();
+  vi.spyOn(console, "error").mockImplementation(() => {});
+});
+
+describe("POST /api/auth/login", () => {
+  it.each(["ADMIN", "SUPER_ADMIN"])("logs in a %s and returns a valid token", async (role) => {
+    findUnique.mockResolvedValue(dbUser({ role }));
+
+    const res = await loginRoute(loginRequest({ email: "admin@example.com", password: PASSWORD }));
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(verifyToken(body.data.token)).toMatchObject({ userId: 1, role });
+    expect(body.data.user.email).toBe("admin@example.com");
+    expect(body.data.user).not.toHaveProperty("password");
+    expect(findUnique).toHaveBeenCalledWith({ where: { email: "admin@example.com" } });
   });
 
-  beforeEach(async () => {
-    // Clean between each test
-    await cleanupTestData();
+  it("rejects a wrong password with 401", async () => {
+    findUnique.mockResolvedValue(dbUser());
+
+    const res = await loginRoute(loginRequest({ email: "admin@example.com", password: "Wrong-Password-1" }));
+
+    expect(res.status).toBe(401);
+    expect((await res.json()).data).toBeUndefined();
   });
 
-  // ===== REGISTRATION TESTS =====
-  describe("POST /api/auth/register", () => {
-    it("should register a new user with valid data", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "newuser@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "password123",
-          confirmPassword: "password123",
-        }),
-      });
+  it("gives the same answer for an unknown email and a wrong password", async () => {
+    findUnique.mockResolvedValue(null);
+    const unknown = await loginRoute(loginRequest({ email: "nobody@example.com", password: PASSWORD }));
 
-      const data = await res.json();
+    findUnique.mockResolvedValue(dbUser());
+    const wrong = await loginRoute(loginRequest({ email: "admin@example.com", password: "Wrong-Password-1" }));
 
-      expect(res.status).toBe(201);
-      expect(data.success).toBe(true);
-      expect(data.data).toHaveProperty("token");
-      expect(data.data.user.email).toBe("newuser@example.com");
-      expect(data.data.user.firstName).toBe("John");
-    });
-
-    it("should reject registration with invalid email", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "invalid",
-          firstName: "John",
-          lastName: "Doe",
-          password: "password123",
-          confirmPassword: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(400);
-      expect(data.success).toBe(false);
-    });
-
-    it("should reject registration with password mismatch", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "newuser@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "password123",
-          confirmPassword: "password456",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(400);
-      expect(data.success).toBe(false);
-    });
-
-    it("should reject short password", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "newuser@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "short",
-          confirmPassword: "short",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(400);
-      expect(data.success).toBe(false);
-    });
-
-    it("should reject duplicate email", async () => {
-      // Create existing user first
-      await createTestUser({ email: "duplicate@example.com" });
-
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "duplicate@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "password123",
-          confirmPassword: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(409);
-      expect(data.success).toBe(false);
-    });
-
-    it("should not return password in response", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "newuser@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          password: "password123",
-          confirmPassword: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(data.data.user).not.toHaveProperty("password");
-    });
+    expect(unknown.status).toBe(401);
+    expect(await unknown.json()).toEqual(await wrong.json());
   });
 
-  // ===== LOGIN TESTS =====
-  describe("POST /api/auth/login", () => {
-    it("should login with valid credentials", async () => {
-      // Create test user first
-      await createTestUser();
+  it.each(["USER", "MODERATOR"])("refuses a %s account, even with the right password", async (role) => {
+    findUnique.mockResolvedValue(dbUser({ role }));
 
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "existing@example.com",
-          password: "password123",
-        }),
-      });
+    const res = await loginRoute(loginRequest({ email: "admin@example.com", password: PASSWORD }));
 
-      const data = await res.json();
-
-      expect(res.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data).toHaveProperty("token");
-      expect(data.data.user.email).toBe("existing@example.com");
-    });
-
-    it("should reject login with invalid email", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "nonexistent@example.com",
-          password: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(401);
-      expect(data.success).toBe(false);
-    });
-
-    it("should reject login with wrong password", async () => {
-      // Create test user first
-      await createTestUser();
-
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "existing@example.com",
-          password: "wrongpassword",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(401);
-      expect(data.success).toBe(false);
-    });
-
-    it("should reject login with invalid email format", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "invalid",
-          password: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(res.status).toBe(400);
-      expect(data.success).toBe(false);
-    });
-
-    it("should not return password in response", async () => {
-      // Create test user first
-      await createTestUser();
-
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: "existing@example.com",
-          password: "password123",
-        }),
-      });
-
-      const data = await res.json();
-
-      expect(data.data.user).not.toHaveProperty("password");
-    });
+    expect(res.status).toBe(401);
+    expect((await res.json()).message).toBe("Invalid email or password");
   });
 
-  // ===== GET ME TESTS =====
-  describe("GET /api/auth/me", () => {
-    it("should return current user profile with valid token", async () => {
-      // Create test user
-      const user = await createTestUser();
-      const token = generateToken(user);
+  it.each([
+    ["an invalid email", { email: "invalid", password: PASSWORD }],
+    ["a missing password", { email: "admin@example.com" }],
+    ["an empty body", {}],
+  ])("returns 400 for %s, not 500", async (_label, body) => {
+    const res = await loginRoute(loginRequest(body));
 
-      const res = await fetch("http://localhost:3000/api/auth/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    expect(res.status).toBe(400);
+    expect((await res.json()).success).toBe(false);
+    expect(findUnique).not.toHaveBeenCalled();
+  });
 
-      const data = await res.json();
+  it("returns 400 for a body that is not JSON", async () => {
+    const res = await loginRoute(loginRequest("not json"));
+    expect(res.status).toBe(400);
+  });
 
-      expect(res.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data.email).toBe("existing@example.com");
-      expect(data.data.firstName).toBe("Test");
-    });
+  it("returns 500 without details when the database fails", async () => {
+    findUnique.mockRejectedValue(new Error("connection refused at 10.0.0.5"));
 
-    it("should reject request without token", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/me", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+    const res = await loginRoute(loginRequest({ email: "admin@example.com", password: PASSWORD }));
+    const body = await res.json();
 
-      const data = await res.json();
+    expect(res.status).toBe(500);
+    expect(JSON.stringify(body)).not.toContain("10.0.0.5");
+  });
+});
 
-      expect(res.status).toBe(401);
-      expect(data.success).toBe(false);
-    });
+describe("GET /api/auth/me", () => {
+  const meRequest = (headers: Record<string, string> = {}) =>
+    new Request("http://localhost:3000/api/auth/me", { headers });
 
-    it("should reject request with invalid token", async () => {
-      const res = await fetch("http://localhost:3000/api/auth/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer invalid.token.here",
-        },
-      });
+  const proxyHeaders = { "x-user-id": "1", "x-user-email": "admin@example.com", "x-user-role": "ADMIN" };
 
-      const data = await res.json();
+  it("returns the profile of the user the proxy forwarded", async () => {
+    const { password: _password, ...profile } = dbUser();
+    findUnique.mockResolvedValue(profile);
 
-      expect(res.status).toBe(401);
-      expect(data.success).toBe(false);
-    });
+    const res = await meRoute(meRequest(proxyHeaders));
+    const body = await res.json();
 
-    it("should not return password in response", async () => {
-      // Create test user
-      const user = await createTestUser();
-      const token = generateToken(user);
+    expect(res.status).toBe(200);
+    expect(body.data.email).toBe("admin@example.com");
+    expect(findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { id: 1 } }));
+    expect(findUnique.mock.calls[0][0].select).not.toHaveProperty("password");
+  });
 
-      const res = await fetch("http://localhost:3000/api/auth/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  it("returns 401 when the proxy forwarded no user", async () => {
+    const res = await meRoute(meRequest());
+    expect(res.status).toBe(401);
+    expect(findUnique).not.toHaveBeenCalled();
+  });
 
-      const data = await res.json();
+  it("returns 404 when the user no longer exists", async () => {
+    findUnique.mockResolvedValue(null);
+    const res = await meRoute(meRequest(proxyHeaders));
+    expect(res.status).toBe(404);
+  });
+});
 
-      expect(data.data).not.toHaveProperty("password");
-    });
-
-    it("should return user with correct role", async () => {
-      // Create test user
-      const user = await createTestUser({ role: "ADMIN" });
-      const token = generateToken(user);
-
-      const res = await fetch("http://localhost:3000/api/auth/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      expect(data.data.role).toBe("ADMIN");
-    });
+describe("removed endpoints", () => {
+  it("has no public sign-up route", async () => {
+    await expect(import("@/app/api/auth/register/route" as string)).rejects.toThrow();
   });
 });
