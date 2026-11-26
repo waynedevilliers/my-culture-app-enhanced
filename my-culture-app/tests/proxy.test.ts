@@ -111,10 +111,53 @@ describe('proxy', () => {
       '/api/users',
       '/api/users/3',
       '/api/events',
-      '/api/organizations/1',
       '/api/certificates',
+      '/api/file/upload',
     ])('protects %s', (path) => {
       expect(proxy(makeRequest(path)).status).toBe(401);
+    });
+
+    it('refuses a USER on the upload route', () => {
+      const res = proxy(
+        makeRequest('/api/file/upload', {
+          Authorization: `Bearer ${tokenFor('USER')}`,
+        })
+      );
+      expect(res.status).toBe(403);
+    });
+  });
+
+  describe('routes whose handlers check the role', () => {
+    it.each([
+      '/api/organizations',
+      '/api/organizations/1',
+      '/api/organizations/published',
+      '/api/organizations/apply',
+    ])('lets %s through without a token', (path) => {
+      expect(proxy(makeRequest(path)).status).toBe(200);
+    });
+
+    it('forwards a verified user so the handler can check the role', () => {
+      const res = proxy(
+        makeRequest('/api/organizations', {
+          Authorization: `Bearer ${tokenFor('ADMIN', 8)}`,
+        })
+      );
+      expect(forwarded(res, 'x-user-id')).toBe('8');
+      expect(forwarded(res, 'x-user-role')).toBe('ADMIN');
+    });
+
+    it('forwards nothing for an invalid token, and strips spoofed headers', () => {
+      const res = proxy(
+        makeRequest('/api/organizations', {
+          Authorization: 'Bearer forged.token.value',
+          'x-user-id': '1',
+          'x-user-role': 'SUPER_ADMIN',
+        })
+      );
+      expect(res.status).toBe(200);
+      expect(forwarded(res, 'x-user-id')).toBeNull();
+      expect(forwarded(res, 'x-user-role')).toBeNull();
     });
 
     it('does not treat a longer path as the same prefix', () => {

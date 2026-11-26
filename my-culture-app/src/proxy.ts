@@ -6,8 +6,10 @@ import type { Role } from './lib/types';
 
 const ALL_ROLES: Role[] = ['USER', 'ADMIN', 'MODERATOR', 'SUPER_ADMIN'];
 
-// Protected route prefixes and the roles allowed on them.
+// Route prefixes that need a login, and the roles allowed on them.
 // The first matching prefix wins, so list more specific prefixes first.
+// Routes that mix public and admin access (e.g. /api/organizations) are not
+// listed: their handlers check the role with requireRole from lib/authz.ts.
 export const PROTECTED_ROUTES: ReadonlyArray<[prefix: string, roles: Role[]]> =
   [
     ['/api/auth/me', ALL_ROLES],
@@ -15,7 +17,7 @@ export const PROTECTED_ROUTES: ReadonlyArray<[prefix: string, roles: Role[]]> =
     ['/api/moderator', ['MODERATOR', 'ADMIN', 'SUPER_ADMIN']],
     ['/api/user', ALL_ROLES],
     ['/api/users', ALL_ROLES],
-    ['/api/organizations', ALL_ROLES],
+    ['/api/file', ['ADMIN', 'SUPER_ADMIN']],
     ['/api/events', ALL_ROLES],
     ['/api/certificates', ALL_ROLES],
   ];
@@ -45,39 +47,38 @@ export function proxy(request: NextRequest) {
     requestHeaders.delete(header);
   }
 
+  const token = extractTokenFromHeader(request.headers.get('Authorization'));
+  const decoded = token ? verifyToken(token) : null;
   const requiredRoles = findRequiredRoles(request.nextUrl.pathname);
 
-  if (!requiredRoles) {
-    return NextResponse.next({ request: { headers: requestHeaders } });
+  if (requiredRoles) {
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Missing token' },
+        { status: 401 }
+      );
+    }
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Invalid token' },
+        { status: 401 }
+      );
+    }
+    if (!requiredRoles.includes(decoded.role)) {
+      return NextResponse.json(
+        { error: 'Forbidden - Insufficient permissions' },
+        { status: 403 }
+      );
+    }
   }
 
-  const token = extractTokenFromHeader(request.headers.get('Authorization'));
-  if (!token) {
-    return NextResponse.json(
-      { error: 'Unauthorized - Missing token' },
-      { status: 401 }
-    );
+  // Pass a verified user to route handlers on the request, not the response.
+  // On routes that are not listed above, handlers decide with requireRole.
+  if (decoded) {
+    requestHeaders.set('x-user-id', String(decoded.userId));
+    requestHeaders.set('x-user-email', decoded.email);
+    requestHeaders.set('x-user-role', decoded.role);
   }
-
-  const decoded = verifyToken(token);
-  if (!decoded) {
-    return NextResponse.json(
-      { error: 'Unauthorized - Invalid token' },
-      { status: 401 }
-    );
-  }
-
-  if (!requiredRoles.includes(decoded.role)) {
-    return NextResponse.json(
-      { error: 'Forbidden - Insufficient permissions' },
-      { status: 403 }
-    );
-  }
-
-  // Pass the user to route handlers on the request, not the response.
-  requestHeaders.set('x-user-id', String(decoded.userId));
-  requestHeaders.set('x-user-email', decoded.email);
-  requestHeaders.set('x-user-role', decoded.role);
 
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
