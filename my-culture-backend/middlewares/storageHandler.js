@@ -1,55 +1,56 @@
-import localFileUploader from './localFileUploader.js';
 import fileUploader from './fileUploader.js';
-import localFileUrl from './localFileUrl.js';
-import vercelBlobUploader from './vercelBlobUploader.js';
+import { createLocalFileUploader } from './localFileUploader.js';
+import { createLocalFileUrl } from './localFileUrl.js';
+import { createVercelBlobUploader } from './vercelBlobUploader.js';
 
 /**
- * Unified storage handler that automatically switches between:
- * - Local filesystem storage (development)
+ * Unified storage handler that switches between:
+ * - Local filesystem storage (development, test)
  * - Vercel Blob storage (production)
+ *
+ * NODE_ENV is fixed for the lifetime of the process, so it is read once.
  */
-
-// Determine storage type based on environment
-const isProduction = process.env.NODE_ENV === 'production';
-
-/**
- * File uploader middleware (first step)
- * - Development: Uses disk storage (saves to filesystem)
- * - Production: Uses memory storage (keeps in buffer for Vercel Blob)
- */
-export const fileStorageUploader = isProduction
-  ? fileUploader  // Memory storage for production
-  : localFileUploader;  // Disk storage for development
+export const isProduction = process.env.NODE_ENV === 'production';
 
 /**
- * File URL generator middleware (second step)
- * - Development: Constructs localhost URL
- * - Production: Uploads to Vercel Blob and returns Vercel URL
+ * Create the two upload middlewares for a folder.
+ * - uploader: multer instance; call .single(fieldName)
+ * - urlGenerator: sets the file URL on req (read it with getFileUrl)
+ *
+ * @param {string} folder single path segment, for example "images"
+ * @param {boolean} [production] defaults to NODE_ENV === 'production'
+ * @returns {{ uploader: import('multer').Multer, urlGenerator: Function }}
  */
-export const fileUrlGenerator = isProduction
-  ? vercelBlobUploader  // Upload to Vercel Blob
-  : localFileUrl;  // Generate localhost URL
+export const createStorage = (folder, production = isProduction) => (production
+  ? { uploader: fileUploader, urlGenerator: createVercelBlobUploader(folder) }
+  : { uploader: createLocalFileUploader(folder), urlGenerator: createLocalFileUrl(folder) });
+
+const organizationStorage = createStorage('organizations');
+
+/** Uploader for organization logos (kept for existing routes). */
+export const fileStorageUploader = organizationStorage.uploader;
+
+/** URL generator for organization logos (kept for existing routes). */
+export const fileUrlGenerator = organizationStorage.urlGenerator;
 
 /**
- * Get the file URL from the request object
- * Abstracts away the difference between local and Vercel storage
+ * Get the uploaded file's URL, whichever storage handled it.
+ *
+ * @param {object} [req]
+ * @param {boolean} [production] defaults to NODE_ENV === 'production'
+ * @returns {string|null}
  */
-export const getFileUrl = (req) => {
+export const getFileUrl = (req, production = isProduction) => {
   if (!req) {
     return null;
   }
-  const vercelUrl = req.vercelBlobURL;
-  const localUrl = req.localFileURL;
-
-  if (isProduction) {
-    return vercelUrl || null;
-  }
-  return localUrl || null;
+  return (production ? req.vercelBlobURL : req.localFileURL) || null;
 };
 
 export default {
+  createStorage,
   fileStorageUploader,
   fileUrlGenerator,
   getFileUrl,
-  isProduction
+  isProduction,
 };

@@ -33,9 +33,8 @@ EMAIL_PORT=587
 EMAIL_USER=your-email@domain.com
 EMAIL_PASS=your-email-password
 EMAIL_FROM=your-email@domain.com
-CLOUD_NAME=your-cloudinary-name
-CLOUD_API_KEY=your-api-key
-CLOUD_API_SECRET=your-api-secret
+# Production only: Vercel Blob storage for uploads
+BLOB_READ_WRITE_TOKEN=your-vercel-blob-token
 URL=http://localhost:3001
 PORT=3001
 ```
