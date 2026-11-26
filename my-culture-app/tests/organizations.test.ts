@@ -1,7 +1,6 @@
 // Organisation routes. Prisma and storage are mocked; no database needed.
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Prisma } from '@prisma/client';
 
 const db = vi.hoisted(() => ({
   organization: {
@@ -44,10 +43,11 @@ import {
   PNG_BYTES,
 } from './helpers/requests';
 
+// Same name and code as Prisma's PrismaClientKnownRequestError.
 const prismaError = (code: string) =>
-  new Prisma.PrismaClientKnownRequestError('db error', {
+  Object.assign(new Error('db error'), {
+    name: 'PrismaClientKnownRequestError',
     code,
-    clientVersion: '6.19.2',
   });
 
 const ORG = {

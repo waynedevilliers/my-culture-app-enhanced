@@ -2,7 +2,6 @@
 // never returned.
 
 import { NextResponse } from 'next/server';
-import { Prisma } from '@prisma/client';
 import type { z } from 'zod';
 import { errorResponse } from './api';
 
@@ -43,10 +42,16 @@ export function serverError(context: string, error: unknown) {
   );
 }
 
-/** Prisma error codes: P2002 unique constraint, P2025 record not found. */
+/**
+ * Prisma error codes: P2002 unique constraint, P2025 record not found.
+ * Checked by name and code rather than instanceof, so it does not depend on
+ * the generated client being loaded.
+ */
 export function isPrismaError(error: unknown, code: 'P2002' | 'P2025') {
   return (
-    error instanceof Prisma.PrismaClientKnownRequestError && error.code === code
+    error instanceof Error &&
+    error.name === 'PrismaClientKnownRequestError' &&
+    (error as Error & { code?: unknown }).code === code
   );
 }
 
