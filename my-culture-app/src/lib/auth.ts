@@ -5,32 +5,49 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import type { JwtPayload, User } from "./types";
 
-const JWT_SECRET =
-  process.env.JWT_SECRET || "your-secret-key-change-in-production";
 const BCRYPT_ROUNDS = 10;
+const TOKEN_LIFETIME = "7d";
+const MIN_SECRET_LENGTH = 32;
+
+/**
+ * Read the JWT secret. Fails closed: there is no default, so a missing or
+ * weak secret stops token creation instead of signing with a known value.
+ */
+export function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret.length < MIN_SECRET_LENGTH) {
+    throw new Error(
+      `JWT_SECRET must be set to at least ${MIN_SECRET_LENGTH} characters`
+    );
+  }
+  return secret;
+}
 
 /**
  * Generate JWT token
  */
-export function generateToken(user: User): string {
-  const payload: JwtPayload = {
+export function generateToken(user: Pick<User, "id" | "email" | "role">): string {
+  const payload = {
     userId: user.id,
     email: user.email,
     role: user.role,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // 7 days
   };
 
-  return jwt.sign(payload, JWT_SECRET);
+  return jwt.sign(payload, getJwtSecret(), {
+    algorithm: "HS256",
+    expiresIn: TOKEN_LIFETIME,
+  });
 }
 
 /**
- * Verify JWT token
+ * Verify JWT token. Returns null for any invalid, expired or unverifiable
+ * token, including when the secret is not configured.
  */
 export function verifyToken(token: string): JwtPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    return decoded;
+    return jwt.verify(token, getJwtSecret(), {
+      algorithms: ["HS256"],
+    }) as JwtPayload;
   } catch {
     return null;
   }
@@ -56,11 +73,11 @@ export async function comparePassword(
 /**
  * Extract token from Authorization header
  */
-export function extractTokenFromHeader(authHeader?: string): string | null {
+export function extractTokenFromHeader(authHeader?: string | null): string | null {
   if (!authHeader) return null;
 
   const parts = authHeader.split(" ");
-  if (parts.length !== 2 || parts[0] !== "Bearer") {
+  if (parts.length !== 2 || parts[0] !== "Bearer" || !parts[1]) {
     return null;
   }
 
