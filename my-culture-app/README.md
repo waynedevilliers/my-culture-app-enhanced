@@ -13,7 +13,9 @@ been moved here.
 | Admin login (`POST /api/auth/login`), current admin (`GET /api/auth/me`) | Done |
 | Health check (`GET /api/health`) | Done |
 | All pages and the dashboard (moved from `my-culture-frontend`) | Done, pixel-identical to the old app |
-| Other API routes (organisations, events, locations, certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
+| Organisations: public list and detail, Join us applications, dashboard list/create/edit/delete, applications approve/reject | Done |
+| Image upload (`POST /api/file/upload`): Vercel Blob in production, `public/uploads` locally | Done |
+| Other API routes (events, locations, categories, certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
 
 The pages were moved without changing markup, classes or CSS: Tailwind 3 +
 DaisyUI 4 with the same `myCulture` theme. Old and new were compared with
@@ -40,6 +42,33 @@ email or password" answer as a wrong password.
 
 `JWT_SECRET` has no default: without it (or if it is shorter than 32
 characters) no token can be signed or verified.
+
+## Organisations and Join us
+
+- **Join us** (`POST /api/organizations/apply`, public) saves the application as
+  `pending` and unpublished. Nothing is emailed yet.
+- A **super admin** approves (the organisation is published) or rejects it in
+  Dashboard > Applications. Admins without the super admin role cannot.
+  Approving does not create a login for the organisation.
+- Organisations an admin creates in the dashboard are approved directly and
+  can be published with the toggle in the list.
+- Public routes only return approved and published organisations, and only
+  their public fields (no applicant details).
+
+## Access rules for API routes
+
+`src/proxy.ts` verifies the token on every `/api` request and passes the user
+to the route handler. Routes that only admins use are listed in
+`PROTECTED_ROUTES`; routes that mix public and admin methods (such as
+`/api/organizations`) check the role in the handler with `requireRole` from
+`src/lib/authz.ts`. Every handler that changes data calls `requireRole` first.
+
+## Uploads
+
+Images are checked by their content (PNG, JPEG or WebP, at most 10 MB), not by
+the name or type the browser sends, and stored under a random name. In
+production `BLOB_READ_WRITE_TOKEN` (Vercel Blob) is required; without it
+uploads are refused instead of being written to the server's disk.
 
 ## Setup
 
