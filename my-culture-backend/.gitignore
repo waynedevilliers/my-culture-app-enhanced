@@ -28,3 +28,6 @@ dist-ssr
 package-lock.json
 .vercel
 tests/test-db.js
+
+# Local deployment notes with secrets
+VERCEL_ENV_SETUP.txt
