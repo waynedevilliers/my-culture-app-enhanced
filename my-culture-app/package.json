@@ -14,7 +14,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "node prisma/seed.js",
+    "prisma:seed": "tsx prisma/seed.ts",
     "db:push": "prisma db push",
     "db:reset": "prisma migrate reset"
   },
@@ -43,10 +43,11 @@
     "eslint-config-next": "16.1.1",
     "supertest": "7.2.2",
     "tailwindcss": "^4",
+    "tsx": "4.23.15",
     "typescript": "^5",
     "vitest": "4.0.17"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "tsx prisma/seed.ts"
   }
 }
