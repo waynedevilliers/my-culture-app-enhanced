@@ -1,4 +1,5 @@
 import { DataTypes } from 'sequelize';
+import { isHttpUrl } from '../utils/urlValidator.js';
 
 export default (sequelize) => {
   return sequelize.define('Image', {
@@ -10,7 +11,13 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isUrl: true,
+        // Sequelize's isUrl rejects localhost, so local development uploads
+        // would fail. Accept any absolute http(s) URL instead.
+        isHttpUrl(value) {
+          if (!isHttpUrl(value)) {
+            throw new Error('URL must be a valid http or https URL.');
+          }
+        },
       },
     },
     userId: {

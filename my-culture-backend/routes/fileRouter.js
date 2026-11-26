@@ -1,20 +1,20 @@
 import express from "express";
 import { authenticate } from '../middlewares/authenticate.js';
-import fileUploader from '../middlewares/fileUploader.js';
-import cloudUploader from '../middlewares/cloudUploader.js';
+import { createStorage } from '../middlewares/storageHandler.js';
 import { imageHandler } from '../controllers/image.js';
 import { authorize } from '../middlewares/authorize.js';
 import { imageCheck } from "../middlewares/imageCheck.js";
 
 const router = express.Router();
+const imageStorage = createStorage('images');
 
 router.post(
   "/upload",
   authenticate,
   authorize,
-  fileUploader.single('image'),
+  imageStorage.uploader.single('image'),
   imageCheck,
-  cloudUploader,
+  imageStorage.urlGenerator,
   imageHandler,
 );
 
