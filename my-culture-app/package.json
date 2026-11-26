@@ -28,7 +28,7 @@
     "@blocknote/mantine": "0.24.0",
     "@blocknote/react": "0.24.0",
     "@blocknote/xl-multi-column": "0.24.0",
-    "@mantine/core": "7.17.8",
+    "@mantine/core": "9.8.0",
     "@prisma/client": "6.19.2",
     "axios": "1.21.1",
     "bcryptjs": "3.0.3",
