@@ -53,7 +53,9 @@ async function main() {
       description: 'A platform for cultural events and community engagement',
       website: 'https://myculture.app',
       verified: true,
+      published: true,
       approvalStatus: 'approved',
+      approvedAt: new Date(),
       userId: adminUser.id,
     },
   });

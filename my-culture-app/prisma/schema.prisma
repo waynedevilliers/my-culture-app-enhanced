@@ -59,24 +59,43 @@ model User {
 model Organization {
   id              Int     @id @default(autoincrement())
   name            String
-  email           String  @unique
+  email           String? @unique
   description     String?
   website         String?
+  phone           String?
+  published       Boolean @default(false)
   verified        Boolean @default(false)
+
+  // "pending" (application from Join us), "approved" or "rejected".
+  // Organisations created by an admin are approved directly.
   approvalStatus  String  @default("pending")
-  
-  userId          Int
-  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approvedAt      DateTime?
+  rejectedAt      DateTime?
+  rejectionNotes  String?
+
+  // Application details from the Join us form.
+  contactPerson   String?
+  adminName       String?
+  adminEmail      String?
+  applicationDetails Json?
+
+  logoId          String?
+  logo            Image?  @relation("OrganizationLogo", fields: [logoId], references: [id], onDelete: SetNull)
+
+  userId          Int?
+  user            User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   
   // Relations
   events          Event[]
   certificates    Certificate[]
   galleries       Gallery[]
-  images          Image[]
+  images          Image[] @relation("OrganizationImages")
   locations       Location[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([published, approvalStatus])
 }
 
 // Event model
@@ -261,7 +280,10 @@ model Image {
   user            User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   
   organizationId  Int?
-  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  organization    Organization? @relation("OrganizationImages", fields: [organizationId], references: [id], onDelete: SetNull)
+
+  // Organisations using this image as their logo.
+  logoFor         Organization[] @relation("OrganizationLogo")
   
   eventId         Int?
   event           Event? @relation(fields: [eventId], references: [id], onDelete: Cascade)
