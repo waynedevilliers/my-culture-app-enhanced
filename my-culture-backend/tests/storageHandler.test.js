@@ -1,95 +1,98 @@
-import { getFileUrl, fileStorageUploader, fileUrlGenerator } from '../middlewares/storageHandler';
-import localFileUploader from '../middlewares/localFileUploader';
-import vercelBlobUploader from '../middlewares/vercelBlobUploader';
-import localFileUrl from '../middlewares/localFileUrl';
-import fileUploader from '../middlewares/fileUploader';
+import { jest } from '@jest/globals';
 
-// Mock the imported modules
-jest.mock('../middlewares/localFileUploader', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-jest.mock('../middlewares/vercelBlobUploader', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-jest.mock('../middlewares/localFileUrl', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
-jest.mock('../middlewares/fileUploader', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
+jest.mock('@vercel/blob', () => ({ put: jest.fn() }));
 
-describe('Storage Handler Middleware', () => {
-  const OLD_ENV = process.env;
+const ORIGINAL_ENV = process.env;
 
-  beforeEach(() => {
-    jest.resetModules(); // Clear cache
-    process.env = { ...OLD_ENV }; // Make a copy
+/**
+ * Load storageHandler with a given NODE_ENV. isProduction is read once at
+ * module load, so each environment needs a fresh module registry.
+ */
+const loadStorageHandler = (nodeEnv) => {
+  process.env = { ...ORIGINAL_ENV, NODE_ENV: nodeEnv };
+  let modules;
+  jest.isolateModules(() => {
+    modules = {
+      storage: require('../middlewares/storageHandler.js'),
+      fileUploader: require('../middlewares/fileUploader.js').default,
+    };
   });
+  return modules;
+};
 
-  afterAll(() => {
-    process.env = OLD_ENV; // Restore old environment
-  });
+afterEach(() => {
+  process.env = ORIGINAL_ENV;
+});
 
-  describe('Storage Selection based on NODE_ENV', () => {
-    it('should select local storage for development environment', () => {
-      process.env.NODE_ENV = 'development';
-      const { fileStorageUploader: devFileStorageUploader, fileUrlGenerator: devFileUrlGenerator } = require('../middlewares/storageHandler');
-      expect(devFileStorageUploader).toBe(localFileUploader);
-      expect(devFileUrlGenerator).toBe(localFileUrl);
+describe('storageHandler', () => {
+  describe('in development', () => {
+    it('reports not production', () => {
+      const { storage } = loadStorageHandler('development');
+      expect(storage.isProduction).toBe(false);
     });
 
-    it('should select Vercel Blob storage for production environment', () => {
-      process.env.NODE_ENV = 'production';
-      const { fileStorageUploader: prodFileStorageUploader, fileUrlGenerator: prodFileUrlGenerator } = require('../middlewares/storageHandler');
-      expect(prodFileStorageUploader).toBe(fileUploader);
-      expect(prodFileUrlGenerator).toBe(vercelBlobUploader);
-    });
-  });
+    it('createStorage returns a disk uploader, not the memory uploader', () => {
+      const { storage, fileUploader } = loadStorageHandler('development');
+      const { uploader, urlGenerator } = storage.createStorage('images');
 
-  describe('getFileUrl Function', () => {
-    it('should return localFileURL in development', () => {
-      process.env.NODE_ENV = 'development';
-      const { getFileUrl: devGetFileUrl } = require('../middlewares/storageHandler');
-      const req = { localFileURL: 'http://localhost/file.jpg' };
-      expect(devGetFileUrl(req)).toBe('http://localhost/file.jpg');
+      expect(typeof uploader.single).toBe('function');
+      expect(uploader).not.toBe(fileUploader);
+      expect(typeof urlGenerator).toBe('function');
     });
 
-    it('should return vercelBlobURL in production', () => {
-      process.env.NODE_ENV = 'production';
-      const { getFileUrl: prodGetFileUrl } = require('../middlewares/storageHandler');
-      const req = { vercelBlobURL: 'https://blob.vercel.com/file.jpg' };
-      expect(prodGetFileUrl(req)).toBe('https://blob.vercel.com/file.jpg');
-    });
-
-    it('should return null if no URL is available', () => {
-      const req = {};
-      expect(getFileUrl(req)).toBe(null);
-    });
-  });
-
-  // Since the individual middlewares are mocked, we can't fully test the upload functionality here.
-  // Those should be tested in their own integration tests if needed.
-  // However, we can test the error handling for the Vercel uploader.
-  describe('Vercel Uploader Error Handling', () => {
-    it('should throw an error if BLOB_READ_WRITE_TOKEN is not configured in production', async () => {
-      process.env.NODE_ENV = 'production';
-      delete process.env.BLOB_READ_WRITE_TOKEN;
-
-      // We need to re-import the module to get the updated isProduction value
-      const { vercelBlobUploader: uploader } = require('../middlewares/vercelBlobUploader');
-      
-      const req = { file: { originalname: 'test.jpg', buffer: Buffer.from('test') } };
-      const res = {};
+    it('urlGenerator sets a local URL in the requested folder', () => {
+      const { storage } = loadStorageHandler('development');
+      process.env.URL = 'http://localhost:3000';
+      const { urlGenerator } = storage.createStorage('images');
+      const req = { file: { filename: 'abc.png' } };
       const next = jest.fn();
 
-      // This is a bit tricky since the original module is mocked.
-      // A better approach would be to test vercelBlobUploader in its own file
-      // with proper mocking of `@vercel/blob`.
-      // For now, we will assume this part is covered by unit tests of vercelBlobUploader.
+      urlGenerator(req, {}, next);
+
+      expect(req.localFileURL).toBe('http://localhost:3000/uploads/images/abc.png');
+      expect(next).toHaveBeenCalledWith();
     });
+
+    it('getFileUrl returns the local URL and ignores a Vercel URL', () => {
+      const { storage } = loadStorageHandler('development');
+      const req = { localFileURL: 'http://localhost/a.png', vercelBlobURL: 'https://x.public.blob.vercel-storage.com/a.png' };
+      expect(storage.getFileUrl(req)).toBe('http://localhost/a.png');
+    });
+  });
+
+  describe('in production', () => {
+    it('reports production', () => {
+      const { storage } = loadStorageHandler('production');
+      expect(storage.isProduction).toBe(true);
+    });
+
+    it('createStorage returns the memory uploader', () => {
+      const { storage, fileUploader } = loadStorageHandler('production');
+      expect(storage.createStorage('images').uploader).toBe(fileUploader);
+      expect(storage.fileStorageUploader).toBe(fileUploader);
+    });
+
+    it('getFileUrl returns the Vercel URL and ignores a local URL', () => {
+      const { storage } = loadStorageHandler('production');
+      const req = { localFileURL: 'http://localhost/a.png', vercelBlobURL: 'https://x.public.blob.vercel-storage.com/a.png' };
+      expect(storage.getFileUrl(req)).toBe('https://x.public.blob.vercel-storage.com/a.png');
+    });
+  });
+
+  describe('getFileUrl edge cases', () => {
+    it('returns null when no URL was set', () => {
+      const { storage } = loadStorageHandler('development');
+      expect(storage.getFileUrl({})).toBeNull();
+    });
+
+    it('returns null when req is missing', () => {
+      const { storage } = loadStorageHandler('development');
+      expect(storage.getFileUrl(undefined)).toBeNull();
+    });
+  });
+
+  it('rejects an unsafe folder name', () => {
+    const { storage } = loadStorageHandler('development');
+    expect(() => storage.createStorage('../secrets')).toThrow('Invalid upload folder');
   });
 });
