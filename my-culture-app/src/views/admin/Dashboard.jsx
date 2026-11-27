@@ -112,7 +112,7 @@ const Dashboard = () => {
     >
       <div className="max-w-screen-xl w-full h-full flex flex-col justify-center items-center border-b-4 border-neutral p-4">
         <div className="relative max-w-1/2 h-auto p-10">
-          <img src="/logoNew/MB_Sparkasse.png" alt="" className="" />
+          <img src="/logo/grow.png" alt="grow" className="w-[250px] h-auto" />
         </div>
       </div>
 

@@ -68,11 +68,7 @@ const Footer = () => {
             </div>
 
             <div className="w-32 h-32">
-              <img
-                src="/logoNew/MB_Sparkasse.png"
-                alt="Culture Academy"
-                className="object-contain"
-              />
+              <img src="/logo/grow.png" alt="grow" className="object-contain" />
             </div>
           </div>
         </div>
