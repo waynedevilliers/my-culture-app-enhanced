@@ -44,7 +44,7 @@ async function main() {
     },
   });
 
-  const organization = await prisma.organization.upsert({
+  await prisma.organization.upsert({
     where: { email: 'org@myculture.app' },
     update: {},
     create: {
@@ -53,51 +53,12 @@ async function main() {
       description: 'A platform for cultural events and community engagement',
       website: 'https://myculture.app',
       verified: true,
+      published: true,
       approvalStatus: 'approved',
+      approvedAt: new Date(),
       userId: adminUser.id,
     },
   });
-
-  const locationData = {
-    name: 'Main Hall',
-    address: '123 Culture Street',
-    city: 'Berlin',
-    postalCode: '10115',
-    country: 'Germany',
-    latitude: 52.52,
-    longitude: 13.405,
-    organizationId: organization.id,
-  };
-  const location =
-    (await prisma.location.findFirst({
-      where: { name: locationData.name, organizationId: organization.id },
-    })) ?? (await prisma.location.create({ data: locationData }));
-
-  const eventTitle = 'Cultural Festival 2025';
-  const existingEvent = await prisma.event.findFirst({
-    where: { title: eventTitle, organizationId: organization.id },
-  });
-  if (!existingEvent) {
-    await prisma.event.create({
-      data: {
-        title: eventTitle,
-        description: 'A celebration of diverse cultures',
-        content: 'Join us for a wonderful cultural experience',
-        date: new Date('2025-06-15'),
-        startDate: new Date('2025-06-15T10:00:00'),
-        endDate: new Date('2025-06-15T22:00:00'),
-        locationString: 'Main Hall, Berlin',
-        capacity: 500,
-        status: 'PUBLISHED',
-        published: true,
-        userId: adminUser.id,
-        organizationId: organization.id,
-        locationId: location.id,
-        price: 25.0,
-        discountedPrice: 15.0,
-      },
-    });
-  }
 
   await prisma.blog.upsert({
     where: { slug: 'welcome-to-myculture' },
@@ -125,7 +86,7 @@ async function main() {
 
   console.log(
     `Seed complete: ${categories.length} categories, super admin ${admin.email}, ` +
-      '1 organization, 1 location, 1 event, 1 blog post, 1 subscriber.'
+      '1 organization, 1 blog post, 1 subscriber.'
   );
 }
 
