@@ -15,7 +15,8 @@ been moved here.
 | All pages and the dashboard (moved from `my-culture-frontend`) | Done, pixel-identical to the old app |
 | Organisations: public list and detail, Join us applications, dashboard list/create/edit/delete, applications approve/reject | Done |
 | Image upload (`POST /api/file/upload`): Vercel Blob in production, `public/uploads` locally | Done |
-| Other API routes (events, locations, categories, certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
+| Events, locations, categories | Hidden for now (not needed yet): pages, menu entry and the profile's "Events you may like" removed. The code is still in `my-culture-frontend` and the tables stay in the schema. The "Kalendar" page stays a placeholder. |
+| Other API routes (certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
 
 The pages were moved without changing markup, classes or CSS: Tailwind 3 +
 DaisyUI 4 with the same `myCulture` theme. Old and new were compared with

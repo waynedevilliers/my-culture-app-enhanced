@@ -7,12 +7,10 @@ import {
   FaArrowRightFromBracket,
   FaHouseChimney,
   FaHouseChimneyUser,
-  FaMapLocationDot,
   FaPlus,
   FaUserGroup,
   FaChartBar,
   FaInfo,
-  FaMusic,
   FaImages,
   FaBarsStaggered,
   FaNewspaper,
@@ -92,68 +90,6 @@ const Navigation = () => {
               </span>{' '}
               {t('admin.dashboard')}{' '}
             </NavLink>
-          </li>
-          <li>
-            <details>
-              <summary>
-                <span className="text-2xl">
-                  <FaMusic />
-                </span>{' '}
-                {t('admin.navigation.events')}
-              </summary>
-              <ul className="flex flex-col gap-4 mt-4">
-                <li>
-                  <NavLink
-                    to="/dashboard/events"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaChartBar />
-                    </span>{' '}
-                    {t('admin.navigation.overview')}{' '}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/new-event"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaPlus />
-                    </span>{' '}
-                    {t('admin.navigation.newEvent')}{' '}
-                  </NavLink>
-                </li>
-                {/*<li>
-                  <NavLink to="/dashboard/calendar" onClick={drawerHandler} className={({ isActive }) => isActive ? "text-primary" : "" } >
-                    <span className="text-2xl">
-                      <FaCalendarCheck />
-                    </span>
-                    Kalendar
-                  </NavLink>
-                </li>*/}
-                <li>
-                  <NavLink
-                    to="/dashboard/locations"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaMapLocationDot />
-                    </span>{' '}
-                    {t('admin.navigation.locations')}{' '}
-                  </NavLink>
-                </li>
-              </ul>
-            </details>
           </li>
           <li>
             <NavLink

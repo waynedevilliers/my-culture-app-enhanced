@@ -110,7 +110,6 @@ describe('proxy', () => {
     it.each([
       '/api/users',
       '/api/users/3',
-      '/api/events',
       '/api/certificates',
       '/api/file/upload',
     ])('protects %s', (path) => {
