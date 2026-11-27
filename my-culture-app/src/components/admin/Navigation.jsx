@@ -11,10 +11,8 @@ import {
   FaUserGroup,
   FaChartBar,
   FaInfo,
-  FaImages,
   FaBarsStaggered,
   FaNewspaper,
-  FaUserPen,
   FaBuilding,
   FaClipboardCheck,
   FaBell,
@@ -73,8 +71,8 @@ const Navigation = () => {
           <li className="self-center">
             <NavLink to="/" onClick={drawerHandler}>
               <img
-                src="/logo/Musikleben_Logo.png"
-                alt="Musikleben Logo"
+                src="/logoNew/MB_Sparkasse.png"
+                alt="Culture Academy"
                 className="h-10 sm:h-16 w-auto mb-5"
               />
             </NavLink>
@@ -101,18 +99,6 @@ const Navigation = () => {
                 <FaUserGroup />
               </span>{' '}
               {t('admin.navigation.users')}{' '}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/dashboard/subscribers"
-              onClick={drawerHandler}
-              className={({ isActive }) => (isActive ? 'text-primary' : '')}
-            >
-              <span className="text-2xl">
-                <FaUserPen />
-              </span>{' '}
-              {t('admin.navigation.subscribers')}{' '}
             </NavLink>
           </li>
           <li>
@@ -204,60 +190,6 @@ const Navigation = () => {
                       <FaPlus />
                     </span>{' '}
                     {t('admin.navigation.newNewsletter')}{' '}
-                  </NavLink>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <details>
-              <summary>
-                <span className="text-2xl">
-                  <FaImages />
-                </span>{' '}
-                {t('admin.navigation.gallery')}
-              </summary>
-              <ul className="flex flex-col gap-4 mt-4">
-                <li>
-                  <NavLink
-                    to="/dashboard/gallery"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaChartBar />
-                    </span>{' '}
-                    {t('admin.navigation.overview')}{' '}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/new-gallery"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaPlus />
-                    </span>{' '}
-                    {t('admin.navigation.newGallery')}{' '}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/images"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaImages />
-                    </span>{' '}
-                    {t('admin.navigation.images')}{' '}
                   </NavLink>
                 </li>
               </ul>

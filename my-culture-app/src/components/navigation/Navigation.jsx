@@ -166,7 +166,7 @@ const Navigation = () => {
                 {' '}
                 <img
                   src="/logoNew/MB_Sparkasse.png"
-                  alt="Musik Leben e.V. Logo"
+                  alt="Culture Academy"
                   className="h-10 sm:h-16 w-auto mb-5"
                 />{' '}
               </NavLink>
