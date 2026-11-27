@@ -70,7 +70,7 @@ const Footer = () => {
             <div className="w-32 h-32">
               <img
                 src="/logoNew/MB_Sparkasse.png"
-                alt="Live in Lu Logo"
+                alt="Culture Academy"
                 className="object-contain"
               />
             </div>

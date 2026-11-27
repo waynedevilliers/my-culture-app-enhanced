@@ -51,7 +51,7 @@ const NavigationSidebar = () => {
             <NavLink to="/">
               <img
                 src="/logoNew/MB_Sparkasse.png"
-                alt="Musikleben Logo"
+                alt="Culture Academy"
                 className="h-10 sm:h-16 w-auto mb-5"
               />
             </NavLink>

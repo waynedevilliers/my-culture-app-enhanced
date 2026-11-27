@@ -22,7 +22,7 @@ const Profile = () => {
           })}
         />
       </figure>
-      <div className="max-w-screen-xl mx-auto flex flex-col lg:flex-row px-4 z-10">
+      <div className="max-w-[min(100%,80rem)] mx-auto flex flex-col lg:flex-row px-4 z-10">
         <aside className="w-full lg:w-1/3 mt-24 z-10">
           <ProfileHeader />
         </aside>
