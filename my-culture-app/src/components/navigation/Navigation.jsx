@@ -46,8 +46,8 @@ const Navigation = () => {
         <div className="drawer-content flex justify-between items-center m-4">
           <NavLink to="/" className={({ isActive }) => (isActive ? '' : '')}>
             <img
-              src="/logoNew/MB_Sparkasse.png"
-              alt="culture academy"
+              src="/logo/grow.png"
+              alt="grow"
               className="h-14 sm:h-16 md:h-20 w-auto mb-5"
             />
           </NavLink>
@@ -165,8 +165,8 @@ const Navigation = () => {
               >
                 {' '}
                 <img
-                  src="/logoNew/MB_Sparkasse.png"
-                  alt="Culture Academy"
+                  src="/logo/grow.png"
+                  alt="grow"
                   className="h-10 sm:h-16 w-auto mb-5"
                 />{' '}
               </NavLink>

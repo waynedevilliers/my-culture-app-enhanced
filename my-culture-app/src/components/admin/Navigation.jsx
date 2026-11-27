@@ -71,8 +71,8 @@ const Navigation = () => {
           <li className="self-center">
             <NavLink to="/" onClick={drawerHandler}>
               <img
-                src="/logoNew/MB_Sparkasse.png"
-                alt="Culture Academy"
+                src="/logo/grow.png"
+                alt="grow"
                 className="h-10 sm:h-16 w-auto mb-5"
               />
             </NavLink>
