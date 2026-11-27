@@ -18,7 +18,6 @@ export const PROTECTED_ROUTES: ReadonlyArray<[prefix: string, roles: Role[]]> =
     ['/api/user', ALL_ROLES],
     ['/api/users', ALL_ROLES],
     ['/api/file', ['ADMIN', 'SUPER_ADMIN']],
-    ['/api/events', ALL_ROLES],
     ['/api/certificates', ALL_ROLES],
   ];
 
