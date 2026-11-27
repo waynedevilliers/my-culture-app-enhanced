@@ -5,8 +5,12 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import UpdateOrganizationModal from './UpdateOrganizationModal';
 import { useTranslation } from 'react-i18next';
+import { useUser } from '../../contexts/UserContext.jsx';
 
 const OrganizationList = () => {
+  const { user } = useUser();
+  // Publishing and deleting are for super admins only.
+  const isSuperAdmin = user?.role === 'superAdmin';
   const { t } = useTranslation();
   const [organizations, setOrganizations] = useState([]);
   const [page, setPage] = useState(1);
@@ -119,26 +123,34 @@ const OrganizationList = () => {
                 <th>{organization.id}</th>
                 <th>{organization.name}</th>
                 <th className="hidden sm:table-cell">
-                  <button
-                    className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
-                    onClick={() => {
-                      handlePublish(organization);
-                    }}
-                    type="button"
-                  >
-                    {organization.published
-                      ? t('admin.tables.no')
-                      : t('admin.tables.yes')}
-                  </button>
+                  {isSuperAdmin ? (
+                    <button
+                      className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                      onClick={() => {
+                        handlePublish(organization);
+                      }}
+                      type="button"
+                    >
+                      {organization.published
+                        ? t('admin.tables.yes')
+                        : t('admin.tables.no')}
+                    </button>
+                  ) : organization.published ? (
+                    t('admin.tables.yes')
+                  ) : (
+                    t('admin.tables.no')
+                  )}
                 </th>
                 <th className="hidden sm:table-cell">
-                  <button
-                    className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
-                    onClick={() => handleDelete(organization.id)}
-                    type="button"
-                  >
-                    {t('admin.tables.delete')}
-                  </button>
+                  {isSuperAdmin && (
+                    <button
+                      className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                      onClick={() => handleDelete(organization.id)}
+                      type="button"
+                    >
+                      {t('admin.tables.delete')}
+                    </button>
+                  )}
                 </th>
                 <th>
                   <button

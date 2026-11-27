@@ -18,7 +18,11 @@ export const DASHBOARD_ROLES = ['admin', 'superAdmin'];
 
 function toUiUser(apiUser) {
   if (!apiUser) return null;
-  return { ...apiUser, role: UI_ROLES[apiUser.role] ?? apiUser.role };
+  return {
+    ...apiUser,
+    role: UI_ROLES[apiUser.role] ?? apiUser.role,
+    phoneNumber: apiUser.phoneNumber ?? apiUser.phone ?? '',
+  };
 }
 
 const UserContext = createContext(undefined);
