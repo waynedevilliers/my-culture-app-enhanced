@@ -7,6 +7,13 @@ updates:
     # Waits until a release is two weeks old, like the rule for manual updates.
     cooldown:
       default-days: 14
+    # The BlockNote editor (0.x, so every release can break) and the Mantine
+    # version it requires are upgraded together on purpose, in their own PR.
+    # Remove these entries when that is done.
+    ignore:
+      - dependency-name: '@blocknote/*'
+      - dependency-name: '@mantine/*'
+        update-types: ['version-update:semver-major']
     groups:
       minor-and-patch:
         update-types:
