@@ -17,13 +17,6 @@ enum Role {
   USER
 }
 
-enum CertificateStatus {
-  DRAFT
-  GENERATED
-  SENT
-  DOWNLOADED
-}
-
 enum EventStatus {
   DRAFT
   PUBLISHED
@@ -54,7 +47,6 @@ model User {
   organizations Organization[] @relation("OrganizationOwner")
   events        Event[]
   certificates  Certificate[]
-  certificateRecipients CertificateRecipient[]
   blogs         Blog[]
   galleries     Gallery[]
   images        Image[]
@@ -195,48 +187,51 @@ model Location {
   updatedAt DateTime @updatedAt
 }
 
-// Certificate model
+// Certificate model: one certificate (Christian's design) for one or more
+// recipients. Texts and choices are stored as fields, never as HTML.
 model Certificate {
   id              String  @id @default(cuid())
-  title           String
-  template        String?
-  recipientName   String?
-  recipientEmail  String?
-  pdfUrl          String?
-  status          CertificateStatus @default(DRAFT)
-  issued          Boolean @default(false)
-  
-  userId          Int
-  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  language        String  @default("de") // de | en
+  color           String  @default("green") // green | blue | burgundy | grey
+  introText       String
+  achievement     String
+  addition        String?
+  // [{ name, role }], 1 to 3 entries
+  signatures      Json
+  issuedDate      DateTime
+
+  createdById     Int?
+  createdBy       User?   @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
   organizationId  Int
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  
-  // Relations
+
   recipients      CertificateRecipient[]
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
 }
 
-// CertificateRecipient model
+// One recipient of a certificate. `code` is the random, unguessable part of
+// the private link (/certificates/<code>). Links do not expire but can be
+// revoked.
 model CertificateRecipient {
-  id              Int     @id @default(autoincrement())
+  id              String  @id @default(cuid())
   name            String
   email           String
-  recipientCode   String  @unique
-  pdfUrl          String?
-  downloaded      Boolean @default(false)
-  downloadedAt    DateTime?
-  
+  code            String  @unique
+  sentAt          DateTime?
+  revokedAt       DateTime?
+
   certificateId   String
   certificate     Certificate @relation(fields: [certificateId], references: [id], onDelete: Cascade)
-  
-  userId          Int?
-  user            User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([certificateId])
 }
 
 // Blog model

@@ -116,14 +116,17 @@ describe('proxy', () => {
       expect(proxy(makeRequest(path)).status).toBe(401);
     });
 
-    it('refuses a USER on the upload route', () => {
-      const res = proxy(
-        makeRequest('/api/file/upload', {
-          Authorization: `Bearer ${tokenFor('USER')}`,
-        })
-      );
-      expect(res.status).toBe(403);
-    });
+    it.each(['/api/file/upload', '/api/certificates/abc/send'])(
+      'refuses a USER on %s',
+      (path) => {
+        const res = proxy(
+          makeRequest(path, {
+            Authorization: `Bearer ${tokenFor('USER')}`,
+          })
+        );
+        expect(res.status).toBe(403);
+      }
+    );
   });
 
   describe('routes whose handlers check the role', () => {

@@ -3,6 +3,7 @@
 // reveal working links.
 
 import { createHash, randomBytes } from 'crypto';
+import { appUrl } from './app-url';
 import { prisma } from './prisma';
 
 export const PASSWORD_TOKEN_HOURS = 48;
@@ -22,11 +23,6 @@ export async function createPasswordToken(userId: number): Promise<string> {
     },
   });
   return token;
-}
-
-/** Base URL for links in emails: APP_URL, else the request's own origin. */
-function appUrl(req: Request): string {
-  return (process.env.APP_URL || new URL(req.url).origin).replace(/\/+$/, '');
 }
 
 export const setPasswordUrl = (req: Request, token: string) =>
