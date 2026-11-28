@@ -37,16 +37,28 @@ test('footer links lead to Impressum and Datenschutz', async ({ page }) => {
   const footer = page.getByRole('contentinfo');
   await footer.getByRole('link', { name: 'Impressum' }).click();
   await expect(page).toHaveURL(/\/impressum$/);
-  await expect(page.getByText('Angaben gemäß § 5 DDG')).toBeVisible();
+  await expect(
+    page.getByText('Vereinsregister 22292 (Amtsgericht Stendal)')
+  ).toBeVisible();
   await page
     .getByRole('main')
     .getByRole('link', { name: 'Datenschutzerklärung' })
     .click();
   await expect(page).toHaveURL(/\/datenschutz$/);
-  await expect(page.getByRole('heading', { name: '6. Kontakt' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Hinweis zur verantwortlichen Stelle' })
+  ).toBeVisible();
 
   await footer.getByRole('link', { name: 'Datenschutz' }).click();
   await expect(page).toHaveURL(/\/datenschutz$/);
+});
+
+test('old /privacy link redirects to /datenschutz', async ({ page }) => {
+  await page.goto('/privacy');
+  await expect(page).toHaveURL(/\/datenschutz$/);
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Datenschutzerklärung' })
+  ).toBeVisible();
 });
 
 test('favicon and touch icon are served', async ({ request }) => {
