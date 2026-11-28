@@ -29,8 +29,8 @@ const Organizations = () => {
   }, []);
 
   return (
-    <main id="organization" className="relative scroll-mt-24 pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4  pt-24 pb-16 min-h-screen">
+    <main id="organization" className="relative scroll-mt-24 pb-16">
+      <div className="max-w-7xl mx-auto px-4 pt-12 pb-16 min-h-screen">
         {/* Page header */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800">

@@ -44,8 +44,8 @@ const SetPassword = () => {
   };
 
   return (
-    <main className="relative scroll-mt-24 pt-24">
-      <div className="max-w-xl mx-auto pt-24 pb-16 min-h-screen px-4">
+    <main className="relative scroll-mt-24">
+      <div className="max-w-xl mx-auto pt-12 pb-16 min-h-screen px-4">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-6 text-center">
           {t('setPassword.title')}
         </h1>

@@ -2,12 +2,9 @@
 
 import Navigation from '../components/navigation/Navigation.jsx';
 
+// The header is part of the page flow: logo on top, sticky menu bar below.
 const Header = () => {
-  return (
-    <header className="absolute flex justify-center w-screen px-4 top-0 z-50">
-      <Navigation />
-    </header>
-  );
+  return <Navigation />;
 };
 
 export default Header;
