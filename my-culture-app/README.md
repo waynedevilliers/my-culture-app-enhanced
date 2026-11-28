@@ -143,8 +143,9 @@ Vercel's Build Command is `npm run build` (`scripts/build.mjs`):
   Unmerged branches never change the database.
 
 `DATABASE_URL` must be available at build time in the production
-environment. If the database uses a connection pooler, use a direct
-(non-pooled) connection for it. Without `--accept-data-loss`, a schema
+environment. When `DATABASE_URL_UNPOOLED` is set (Neon does this), the
+schema push uses that direct connection; on other hosts `DATABASE_URL` is
+used. Without `--accept-data-loss`, a schema
 change that would delete data stops the build and the live version keeps
 running; such a change needs a deliberate manual step.
 
