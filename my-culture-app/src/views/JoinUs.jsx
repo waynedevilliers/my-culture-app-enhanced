@@ -277,7 +277,7 @@ const JoinUs = () => {
                   transition={{ duration: 0.6, delay: 0.1 * index }}
                 >
                   <benefit.icon className="text-3xl text-primary mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3 hyphens-auto break-words">
                     {benefit.title}
                   </h3>
                   <p className="text-gray-600">{benefit.description}</p>
