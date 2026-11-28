@@ -13,6 +13,8 @@ import {
   FaInfo,
   FaBarsStaggered,
   FaCertificate,
+  FaClipboardCheck,
+  FaNewspaper,
 } from 'react-icons/fa6';
 import { RiCommunityFill } from 'react-icons/ri';
 
@@ -94,6 +96,21 @@ const NavigationSidebar = () => {
                 {isSuperAdmin && (
                   <li>
                     <NavLink
+                      to="/dashboard/organization-applications"
+                      className={({ isActive }) =>
+                        isActive ? 'text-primary' : ''
+                      }
+                    >
+                      <span className="text-2xl">
+                        <FaClipboardCheck />
+                      </span>{' '}
+                      {t('admin.navigation.applications')}
+                    </NavLink>
+                  </li>
+                )}
+                {isSuperAdmin && (
+                  <li>
+                    <NavLink
                       to="/dashboard/new-organization"
                       className={({ isActive }) =>
                         isActive ? 'text-primary' : ''
@@ -142,6 +159,44 @@ const NavigationSidebar = () => {
                       <FaPlus />
                     </span>{' '}
                     {t('admin.navigation.createCertificate')}
+                  </NavLink>
+                </li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary>
+                <span className="text-2xl">
+                  <FaNewspaper />
+                </span>{' '}
+                {t('admin.navigation.newsletter')}
+              </summary>
+              <ul className="flex flex-col gap-4 mt-4">
+                <li>
+                  <NavLink
+                    to="/dashboard/newsletter"
+                    className={({ isActive }) =>
+                      isActive ? 'text-primary' : ''
+                    }
+                  >
+                    <span className="text-2xl">
+                      <FaChartBar />
+                    </span>{' '}
+                    {t('admin.navigation.overview')}
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/new-newsletter"
+                    className={({ isActive }) =>
+                      isActive ? 'text-primary' : ''
+                    }
+                  >
+                    <span className="text-2xl">
+                      <FaPlus />
+                    </span>{' '}
+                    {t('admin.navigation.newNewsletter')}
                   </NavLink>
                 </li>
               </ul>

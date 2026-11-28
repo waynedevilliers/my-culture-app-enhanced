@@ -13,10 +13,11 @@ import {
   FaInfo,
   FaBarsStaggered,
   FaNewspaper,
-  FaBuilding,
+  FaCertificate,
   FaClipboardCheck,
   FaBell,
 } from 'react-icons/fa6';
+import { RiCommunityFill } from 'react-icons/ri';
 import { useState } from 'react';
 import NotificationCenter from '../notification/NotificationCenter';
 
@@ -92,22 +93,10 @@ const Navigation = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/dashboard/users"
-              onClick={drawerHandler}
-              className={({ isActive }) => (isActive ? 'text-primary' : '')}
-            >
-              <span className="text-2xl">
-                <FaUserGroup />
-              </span>{' '}
-              {t('admin.navigation.users')}{' '}
-            </NavLink>
-          </li>
-          <li>
             <details>
               <summary>
                 <span className="text-2xl">
-                  <FaBuilding />
+                  <RiCommunityFill />
                 </span>{' '}
                 {t('admin.navigation.organizations')}
               </summary>
@@ -165,6 +154,46 @@ const Navigation = () => {
             <details>
               <summary>
                 <span className="text-2xl">
+                  <FaCertificate />
+                </span>{' '}
+                {t('admin.navigation.certificates')}
+              </summary>
+              <ul className="flex flex-col gap-4 mt-4">
+                <li>
+                  <NavLink
+                    to="/dashboard/certificates"
+                    onClick={drawerHandler}
+                    className={({ isActive }) =>
+                      isActive ? 'text-primary' : ''
+                    }
+                  >
+                    <span className="text-2xl">
+                      <FaChartBar />
+                    </span>{' '}
+                    {t('admin.navigation.overview')}{' '}
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/new-certificate"
+                    onClick={drawerHandler}
+                    className={({ isActive }) =>
+                      isActive ? 'text-primary' : ''
+                    }
+                  >
+                    <span className="text-2xl">
+                      <FaPlus />
+                    </span>{' '}
+                    {t('admin.navigation.createCertificate')}{' '}
+                  </NavLink>
+                </li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary>
+                <span className="text-2xl">
                   <FaNewspaper />
                 </span>{' '}
                 {t('admin.navigation.newsletter')}
@@ -200,6 +229,18 @@ const Navigation = () => {
                 </li>
               </ul>
             </details>
+          </li>
+          <li>
+            <NavLink
+              to="/dashboard/users"
+              onClick={drawerHandler}
+              className={({ isActive }) => (isActive ? 'text-primary' : '')}
+            >
+              <span className="text-2xl">
+                <FaUserGroup />
+              </span>{' '}
+              {t('admin.navigation.users')}{' '}
+            </NavLink>
           </li>
           <div className="divider"></div>
           <li>
