@@ -103,6 +103,15 @@ the name or type the browser sends, and stored under a random name. In
 production `BLOB_READ_WRITE_TOKEN` (Vercel Blob) is required; without it
 uploads are refused instead of being written to the server's disk.
 
+## Certificate design
+
+Christian's LaTeX certificate rebuilt in HTML/CSS:
+`src/components/certificate/CertificateDesign.tsx`. Fields: organisation and
+logo, intro text, achievement, recipient, addition, one to three signatures;
+German or English; colour presets green (default), blue, burgundy and grey.
+Comparison with his PDF and examples: `docs/certificate-design/`. His
+`.tex` is kept in `docs/certificate-latex/` for a later LaTeX engine.
+
 ## Setup
 
 ```bash
