@@ -5,7 +5,7 @@
 body {
   @apply overflow-x-hidden;
   --toastify-color-dark: #080808;
-  --toastify-color-success: #bfb304;
+  --toastify-color-success: #2e7d32;
   --toastify-color-transparent: rgba(255, 255, 255, 0.7);
 
   --toastify-icon-color-success: var(--toastify-color-success);
