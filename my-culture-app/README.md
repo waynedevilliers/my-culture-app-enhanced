@@ -17,7 +17,8 @@ been moved here.
 | Image upload (`POST /api/file/upload`): Vercel Blob in production, `public/uploads` locally | Done |
 | Users (`/api/users`): list (scoped for organisation admins), super admin edit and delete, own profile and password (`/api/users/update`) | Done |
 | Events, locations, categories | Hidden for now (not needed yet): pages, menu entry and the profile's "Events you may like" removed. The code is still in `my-culture-frontend` and the tables stay in the schema. The "Kalendar" page stays a placeholder. |
-| Other API routes (certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
+| Certificates (`/api/certificates`): create, list, private links, send, revoke; recipient page `/certificates/<code>` | Done |
+| Newsletter API | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
 
 The pages were moved without changing markup, classes or CSS: Tailwind 3 +
 DaisyUI 4 with the same `myCulture` theme. Old and new were compared with
@@ -33,8 +34,8 @@ email or password" answer as a wrong password.
 
 | Role | Can |
 | --- | --- |
-| Super admin (`SUPER_ADMIN`, grow) | Everything: all organisations (also those without an admin of their own), applications, users and roles |
-| Organisation admin (`ADMIN`) | Only their own organisation (`User.organizationId`): edit it except name and publication, see its users, change their own profile and password |
+| Super admin (`SUPER_ADMIN`, grow) | Everything: all organisations (also those without an admin of their own) and their certificates, applications, users and roles |
+| Organisation admin (`ADMIN`) | Only their own organisation (`User.organizationId`): edit it except name and publication, its certificates, see its users, change their own profile and password |
 
 Roles and the organisation are read from the database on every request, not
 from the login token, so a change takes effect immediately. A super admin
@@ -112,6 +113,26 @@ German or English; colour presets green (default), blue, burgundy and grey.
 Comparison with his PDF and examples: `docs/certificate-design/`. His
 `.tex` is kept in `docs/certificate-latex/` for a later LaTeX engine.
 
+## Certificates
+
+- **Create** (Zertifikate > Neues Zertifikat): organisation (super admins
+  choose one; organisation admins always issue for their own), language,
+  colour, the texts, 1 to 3 signatures, issue date and the recipients. The
+  preview shows the certificate as it will look.
+- **Private links:** every recipient gets their own link
+  `/certificates/<code>`, with 24 random bytes as the code. It is never built
+  from ids, names or organisations, so links cannot be guessed or listed.
+  Links do not expire. The page is not indexed by search engines and offers
+  "Drucken oder als PDF speichern" (one A4 landscape page).
+- **Send:** emails each recipient their link in the certificate's language
+  (recipients not sent yet; single recipients can be sent again). Without
+  SMTP nothing is sent and the dashboard shows the links to copy.
+- **Revoke:** "Deaktivieren" turns one recipient's link off at once; it can
+  be turned on again. Deleting a certificate turns off all its links.
+- **Scope:** organisation admins only see and change their organisation's
+  certificates; others answer 404. Created, sent, revoked, deleted and
+  viewed certificates are logged as JSON, without names or email addresses.
+
 ## Setup
 
 ```bash
@@ -172,13 +193,14 @@ config, router) and `ui` (jsdom: tests moved from the old app).
 
 ### Known failing UI tests
 
-72 UI tests never passed in `my-culture-frontend` either: they test
+41 UI tests never passed in `my-culture-frontend` either: they test
 behaviour the components do not have (or no longer have). They are marked
 `it.skip`/`test.skip` with the comment "Already failing in
-my-culture-frontend before the move", in `CertificateEmailSender` (19),
-`validation` (14), `SecureCertificateViewer` (12), `phase2-integration` (11),
-`UserFeedback` (7), `ErrorBoundary` (6), `Pagination`, `notificationService`
-and `useFormValidation` (1 each). Fix the test or the component, then remove
+my-culture-frontend before the move", in `validation` (14),
+`phase2-integration` (11), `UserFeedback` (7), `ErrorBoundary` (6),
+`Pagination`, `notificationService` and `useFormValidation` (1 each). The
+old certificate components and their tests were removed with the new
+certificates. Fix the test or the component, then remove
 the `.skip`. Every test that runs must pass.
 
 ## Accessibility

@@ -18,7 +18,7 @@ export const PROTECTED_ROUTES: ReadonlyArray<[prefix: string, roles: Role[]]> =
     ['/api/user', ALL_ROLES],
     ['/api/users', ALL_ROLES],
     ['/api/file', ['ADMIN', 'SUPER_ADMIN']],
-    ['/api/certificates', ALL_ROLES],
+    ['/api/certificates', ['ADMIN', 'SUPER_ADMIN']],
   ];
 
 // Headers the proxy sets for route handlers. Clients must never set them.

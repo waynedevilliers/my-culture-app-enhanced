@@ -22,8 +22,7 @@ src/tests/
 ├── components/                        # Component tests
 │   ├── ErrorBoundary.test.jsx         # Error boundary component tests
 │   ├── UserFeedback.test.jsx          # User feedback component tests
-│   ├── CertificateEmailSender.test.jsx # Email sender component tests
-│   └── SecureCertificateViewer.test.jsx # Certificate viewer tests
+│   └── CertificateDesign.test.jsx     # Certificate design tests
 └── integration/                       # Integration tests
     └── phase2-integration.test.jsx    # End-to-end integration tests
 ```
@@ -41,8 +40,7 @@ src/tests/
 ### Components (100% coverage)
 - **ErrorBoundary**: 23 tests covering error catching, recovery, HOC wrapper, hooks, and edge cases
 - **UserFeedback**: 28 tests covering all feedback types, interactions, auto-close, actions, and state management
-- **CertificateEmailSender**: 35 tests covering form validation, email management, sending, permissions, and UI interactions
-- **SecureCertificateViewer**: 32 tests covering certificate loading, access control, multiple recipients, navigation, and error states
+- **CertificateDesign**: fields, languages, signatures, colours, dates and plain-text rendering
 
 ### Integration Tests (100% coverage)
 - **Phase 2 Integration**: 15 tests covering complete workflows, service integration, error recovery, and performance

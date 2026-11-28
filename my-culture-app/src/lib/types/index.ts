@@ -2,7 +2,6 @@
 // This file provides TypeScript types for all database entities
 
 export type Role = 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'USER';
-export type CertificateStatus = 'DRAFT' | 'GENERATED' | 'SENT' | 'DOWNLOADED';
 export type EventStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'CANCELLED';
 
 // User type
@@ -162,53 +161,6 @@ export interface CreateLocationInput {
   latitude?: number;
   longitude?: number;
   organizationId?: number;
-}
-
-// Certificate type
-export interface Certificate {
-  id: string;
-  title: string;
-  template?: string;
-  recipientName?: string;
-  recipientEmail?: string;
-  pdfUrl?: string;
-  status: CertificateStatus;
-  issued: boolean;
-  userId: number;
-  organizationId: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateCertificateInput {
-  title: string;
-  template?: string;
-  recipientName?: string;
-  recipientEmail?: string;
-  userId: number;
-  organizationId: number;
-}
-
-// CertificateRecipient type
-export interface CertificateRecipient {
-  id: number;
-  name: string;
-  email: string;
-  recipientCode: string;
-  pdfUrl?: string;
-  downloaded: boolean;
-  downloadedAt?: Date;
-  certificateId: string;
-  userId?: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateCertificateRecipientInput {
-  name: string;
-  email: string;
-  certificateId: string;
-  userId?: number;
 }
 
 // Blog type

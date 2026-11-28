@@ -115,20 +115,6 @@ export const CreateLocationSchema = z.object({
   organizationId: z.number().int().positive().optional(),
 });
 
-// Certificate schemas
-export const CreateCertificateSchema = z.object({
-  title: z.string().min(1, 'Certificate title is required'),
-  template: z.string().optional(),
-  recipientName: z.string().optional(),
-  recipientEmail: z
-    .string()
-    .email('Invalid email address')
-    .optional()
-    .or(z.literal('')),
-  userId: z.number().int().positive(),
-  organizationId: z.number().int().positive(),
-});
-
 // Blog schemas
 export const CreateBlogSchema = z.object({
   title: z.string().min(1, 'Blog title is required'),
@@ -206,7 +192,6 @@ export type CreateEventInput = z.infer<typeof CreateEventSchema>;
 export type UpdateEventInput = z.infer<typeof UpdateEventSchema>;
 export type CreateCategoryInput = z.infer<typeof CreateCategorySchema>;
 export type CreateLocationInput = z.infer<typeof CreateLocationSchema>;
-export type CreateCertificateInput = z.infer<typeof CreateCertificateSchema>;
 export type CreateBlogInput = z.infer<typeof CreateBlogSchema>;
 export type UpdateBlogInput = z.infer<typeof UpdateBlogSchema>;
 export type CreateGalleryInput = z.infer<typeof CreateGallerySchema>;
