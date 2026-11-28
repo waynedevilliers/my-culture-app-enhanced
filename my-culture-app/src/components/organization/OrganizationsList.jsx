@@ -40,8 +40,9 @@ const OrganizationList = () => {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            {t('hero.featuredOrganizations').split(' ')[0]}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent ml-3">
+            {/* A real space, not a margin, so the heading can wrap on phones. */}
+            {t('hero.featuredOrganizations').split(' ')[0]}{' '}
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               {t('hero.featuredOrganizations').split(' ').slice(1).join(' ')}
             </span>
           </h2>

@@ -32,8 +32,7 @@ test.describe('Public pages', () => {
 });
 
 test('footer links lead to Impressum and Datenschutz', async ({ page }) => {
-  // Not the start page: it is wider than a phone screen (known, open).
-  await page.goto('/organizations');
+  await page.goto('/');
   const footer = page.getByRole('contentinfo');
   await footer.getByRole('link', { name: 'Impressum' }).click();
   await expect(page).toHaveURL(/\/impressum$/);
@@ -51,6 +50,18 @@ test('footer links lead to Impressum and Datenschutz', async ({ page }) => {
 
   await footer.getByRole('link', { name: 'Datenschutz' }).click();
   await expect(page).toHaveURL(/\/datenschutz$/);
+});
+
+test('no page is wider than the screen', async ({ page }) => {
+  for (const { path } of publicPages) {
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    expect(scrollWidth, path).toBeLessThanOrEqual(clientWidth);
+  }
 });
 
 test('old /privacy link redirects to /datenschutz', async ({ page }) => {
