@@ -6,12 +6,7 @@ import { z } from 'zod';
 const text = (max: number) => z.string().trim().max(max);
 
 const CERTIFICATE_LANGUAGES = ['de', 'en'] as const;
-const CERTIFICATE_COLOR_NAMES = [
-  'green',
-  'blue',
-  'burgundy',
-  'grey',
-] as const;
+const CERTIFICATE_COLOR_NAMES = ['green', 'blue', 'burgundy', 'grey'] as const;
 const MAX_SIGNATURES = 3;
 const MAX_RECIPIENTS = 200;
 
