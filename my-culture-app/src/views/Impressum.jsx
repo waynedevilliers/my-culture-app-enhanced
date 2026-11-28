@@ -13,44 +13,71 @@ const Impressum = () => {
     });
   }, []);
 
+  const headingClass = 'text-2xl sm:text-3xl font-bold text-primary mt-4';
+
   return (
     <main
       id="impressum"
       className="flex flex-col justify-center items-center text-gray-800"
     >
-      <article className="max-w-screen-xl w-full mt-32 flex flex-col gap-2 text-pretty px-4 mb-10">
+      <article className="max-w-screen-xl w-full mt-48 flex flex-col gap-2 text-pretty px-4 mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-primary">
           Impressum
         </h1>
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary">
-          Angaben gemäß § 5 DDG
-        </h2>
+
+        <h2 className={headingClass}>Anschrift</h2>
         <address className="not-italic">
-          Musik Leben e.V.
-          <br /> Gaggenauer Straße 7<br /> 14974 Ludwigsfelde
+          Culture Academy e. V.
+          <br /> Harz 51
+          <br /> 06108 Halle (Saale)
+          <br /> Germany
         </address>
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary">Kontakt</h2>
         <p>
           E-Mail:{' '}
           <a
-            href="mailto:live-in-lu@gmx.de"
-            className="text-primary hover:underline"
+            href="mailto:info@culture-academy.org"
+            className="text-primary underline hover:no-underline"
           >
-            live-in-lu@gmx.de
+            info@culture-academy.org
           </a>
+          <br /> Tel: +49 172 3560531
         </p>
-        <h2 className="text-2xl sm:text-3xl font-bold text-primary">
-          Datenschutz
-        </h2>
+        <p>Vereinsregister 22292 (Amtsgericht Stendal)</p>
+
+        <h2 className={headingClass}>Datenschutzbeauftragter</h2>
+        <address className="not-italic">
+          Christian Köhler-Warmbrunn
+          <br /> c/o Culture Academy e. V.
+          <br /> Harz 51
+          <br /> 06108 Halle (Saale)
+        </address>
+
+        <h2 className={headingClass}>Verbraucherstreitbeilegung</h2>
         <p>
-          Wie wir mit Ihren Daten umgehen, lesen Sie in unserer{' '}
+          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren
+          vor einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+
+        <h2 className={headingClass}>Inhaltslizenzen</h2>
+        <p>
+          Jegliche Inhalte, die bei culture-academy.org veröffentlicht werden,
+          bleiben Eigentum des Culture Academy e. V.. Soweit nicht anders
+          vermerkt, können und sollen sie weiterverwertet werden. Alle Inhalte,
+          die nicht anders gekennzeichnet sind, und ab dem 01.08.2025
+          veröffentlicht wurden, stehen unter der „Creative Commons
+          Attribution-NonCommercial 4.0 International“-Lizenz.
+        </p>
+
+        <h2 className={headingClass}>Datenschutz</h2>
+        <p>
+          Angaben zum Datenschutz sind unserer{' '}
           <Link
             to="/datenschutz"
             className="text-primary underline hover:no-underline"
           >
             Datenschutzerklärung
-          </Link>
-          .
+          </Link>{' '}
+          zu entnehmen.
         </p>
       </article>
     </main>
