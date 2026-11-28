@@ -12,9 +12,9 @@ const config = {
     themes: [
       {
         myCulture: {
-          primary: '#FF6A00',
+          primary: '#2E7D32',
           secondary: '#6F7571',
-          accent: '#DADADA',
+          accent: '#66BB6A',
           neutral: '#080808',
           'base-100': '#E3E7DB',
           info: '#6F7571',
