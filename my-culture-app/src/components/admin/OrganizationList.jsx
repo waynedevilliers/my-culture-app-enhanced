@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import UpdateOrganizationModal from './UpdateOrganizationModal';
+import AssignAdminModal from './AssignAdminModal.jsx';
+import AdminLinkDialog from './AdminLinkDialog.jsx';
 import { useTranslation } from 'react-i18next';
 import { useUser } from '../../contexts/UserContext.jsx';
 
@@ -11,6 +13,8 @@ const OrganizationList = () => {
   const { user } = useUser();
   // Publishing and deleting are for super admins only.
   const isSuperAdmin = user?.role === 'superAdmin';
+  const [adminFor, setAdminFor] = useState(null);
+  const [adminResult, setAdminResult] = useState(null);
   const { t } = useTranslation();
   const [organizations, setOrganizations] = useState([]);
   const [page, setPage] = useState(1);
@@ -160,6 +164,15 @@ const OrganizationList = () => {
                   >
                     {t('admin.tables.update')}
                   </button>
+                  {isSuperAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => setAdminFor(organization)}
+                      className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                    >
+                      {t('admin.adminAccess.button')}
+                    </button>
+                  )}
                 </th>
               </tr>
             ))}
@@ -208,6 +221,20 @@ const OrganizationList = () => {
           onUpdated={() => fetchOrganizations()}
         />
       )}
+      {adminFor && (
+        <AssignAdminModal
+          organization={adminFor}
+          onClose={() => setAdminFor(null)}
+          onAssigned={(result) => {
+            setAdminFor(null);
+            setAdminResult(result);
+          }}
+        />
+      )}
+      <AdminLinkDialog
+        result={adminResult}
+        onClose={() => setAdminResult(null)}
+      />
     </div>
   );
 };

@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "organizations": "Organizations",
-    "joinUs": "Join Us", 
+    "joinUs": "Join Us",
     "login": "Log In",
     "logout": "Logout",
     "profile": "Profile",
@@ -41,7 +41,7 @@
         "description": "Connect with other cultural organizations across Germany and beyond"
       },
       "onlinePresence": {
-        "title": "Online Presence", 
+        "title": "Online Presence",
         "description": "Get featured on our platform with your own dedicated organization page"
       },
       "partnerships": {
@@ -61,8 +61,6 @@
       "email": "Email Address",
       "phone": "Phone Number",
       "website": "Website",
-      "location": "Location",
-      "locationPlaceholder": "City, Germany",
       "establishedYear": "Established Year",
       "memberCount": "Member Count",
       "memberCountPlaceholder": "50-100 members",
@@ -70,7 +68,7 @@
       "programsPlaceholder": "Describe your current programs, workshops, events, or activities...",
       "goals": "Goals for Joining Our Platform",
       "goalsPlaceholder": "What do you hope to achieve by joining our platform?",
-      "additionalInfo": "Additional Information", 
+      "additionalInfo": "Additional Information",
       "additionalInfoPlaceholder": "Any additional information you'd like to share...",
       "adminName": "Administrator Name",
       "adminNamePlaceholder": "Administrator full name",
@@ -78,7 +76,7 @@
       "adminEmailPlaceholder": "admin@yourorganization.de",
       "adminSection": "Administrator Account",
       "adminSectionDescription": "This person will have admin access to manage certificates for your organization",
-      "adminNote": "The administrator will receive login credentials via email once the organization application is approved. They will be able to create and manage certificates for your organization.",
+      "adminNote": "After approval, this person receives a link by email to set their password. They can then create and manage your organisation's certificates.",
       "logoOptional": "Organization Logo (Optional)",
       "logoSelected": "Logo selected",
       "removeLogo": "Remove Logo",
@@ -86,7 +84,14 @@
       "logoInfo": "PNG, JPG, JPEG, or WebP (max 10MB)",
       "submit": "Submit Application",
       "submitting": "Submitting Application...",
-      "required": "Required field"
+      "required": "Required field",
+      "street": "Street and house number",
+      "streetPlaceholder": "12 Culture Street",
+      "postalCode": "Postal code",
+      "city": "City",
+      "cityPlaceholder": "Berlin",
+      "hasOwnAdmin": "We have our own administrator",
+      "noOwnAdminNote": "Without an admin of your own, grow manages your organisation and creates certificates for you."
     },
     "process": {
       "title": "Application Process",
@@ -127,7 +132,7 @@
     "phone": "Phone",
     "joinCommunity": "Join Our Community",
     "joinDescription": "Become part of our cultural journey and earn recognition for your achievements.",
-    "contactUs": "Contact Us", 
+    "contactUs": "Contact Us",
     "visitWebsite": "Visit Website",
     "programs": "Our Programs",
     "recentActivity": "Recent Activity",
@@ -153,7 +158,7 @@
   "login": {
     "title": "Log In",
     "email": "Email Address",
-    "password": "Password", 
+    "password": "Password",
     "loginButton": "Log In",
     "forgotPassword": "Forgot Password?"
   },
@@ -340,7 +345,7 @@
       "noApplications": "No applications available",
       "approveSuccess": "Application approved successfully",
       "approveError": "Error approving application",
-      "rejectSuccess": "Application rejected successfully", 
+      "rejectSuccess": "Application rejected successfully",
       "rejectError": "Error rejecting application",
       "rejectPrompt": "Please provide a reason for rejection:",
       "stats": {
@@ -380,6 +385,23 @@
         "adminEmail": "Administrator Email",
         "description": "Description"
       }
+    },
+    "adminAccess": {
+      "title": "Admin access",
+      "emailed": "The link to set the password was sent to {{email}}.",
+      "notEmailed": "Sending email is not set up yet. Please pass this link on to {{email}}. It is valid for 48 hours and works once.",
+      "linkLabel": "Link to set the password",
+      "copy": "Copy",
+      "copied": "Link copied",
+      "copyFailed": "Copying failed, please select and copy the link.",
+      "close": "Close",
+      "assign": "Set admin",
+      "assignTitle": "Admin for {{name}}",
+      "assignIntro": "The person gets a link to set their password. A previous admin of this organisation loses access.",
+      "assignError": "The admin could not be set.",
+      "cancel": "Cancel",
+      "button": "Admin",
+      "address": "Address"
     }
   },
   "emailVerification": {
@@ -401,5 +423,17 @@
       "goHome": "Go to Homepage",
       "goToLogin": "Go to Login"
     }
+  },
+  "setPassword": {
+    "title": "Set your password",
+    "intro": "Set the password for your admin account. The link is valid for 48 hours and works once.",
+    "password": "New password",
+    "confirm": "Repeat password",
+    "rule": "At least 10 characters.",
+    "submit": "Save password",
+    "success": "Password saved. You can now log in.",
+    "mismatch": "Passwords do not match.",
+    "error": "The password could not be saved.",
+    "missingToken": "This link is incomplete. Please use the link from your email."
   }
 }

@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Startseite",
-    "organizations": "Organisationen", 
+    "organizations": "Organisationen",
     "joinUs": "Mitmachen",
     "login": "Anmelden",
     "logout": "Abmelden",
@@ -27,7 +27,7 @@
     "subtitle": "Werden Sie Teil von Deutschlands führender Plattform für kulturelle Organisationen. Vernetzen, kooperieren und feiern Sie gemeinsam Erfolge.",
     "stats": {
       "organizations": "Organisationen",
-      "certificates": "Zertifikate ausgestellt", 
+      "certificates": "Zertifikate ausgestellt",
       "community": "Wachsende Gemeinschaft"
     },
     "benefits": {
@@ -37,7 +37,7 @@
         "description": "Stellen Sie schöne, professionelle Zertifikate aus, um Leistungen und Teilnahme anzuerkennen"
       },
       "communityNetwork": {
-        "title": "Gemeinschaftsnetzwerk", 
+        "title": "Gemeinschaftsnetzwerk",
         "description": "Vernetzen Sie sich mit anderen kulturellen Organisationen in ganz Deutschland und darüber hinaus"
       },
       "onlinePresence": {
@@ -61,8 +61,6 @@
       "email": "E-Mail-Adresse",
       "phone": "Telefonnummer",
       "website": "Webseite",
-      "location": "Standort",
-      "locationPlaceholder": "Stadt, Deutschland",
       "establishedYear": "Gründungsjahr",
       "memberCount": "Mitgliederzahl",
       "memberCountPlaceholder": "50-100 Mitglieder",
@@ -78,7 +76,7 @@
       "adminEmailPlaceholder": "admin@ihreorganisation.de",
       "adminSection": "Administrator-Konto",
       "adminSectionDescription": "Diese Person hat Admin-Zugang zur Verwaltung von Zertifikaten für Ihre Organisation",
-      "adminNote": "Der Administrator erhält Login-Daten per E-Mail, sobald der Organisationsantrag genehmigt wird. Sie können dann Zertifikate für Ihre Organisation erstellen und verwalten.",
+      "adminNote": "Nach der Genehmigung erhält diese Person per E-Mail einen Link, um ihr Passwort festzulegen. Danach kann sie Zertifikate Ihrer Organisation erstellen und verwalten.",
       "logoOptional": "Logo der Organisation (Optional)",
       "logoSelected": "Logo ausgewählt",
       "removeLogo": "Logo entfernen",
@@ -86,7 +84,14 @@
       "logoInfo": "PNG, JPG, JPEG oder WebP (max 10MB)",
       "submit": "Antrag einreichen",
       "submitting": "Antrag wird eingereicht...",
-      "required": "Pflichtfeld"
+      "required": "Pflichtfeld",
+      "street": "Straße und Hausnummer",
+      "streetPlaceholder": "Kulturstraße 12",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "cityPlaceholder": "Berlin",
+      "hasOwnAdmin": "Wir haben eine eigene Administratorin / einen eigenen Administrator",
+      "noOwnAdminNote": "Ohne eigenen Admin verwaltet grow Ihre Organisation und erstellt Zertifikate für Sie."
     },
     "process": {
       "title": "Bewerbungsprozess",
@@ -95,7 +100,7 @@
         "description": "Füllen Sie das Formular mit Ihren Organisationsdetails aus"
       },
       "step2": {
-        "title": "Prüfungsprozess", 
+        "title": "Prüfungsprozess",
         "description": "Wir prüfen Ihren Antrag innerhalb von 2-3 Werktagen"
       },
       "step3": {
@@ -120,7 +125,7 @@
   },
   "organizationDetails": {
     "backToOrganizations": "Zurück zu den Organisationen",
-    "aboutTitle": "Über unsere Organisation", 
+    "aboutTitle": "Über unsere Organisation",
     "contactTitle": "Kontakt aufnehmen",
     "website": "Webseite",
     "email": "E-Mail",
@@ -142,10 +147,13 @@
   },
   "footer": {
     "stayConnected": "Bleiben Sie verbunden!",
-    "socialMedia": "Folgen Sie uns in den sozialen Medien",
+    "connectDescription": "Wir freuen uns darauf, uns mit Ihnen zu verbinden und Updates zu teilen.",
+    "email": "E-Mail:",
+    "phone": "Telefon:",
+    "socialMedia": "Folgen Sie uns in den sozialen Medien:",
     "copyright": "Alle Rechte vorbehalten.",
-    "privacy": "Datenschutz",
-    "terms": "Nutzungsbedingungen"
+    "imprint": "Impressum",
+    "privacy": "Datenschutz"
   },
   "login": {
     "title": "Anmelden",
@@ -172,16 +180,6 @@
     "delete": "Löschen",
     "view": "Anzeigen",
     "germany": "Deutschland"
-  },
-  "footer": {
-    "stayConnected": "Bleiben Sie verbunden!",
-    "connectDescription": "Wir freuen uns darauf, uns mit Ihnen zu verbinden und Updates zu teilen.",
-    "email": "E-Mail:",
-    "phone": "Telefon:",
-    "socialMedia": "Folgen Sie uns in den sozialen Medien:",
-    "copyright": "Alle Rechte vorbehalten.",
-    "imprint": "Impressum",
-    "privacy": "Datenschutz"
   },
   "admin": {
     "dashboard": "Dashboard",
@@ -387,6 +385,23 @@
         "adminEmail": "Administrator E-Mail",
         "description": "Beschreibung"
       }
+    },
+    "adminAccess": {
+      "title": "Admin-Zugang",
+      "emailed": "Der Link zum Festlegen des Passworts wurde an {{email}} gesendet.",
+      "notEmailed": "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte geben Sie diesen Link an {{email}} weiter. Er ist 48 Stunden gültig und nur einmal verwendbar.",
+      "linkLabel": "Link zum Festlegen des Passworts",
+      "copy": "Kopieren",
+      "copied": "Link kopiert",
+      "copyFailed": "Kopieren nicht möglich, bitte den Link markieren und kopieren.",
+      "close": "Schließen",
+      "assign": "Admin festlegen",
+      "assignTitle": "Admin für {{name}}",
+      "assignIntro": "Die Person erhält einen Link, um ihr Passwort festzulegen. Ein bisheriger Admin dieser Organisation verliert den Zugang.",
+      "assignError": "Der Admin konnte nicht festgelegt werden.",
+      "cancel": "Abbrechen",
+      "button": "Admin",
+      "address": "Adresse"
     }
   },
   "emailVerification": {
@@ -408,5 +423,17 @@
       "goHome": "Zur Startseite",
       "goToLogin": "Zum Login"
     }
+  },
+  "setPassword": {
+    "title": "Passwort festlegen",
+    "intro": "Legen Sie Ihr Passwort für Ihren Admin-Zugang fest. Der Link ist 48 Stunden gültig und nur einmal verwendbar.",
+    "password": "Neues Passwort",
+    "confirm": "Passwort wiederholen",
+    "rule": "Mindestens 10 Zeichen.",
+    "submit": "Passwort speichern",
+    "success": "Passwort gespeichert. Sie können sich jetzt anmelden.",
+    "mismatch": "Passwörter stimmen nicht überein.",
+    "error": "Das Passwort konnte nicht gespeichert werden.",
+    "missingToken": "Dieser Link ist unvollständig. Bitte verwenden Sie den Link aus Ihrer E-Mail."
   }
 }

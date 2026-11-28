@@ -66,6 +66,28 @@ characters) no token can be signed or verified.
 - Public routes only return approved and published organisations, and only
   their public fields (no applicant details).
 
+## Organisation admins
+
+- An organisation does not need its own admin. Without one, grow (super
+  admin) manages it.
+- With one ("Join us" checkbox, or later via Dashboard > Organisations >
+  Admin), approving creates an `ADMIN` account limited to that organisation.
+  A previous admin of the organisation loses access.
+- The admin gets a one-time link to set their password (valid 48 hours;
+  only a hash is stored). It is emailed when SMTP is set up; otherwise the
+  super admin sees the link with a copy button and passes it on.
+- An email that belongs to a super admin or to the admin of another
+  organisation is refused before anything is approved.
+
+## Email
+
+SMTP, same settings as Salon77: `EMAIL_HOST`, `EMAIL_PORT` (default 587),
+`EMAIL_SECURE` (`true` for port 465), `EMAIL_USER`, `EMAIL_PASS`,
+`EMAIL_FROM`. Without `EMAIL_HOST` and `EMAIL_FROM` nothing is sent and the
+app keeps working. `APP_URL` (for example `https://grow.example`) is used in
+links; without it, the address of the request is used. Values from users are
+escaped in every email, and failures are logged without addresses.
+
 ## Access rules for API routes
 
 `src/proxy.ts` verifies the token on every `/api` request and passes the user

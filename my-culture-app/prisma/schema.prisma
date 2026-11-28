@@ -43,6 +43,8 @@ model User {
   newsletter Boolean @default(false)
   verified  Boolean @default(false)
 
+  passwordTokens PasswordToken[]
+
   // The organisation an ADMIN manages. Super admins have none and manage
   // every organisation (including those without an admin of their own).
   organizationId Int?
@@ -69,6 +71,12 @@ model Organization {
   description     String?
   website         String?
   phone           String?
+
+  // Postal address. Only super admins change it (legal reasons).
+  street          String?
+  postalCode      String?
+  city            String?
+
   published       Boolean @default(false)
   verified        Boolean @default(false)
 
@@ -345,4 +353,20 @@ model Testimonial {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// One-time "set your password" links. Only a SHA-256 hash of the token is
+// stored; the link itself is sent to the person once.
+model PasswordToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
