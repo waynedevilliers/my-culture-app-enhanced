@@ -21,7 +21,9 @@ import { useState } from 'react';
 import NotificationCenter from '../notification/NotificationCenter';
 
 const Navigation = () => {
-  const { logout } = useUser();
+  const { logout, user } = useUser();
+  // New organisations and applications are for super admins only.
+  const isSuperAdmin = user?.role === 'superAdmin';
   const { t } = useTranslation();
   const [isChecked, setIsChecked] = useState(false);
   const [notificationCenterOpen, setNotificationCenterOpen] = useState(false);
@@ -124,34 +126,38 @@ const Navigation = () => {
                     {t('admin.navigation.overview')}{' '}
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/organization-applications"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaClipboardCheck />
-                    </span>{' '}
-                    {t('admin.navigation.applications')}{' '}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/new-organization"
-                    onClick={drawerHandler}
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaPlus />
-                    </span>{' '}
-                    {t('admin.navigation.newOrganization')}{' '}
-                  </NavLink>
-                </li>
+                {isSuperAdmin && (
+                  <li>
+                    <NavLink
+                      to="/dashboard/organization-applications"
+                      onClick={drawerHandler}
+                      className={({ isActive }) =>
+                        isActive ? 'text-primary' : ''
+                      }
+                    >
+                      <span className="text-2xl">
+                        <FaClipboardCheck />
+                      </span>{' '}
+                      {t('admin.navigation.applications')}{' '}
+                    </NavLink>
+                  </li>
+                )}
+                {isSuperAdmin && (
+                  <li>
+                    <NavLink
+                      to="/dashboard/new-organization"
+                      onClick={drawerHandler}
+                      className={({ isActive }) =>
+                        isActive ? 'text-primary' : ''
+                      }
+                    >
+                      <span className="text-2xl">
+                        <FaPlus />
+                      </span>{' '}
+                      {t('admin.navigation.newOrganization')}{' '}
+                    </NavLink>
+                  </li>
+                )}
               </ul>
             </details>
           </li>

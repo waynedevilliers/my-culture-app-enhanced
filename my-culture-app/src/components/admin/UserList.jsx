@@ -5,8 +5,12 @@ import Pagination from '../common/Pagination.jsx';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import UserEditModal from './UserEditModal.jsx';
+import { useUser } from '../../contexts/UserContext.jsx';
 
 const UserList = () => {
+  const { user: currentUser } = useUser();
+  // Editing and deleting users is for super admins only.
+  const isSuperAdmin = currentUser?.role === 'superAdmin';
   const { t } = useTranslation();
   const [editingUser, setEditingUser] = useState(null);
 
@@ -88,20 +92,22 @@ const UserList = () => {
                 </td>
                 <td className="hidden sm:table-cell">{user.role}</td>
                 <td>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(user)}
-                      className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
-                    >
-                      {t('admin.tables.edit')}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(user)}
-                      className="btn btn-ghost btn-xs hover:bg-transparent hover:text-error transform duration-300 transition-colors"
-                    >
-                      {t('admin.tables.delete')}
-                    </button>
-                  </div>
+                  {isSuperAdmin && (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(user)}
+                        className="btn btn-ghost btn-xs hover:bg-transparent hover:text-primary transform duration-300 transition-colors"
+                      >
+                        {t('admin.tables.edit')}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user)}
+                        className="btn btn-ghost btn-xs hover:bg-transparent hover:text-error transform duration-300 transition-colors"
+                      >
+                        {t('admin.tables.delete')}
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

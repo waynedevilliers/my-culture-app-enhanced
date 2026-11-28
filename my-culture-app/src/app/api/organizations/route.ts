@@ -1,11 +1,18 @@
 // /api/organizations
-// GET  dashboard: approved organisations, paginated
-// POST dashboard: create an organisation (approved directly)
+// GET  dashboard: approved organisations, paginated. Organisation admins
+//      see only their own organisation.
+// POST super admin: create an organisation (approved directly)
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getPaginationParams } from '@/lib/api';
-import { DASHBOARD_ROLES, requireRole } from '@/lib/authz';
+import {
+  DASHBOARD_ROLES,
+  isSuperAdmin,
+  loadActor,
+  requireRole,
+  SUPER_ADMIN_ONLY,
+} from '@/lib/authz';
 import { adminOrganizationSelect, withImage } from '@/lib/organizations';
 import { OrganizationSchema } from '@/lib/schemas/organization';
 import {
@@ -26,10 +33,15 @@ export async function GET(req: Request) {
     query.get('page') ?? undefined,
     query.get('limit') ?? undefined
   );
-  // Pending and rejected applications are handled on the Applications page.
-  const where = { approvalStatus: 'approved' };
-
   try {
+    const actor = await loadActor(auth.user.userId);
+    if (!actor)
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    // Pending and rejected applications are handled on the Applications page.
+    const where = isSuperAdmin(actor)
+      ? { approvalStatus: 'approved' }
+      : { approvalStatus: 'approved', id: actor.organizationId ?? -1 };
+
     const [results, totalCount] = await Promise.all([
       prisma.organization.findMany({
         where,
@@ -56,7 +68,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const auth = requireRole(req, DASHBOARD_ROLES);
+  const auth = requireRole(req, SUPER_ADMIN_ONLY);
   if (auth.response) return auth.response;
 
   const parsed = OrganizationSchema.safeParse(await readJson(req));

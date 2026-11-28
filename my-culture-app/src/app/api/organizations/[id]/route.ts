@@ -1,11 +1,20 @@
 // /api/organizations/:id
 // GET    public: one published organisation
-// PUT    dashboard: update (also used to toggle `published`)
-// DELETE dashboard: delete
+// PUT    dashboard: update (also used to toggle `published`). Organisation
+//        admins may edit their own organisation, but not its name or
+//        publication.
+// DELETE super admin: delete
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { DASHBOARD_ROLES, requireRole } from '@/lib/authz';
+import {
+  canManageOrganization,
+  DASHBOARD_ROLES,
+  isSuperAdmin,
+  loadActor,
+  requireRole,
+  SUPER_ADMIN_ONLY,
+} from '@/lib/authz';
 import {
   adminOrganizationSelect,
   publicOrganizationSelect,
@@ -16,6 +25,7 @@ import { IdSchema, OrganizationUpdateSchema } from '@/lib/schemas/organization';
 import {
   badRequest,
   conflict,
+  forbidden,
   isPrismaError,
   notFound,
   readJson,
@@ -57,6 +67,29 @@ export async function PUT(req: Request, context: Context) {
   const { imageId, ...fields } = parsed.data;
 
   try {
+    const actor = await loadActor(auth.user.userId);
+    if (!actor || !canManageOrganization(actor, id.data)) {
+      return forbidden('You can only edit your own organization');
+    }
+
+    if (!isSuperAdmin(actor)) {
+      // The edit form always sends name and published; refuse only changes.
+      const current = await prisma.organization.findUnique({
+        where: { id: id.data },
+        select: { name: true, published: true },
+      });
+      if (!current) return notFound('Organization not found');
+      if (
+        (fields.name !== undefined && fields.name !== current.name) ||
+        (fields.published !== undefined &&
+          fields.published !== current.published)
+      ) {
+        return forbidden(
+          'Only super admins can change the name or publication'
+        );
+      }
+    }
+
     if (imageId) {
       const image = await prisma.image.findUnique({ where: { id: imageId } });
       if (!image) return badRequest('Image not found');
@@ -82,7 +115,7 @@ export async function PUT(req: Request, context: Context) {
 }
 
 export async function DELETE(req: Request, context: Context) {
-  const auth = requireRole(req, DASHBOARD_ROLES);
+  const auth = requireRole(req, SUPER_ADMIN_ONLY);
   if (auth.response) return auth.response;
 
   const id = await parseId(context);

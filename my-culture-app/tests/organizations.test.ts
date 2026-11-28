@@ -14,6 +14,7 @@ const db = vi.hoisted(() => ({
     delete: vi.fn(),
   },
   image: { findUnique: vi.fn(), create: vi.fn() },
+  user: { findUnique: vi.fn() },
 }));
 vi.mock('@/lib/prisma', () => ({ prisma: db }));
 
@@ -62,8 +63,13 @@ const ORG = {
   logo: { id: 'img1', url: '/uploads/organizations/a.png' },
 };
 
+// The caller as stored in the database (role and organisation).
+const actor = (role: string, organizationId: number | null = null, id = 1) =>
+  db.user.findUnique.mockResolvedValue({ id, role, organizationId });
+
 beforeEach(() => {
   vi.clearAllMocks();
+  actor('SUPER_ADMIN');
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
@@ -240,7 +246,7 @@ describe('POST /api/organizations', () => {
           approvalStatus: 'rejected',
           userId: 99,
         },
-        asUser('ADMIN', 7)
+        asUser('SUPER_ADMIN', 7)
       )
     );
 
@@ -265,7 +271,7 @@ describe('POST /api/organizations', () => {
     ['a bad email', { name: 'Verein', email: 'nope' }],
   ])('returns 400 for %s', async (_label, body) => {
     const res = await create(
-      jsonRequest('/api/organizations', 'POST', body, asUser('ADMIN'))
+      jsonRequest('/api/organizations', 'POST', body, asUser('SUPER_ADMIN'))
     );
     expect(res.status).toBe(400);
     expect(db.organization.create).not.toHaveBeenCalled();
@@ -278,7 +284,7 @@ describe('POST /api/organizations', () => {
         '/api/organizations',
         'POST',
         { name: 'Verein', imageId: 'nope' },
-        asUser('ADMIN')
+        asUser('SUPER_ADMIN')
       )
     );
     expect(res.status).toBe(400);
@@ -291,7 +297,7 @@ describe('POST /api/organizations', () => {
         '/api/organizations',
         'POST',
         { name: 'Verein', email: 'a@b.de' },
-        asUser('ADMIN')
+        asUser('SUPER_ADMIN')
       )
     );
     expect(res.status).toBe(409);
@@ -368,7 +374,12 @@ describe('DELETE /api/organizations/:id', () => {
   it('returns 404 when missing', async () => {
     db.organization.delete.mockRejectedValue(prismaError('P2025'));
     const res = await remove(
-      jsonRequest('/api/organizations/1', 'DELETE', undefined, asUser('ADMIN')),
+      jsonRequest(
+        '/api/organizations/1',
+        'DELETE',
+        undefined,
+        asUser('SUPER_ADMIN')
+      ),
       params(1)
     );
     expect(res.status).toBe(404);
@@ -611,5 +622,134 @@ describe('applications (super admin only)', () => {
       params(4)
     );
     expect(res.status).toBe(404);
+  });
+});
+
+describe('organisation admins only manage their own organisation', () => {
+  it('lists only their own organisation', async () => {
+    actor('ADMIN', 5, 3);
+    db.organization.findMany.mockResolvedValue([]);
+    db.organization.count.mockResolvedValue(0);
+
+    await listAll(
+      jsonRequest('/api/organizations', 'GET', undefined, asUser('ADMIN', 3))
+    );
+
+    expect(db.organization.findMany.mock.calls[0][0].where).toEqual({
+      approvalStatus: 'approved',
+      id: 5,
+    });
+    expect(db.user.findUnique).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 3 } })
+    );
+  });
+
+  it('an admin without an organisation sees nothing', async () => {
+    actor('ADMIN', null, 3);
+    db.organization.findMany.mockResolvedValue([]);
+    db.organization.count.mockResolvedValue(0);
+    await listAll(
+      jsonRequest('/api/organizations', 'GET', undefined, asUser('ADMIN', 3))
+    );
+    expect(db.organization.findMany.mock.calls[0][0].where.id).toBe(-1);
+  });
+
+  it('uses the role from the database, not the token', async () => {
+    // The token still says SUPER_ADMIN; the account is now an org admin.
+    actor('ADMIN', 5, 3);
+    db.organization.findMany.mockResolvedValue([]);
+    db.organization.count.mockResolvedValue(0);
+    await listAll(
+      jsonRequest(
+        '/api/organizations',
+        'GET',
+        undefined,
+        asUser('SUPER_ADMIN', 3)
+      )
+    );
+    expect(db.organization.findMany.mock.calls[0][0].where.id).toBe(5);
+  });
+
+  it('edits the description of their own organisation', async () => {
+    actor('ADMIN', 5, 3);
+    db.organization.findUnique.mockResolvedValue({
+      name: 'Verein',
+      published: true,
+    });
+    db.organization.update.mockResolvedValue(ORG);
+
+    const res = await update(
+      jsonRequest(
+        '/api/organizations/5',
+        'PUT',
+        { name: 'Verein', published: true, description: 'Neu' },
+        asUser('ADMIN', 3)
+      ),
+      params(5)
+    );
+
+    expect(res.status).toBe(202);
+    expect(db.organization.update.mock.calls[0][0].data.description).toBe(
+      'Neu'
+    );
+  });
+
+  it('cannot edit another organisation', async () => {
+    actor('ADMIN', 5, 3);
+    const res = await update(
+      jsonRequest(
+        '/api/organizations/6',
+        'PUT',
+        { description: 'x' },
+        asUser('ADMIN', 3)
+      ),
+      params(6)
+    );
+    expect(res.status).toBe(403);
+    expect(db.organization.update).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['the name', { name: 'Anderer Name' }],
+    ['the publication', { published: false }],
+  ])('cannot change %s', async (_label, body) => {
+    actor('ADMIN', 5, 3);
+    db.organization.findUnique.mockResolvedValue({
+      name: 'Verein',
+      published: true,
+    });
+    const res = await update(
+      jsonRequest('/api/organizations/5', 'PUT', body, asUser('ADMIN', 3)),
+      params(5)
+    );
+    expect(res.status).toBe(403);
+    expect(db.organization.update).not.toHaveBeenCalled();
+  });
+
+  it('cannot create organisations', async () => {
+    const res = await create(
+      jsonRequest(
+        '/api/organizations',
+        'POST',
+        { name: 'Neu' },
+        asUser('ADMIN', 3)
+      )
+    );
+    expect(res.status).toBe(403);
+    expect(db.organization.create).not.toHaveBeenCalled();
+  });
+
+  it('cannot delete organisations', async () => {
+    const res = await remove(
+      jsonRequest(
+        '/api/organizations/5',
+        'DELETE',
+        undefined,
+        asUser('ADMIN', 3)
+      ),
+      params(5)
+    );
+    expect(res.status).toBe(403);
+    expect(db.organization.delete).not.toHaveBeenCalled();
   });
 });

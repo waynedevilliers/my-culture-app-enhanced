@@ -90,7 +90,9 @@ const PersonalInfo = () => {
         confirmPassword: '',
       });
     } catch (error) {
-      toast.error('Fehler beim Ändern des Passworts.', error);
+      toast.error(
+        error.response?.data?.message || 'Fehler beim Ändern des Passworts.'
+      );
     } finally {
       setLoading(false);
     }

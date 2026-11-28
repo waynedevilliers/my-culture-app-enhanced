@@ -43,3 +43,37 @@ export function requireRole(req: Request, roles: readonly Role[]): AuthResult {
   }
   return { user: { ...user, role: user.role as Role } };
 }
+
+interface Actor {
+  id: number;
+  role: Role;
+  organizationId: number | null;
+}
+
+/**
+ * The calling user as stored now (role and organisation are read from the
+ * database, not trusted from the token). Null if the account no longer
+ * exists.
+ */
+export async function loadActor(userId: number): Promise<Actor | null> {
+  const { prisma } = await import('./prisma');
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, role: true, organizationId: true },
+  });
+  return user ? { ...user, role: user.role as Role } : null;
+}
+
+export const isSuperAdmin = (actor: Pick<Actor, 'role'>) =>
+  actor.role === 'SUPER_ADMIN';
+
+/** May this actor manage organisation `organizationId`? */
+export function canManageOrganization(
+  actor: Actor,
+  organizationId: number
+): boolean {
+  return (
+    isSuperAdmin(actor) ||
+    (actor.role === 'ADMIN' && actor.organizationId === organizationId)
+  );
+}

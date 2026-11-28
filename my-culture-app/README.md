@@ -15,6 +15,7 @@ been moved here.
 | All pages and the dashboard (moved from `my-culture-frontend`) | Done, pixel-identical to the old app |
 | Organisations: public list and detail, Join us applications, dashboard list/create/edit/delete, applications approve/reject | Done |
 | Image upload (`POST /api/file/upload`): Vercel Blob in production, `public/uploads` locally | Done |
+| Users (`/api/users`): list (scoped for organisation admins), super admin edit and delete, own profile and password (`/api/users/update`) | Done |
 | Events, locations, categories | Hidden for now (not needed yet): pages, menu entry and the profile's "Events you may like" removed. The code is still in `my-culture-frontend` and the tables stay in the schema. The "Kalendar" page stays a placeholder. |
 | Other API routes (certificates, newsletter, users) | Not moved yet: those pages show "Request failed with status code 404" until their routes exist |
 
@@ -29,6 +30,15 @@ Only admins and super admins. There is no public sign-up: visitors browse
 organisations, apply through "Join us" and open certificates through their
 private link, without an account. Any other account gets the same "Invalid
 email or password" answer as a wrong password.
+
+| Role | Can |
+| --- | --- |
+| Super admin (`SUPER_ADMIN`, grow) | Everything: all organisations (also those without an admin of their own), applications, users and roles |
+| Organisation admin (`ADMIN`) | Only their own organisation (`User.organizationId`): edit it except name and publication, see its users, change their own profile and password |
+
+Roles and the organisation are read from the database on every request, not
+from the login token, so a change takes effect immediately. A super admin
+cannot remove their own super admin role or delete their own account.
 
 ## How login works
 

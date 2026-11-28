@@ -19,7 +19,9 @@ import { RiCommunityFill } from 'react-icons/ri';
 import { useState } from 'react';
 
 const NavigationSidebar = () => {
-  const { logout } = useUser();
+  const { logout, user } = useUser();
+  // New organisations and applications are for super admins only.
+  const isSuperAdmin = user?.role === 'superAdmin';
   const { t } = useTranslation();
   const [isChecked] = useState(true);
 
@@ -89,19 +91,21 @@ const NavigationSidebar = () => {
                     {t('admin.navigation.overview')}
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/dashboard/new-organization"
-                    className={({ isActive }) =>
-                      isActive ? 'text-primary' : ''
-                    }
-                  >
-                    <span className="text-2xl">
-                      <FaPlus />
-                    </span>{' '}
-                    {t('admin.navigation.newOrganization')}
-                  </NavLink>
-                </li>
+                {isSuperAdmin && (
+                  <li>
+                    <NavLink
+                      to="/dashboard/new-organization"
+                      className={({ isActive }) =>
+                        isActive ? 'text-primary' : ''
+                      }
+                    >
+                      <span className="text-2xl">
+                        <FaPlus />
+                      </span>{' '}
+                      {t('admin.navigation.newOrganization')}
+                    </NavLink>
+                  </li>
+                )}
               </ul>
             </details>
           </li>

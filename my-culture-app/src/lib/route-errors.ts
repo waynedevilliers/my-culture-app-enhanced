@@ -19,6 +19,12 @@ export function badRequest(message: string) {
   });
 }
 
+export function forbidden(message = 'Insufficient permissions') {
+  return NextResponse.json(errorResponse('Forbidden', message), {
+    status: 403,
+  });
+}
+
 export function notFound(message = 'Not found') {
   return NextResponse.json(errorResponse('Not found', message), {
     status: 404,

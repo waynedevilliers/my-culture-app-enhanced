@@ -106,6 +106,8 @@ export async function getMe(req: Request) {
         firstName: true,
         lastName: true,
         role: true,
+        phone: true,
+        organizationId: true,
         verified: true,
         newsletter: true,
         createdAt: true,
