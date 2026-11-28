@@ -14,21 +14,32 @@ import { pathToFileURL } from 'node:url';
 /**
  * The commands to run for this environment, in order.
  * @param {Record<string, string | undefined>} env
- * @returns {Array<[string, string[]]>}
+ * @returns {Array<[string, string[], Record<string, string>?]>}
  */
 export function buildSteps(env = process.env) {
+  /** @type {Array<[string, string[], Record<string, string>?]>} */
   const steps = [];
   if (env.VERCEL_ENV === 'production') {
-    steps.push(['npx', ['prisma', 'db', 'push', '--skip-generate']]);
+    // Schema changes over a direct connection when there is one (Neon sets
+    // DATABASE_URL_UNPOOLED); elsewhere DATABASE_URL is used as it is.
+    const direct = env.DATABASE_URL_UNPOOLED;
+    steps.push([
+      'npx',
+      ['prisma', 'db', 'push', '--skip-generate'],
+      ...(direct ? [{ DATABASE_URL: direct }] : []),
+    ]);
   }
   steps.push(['npx', ['prisma', 'generate']]);
   steps.push(['npx', ['next', 'build']]);
   return steps;
 }
 
-function run([command, args]) {
+function run([command, args, envOverride]) {
   console.log(`> ${command} ${args.join(' ')}`);
-  const result = spawnSync(command, args, { stdio: 'inherit' });
+  const result = spawnSync(command, args, {
+    stdio: 'inherit',
+    env: { ...process.env, ...envOverride },
+  });
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 

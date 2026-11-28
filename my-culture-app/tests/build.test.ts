@@ -22,6 +22,15 @@ describe('build', () => {
     }
   );
 
+  it('pushes over the direct connection when there is one', () => {
+    const [push] = buildSteps({
+      VERCEL_ENV: 'production',
+      DATABASE_URL: 'postgres://pooled',
+      DATABASE_URL_UNPOOLED: 'postgres://direct',
+    });
+    expect(push[2]).toEqual({ DATABASE_URL: 'postgres://direct' });
+  });
+
   it('never accepts data loss', () => {
     const commands = JSON.stringify(buildSteps({ VERCEL_ENV: 'production' }));
     expect(commands).not.toContain('accept-data-loss');
