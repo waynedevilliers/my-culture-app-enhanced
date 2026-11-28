@@ -24,12 +24,20 @@ const cmuSerif = localFont({
   display: 'swap',
 });
 
+// `tile` tints the background pattern; null keeps Christian's original tile.
 export const CERTIFICATE_COLORS = {
-  green: { frame: '#669466', text: '#193019' },
-  blue: { frame: '#5f7fa3', text: '#19243a' },
-  burgundy: { frame: '#9a5f66', text: '#301919' },
-  grey: { frame: '#7d7d7d', text: '#222222' },
+  green: { frame: '#669466', text: '#193019', tile: null },
+  blue: { frame: '#5f7fa3', text: '#19243a', tile: '#ecf0f6' },
+  burgundy: { frame: '#9a5f66', text: '#301919', tile: '#f6ecee' },
+  grey: { frame: '#7d7d7d', text: '#222222', tile: '#efefef' },
 } as const;
+
+const TILE = {
+  size: `${(113.386 / 7.92).toFixed(4)}cqw ${(56.693 / 7.92).toFixed(4)}cqw`,
+  position: `0 ${(-11.622 / 7.92).toFixed(4)}cqw`,
+};
+
+const DATE_LOCALES = { de: 'de-DE', en: 'en-GB' } as const;
 
 type CertificateColor = keyof typeof CERTIFICATE_COLORS;
 type CertificateLanguage = 'de' | 'en';
@@ -55,6 +63,8 @@ export interface CertificateDesignProps {
   recipientName: string;
   addition?: string | null;
   signatures: CertificateSignature[];
+  /** Issue date, shown small under the signatures. */
+  issuedDate?: Date | string | null;
   language?: CertificateLanguage;
   color?: CertificateColor;
 }
@@ -85,10 +95,21 @@ export default function CertificateDesign({
   signatures,
   language = 'de',
   color = 'green',
+  issuedDate,
 }: CertificateDesignProps) {
   const words = WORDS[language];
   const colors = CERTIFICATE_COLORS[color] ?? CERTIFICATE_COLORS.green;
   const shownSignatures = signatures.filter((s) => s.name.trim()).slice(0, 3);
+  const date = issuedDate ? new Date(issuedDate) : null;
+  const formattedDate =
+    date && !Number.isNaN(date.getTime())
+      ? date.toLocaleDateString(DATE_LOCALES[language], {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          timeZone: 'Europe/Berlin',
+        })
+      : null;
 
   return (
     <div
@@ -104,15 +125,38 @@ export default function CertificateDesign({
           aspectRatio: '792 / 612',
           overflow: 'hidden',
           backgroundColor: '#ffffff',
-          backgroundImage: 'url(/certificate/background-tile.png)',
-          backgroundSize: `${u(113.386)} ${u(56.693)}`,
-          backgroundPosition: `0 ${u(-11.622)}`,
+          ...(colors.tile
+            ? {}
+            : {
+                backgroundImage: 'url(/certificate/background-tile.png)',
+                backgroundSize: TILE.size,
+                backgroundPosition: TILE.position,
+              }),
           printColorAdjust: 'exact',
           WebkitPrintColorAdjust: 'exact',
         }}
       >
+        {colors.tile && (
+          // The same pattern, tinted to match the frame colour.
+          <div
+            aria-hidden="true"
+            data-testid="certificate-tile"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: colors.tile,
+              maskImage: 'url(/certificate/background-tile.png)',
+              maskSize: TILE.size,
+              maskPosition: TILE.position,
+              WebkitMaskImage: 'url(/certificate/background-tile.png)',
+              WebkitMaskSize: TILE.size,
+              WebkitMaskPosition: TILE.position,
+            }}
+          />
+        )}
         <div
           aria-hidden="true"
+          data-testid="certificate-frame"
           style={{
             position: 'absolute',
             inset: 0,
@@ -132,9 +176,12 @@ export default function CertificateDesign({
             alt=""
             style={{
               position: 'absolute',
-              left: u(347.915),
+              // Same height and centre as Christian's logo; wide logos may
+              // be up to about twice as wide as high.
+              left: '50%',
+              transform: 'translateX(-50%)',
               top: u(56.461),
-              width: u(86.21),
+              maxWidth: u(200),
               height: u(93.54),
               objectFit: 'contain',
             }}
@@ -243,6 +290,18 @@ export default function CertificateDesign({
                 {signature.role}
               </div>
             ))}
+          </div>
+        )}
+
+        {formattedDate && (
+          <div
+            style={{
+              ...line(shownSignatures.length > 0 ? 488 : 440, 11),
+              letterSpacing: '0.09em',
+              color: '#000066',
+            }}
+          >
+            {formattedDate}
           </div>
         )}
       </div>

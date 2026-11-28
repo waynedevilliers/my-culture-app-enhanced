@@ -89,9 +89,42 @@ describe('CertificateDesign', () => {
 
   it('colours the frame and recipient with the chosen preset', () => {
     render(<CertificateDesign {...base} color="blue" />);
-    const frame = document.querySelector('[aria-hidden="true"]');
+    const frame = screen.getByTestId('certificate-frame');
     expect(frame.style.backgroundColor).toBe('rgb(95, 127, 163)');
     expect(CERTIFICATE_COLORS.blue.frame).toBe('#5f7fa3');
+  });
+
+  it("keeps Christian's tile for green and tints it for other colours", () => {
+    const { rerender } = render(<CertificateDesign {...base} />);
+    expect(screen.queryByTestId('certificate-tile')).toBeNull();
+
+    rerender(<CertificateDesign {...base} color="burgundy" />);
+    expect(screen.getByTestId('certificate-tile').style.backgroundColor).toBe(
+      'rgb(246, 236, 238)'
+    );
+  });
+
+  it('shows the issue date in the certificate language', () => {
+    const { rerender } = render(
+      <CertificateDesign {...base} issuedDate="2026-11-28T10:00:00Z" />
+    );
+    expect(screen.getByText('28. November 2026')).toBeInTheDocument();
+
+    rerender(
+      <CertificateDesign
+        {...base}
+        language="en"
+        issuedDate="2026-11-28T10:00:00Z"
+      />
+    );
+    expect(screen.getByText('28 November 2026')).toBeInTheDocument();
+  });
+
+  it('shows no date when none or an invalid one is given', () => {
+    const { rerender } = render(<CertificateDesign {...base} />);
+    expect(screen.queryByText(/November/)).toBeNull();
+    rerender(<CertificateDesign {...base} issuedDate="not a date" />);
+    expect(screen.queryByText(/Invalid/)).toBeNull();
   });
 
   it('renders user text as text, not HTML', () => {
