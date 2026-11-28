@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const paths = ['/', '/organizations', '/join-us', '/impressum'];
+const paths = ['/', '/organizations', '/join-us', '/impressum', '/datenschutz'];
 
 test.describe('Accessibility (WCAG 2.2 AA)', () => {
   test.use({ reducedMotion: 'reduce' });

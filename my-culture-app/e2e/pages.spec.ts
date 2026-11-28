@@ -4,7 +4,8 @@ const publicPages = [
   { path: '/', heading: /Stärkung der Kultur/ },
   { path: '/organizations', heading: null },
   { path: '/join-us', heading: null },
-  { path: '/impressum', heading: null },
+  { path: '/impressum', heading: /Impressum/ },
+  { path: '/datenschutz', heading: /Datenschutzerklärung/ },
 ];
 
 test.describe('Public pages', () => {
@@ -27,6 +28,30 @@ test.describe('Public pages', () => {
       }
       expect(errors).toEqual([]);
     });
+  }
+});
+
+test('footer links lead to Impressum and Datenschutz', async ({ page }) => {
+  // Not the start page: it is wider than a phone screen (known, open).
+  await page.goto('/organizations');
+  const footer = page.getByRole('contentinfo');
+  await footer.getByRole('link', { name: 'Impressum' }).click();
+  await expect(page).toHaveURL(/\/impressum$/);
+  await expect(page.getByText('Angaben gemäß § 5 DDG')).toBeVisible();
+  await page
+    .getByRole('main')
+    .getByRole('link', { name: 'Datenschutzerklärung' })
+    .click();
+  await expect(page).toHaveURL(/\/datenschutz$/);
+  await expect(page.getByRole('heading', { name: '6. Kontakt' })).toBeVisible();
+
+  await footer.getByRole('link', { name: 'Datenschutz' }).click();
+  await expect(page).toHaveURL(/\/datenschutz$/);
+});
+
+test('favicon and touch icon are served', async ({ request }) => {
+  for (const path of ['/logo/favicon.ico', '/logo/apple-touch-icon.png']) {
+    expect((await request.get(path)).status()).toBe(200);
   }
 });
 

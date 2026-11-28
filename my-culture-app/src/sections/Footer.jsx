@@ -85,7 +85,7 @@ const Footer = () => {
               <Link to="/impressum" className="hover:text-primary font-bold">
                 {t('footer.imprint')}
               </Link>
-              <Link to="/privacy" className="hover:text-primary font-bold">
+              <Link to="/datenschutz" className="hover:text-primary font-bold">
                 {t('footer.privacy')}
               </Link>
             </nav>

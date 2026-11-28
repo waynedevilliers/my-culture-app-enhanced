@@ -8,7 +8,11 @@ export const metadata: Metadata = {
   keywords: 'Culture Academy',
   authors: [{ name: 'Wayne de Villiers' }],
   other: { 'content-language': 'de', copyright: '\u00a9 Culture Academy' },
-  icons: { shortcut: '/logo/favicon.ico' },
+  icons: {
+    icon: '/logo/favicon.ico',
+    shortcut: '/logo/favicon.ico',
+    apple: '/logo/apple-touch-icon.png',
+  },
 };
 
 export const viewport: Viewport = {
