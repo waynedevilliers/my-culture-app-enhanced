@@ -133,6 +133,21 @@ Comparison with his PDF and examples: `docs/certificate-design/`. His
   certificates; others answer 404. Created, sent, revoked, deleted and
   viewed certificates are logged as JSON, without names or email addresses.
 
+## Deployment (Vercel)
+
+Vercel runs `npm run vercel-build` (`scripts/vercel-build.mjs`):
+
+- **Production** (`VERCEL_ENV=production`): `prisma db push` first, so the
+  database schema matches the code, then the build.
+- **Preview and development:** only the build. Unmerged branches never
+  change the database.
+
+`DATABASE_URL` must be available at build time in the production
+environment. If the database uses a connection pooler, use a direct
+(non-pooled) connection for it. Without `--accept-data-loss`, a schema
+change that would delete data stops the build and the live version keeps
+running; such a change needs a deliberate manual step.
+
 ## Setup
 
 ```bash
