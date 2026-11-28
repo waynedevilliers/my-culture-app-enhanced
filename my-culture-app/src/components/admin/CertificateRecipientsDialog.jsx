@@ -107,11 +107,13 @@ const CertificateRecipientsDialog = ({ certificate, onClose, onChanged }) => {
                   <span className="text-xs text-gray-500">
                     {revoked
                       ? t('admin.certificates.recipientsDialog.revoked')
-                      : recipient.sentAt
-                        ? t('admin.certificates.recipientsDialog.sentOn', {
-                            date: formatDate(recipient.sentAt),
-                          })
-                        : t('admin.certificates.recipientsDialog.notSent')}
+                      : !recipient.email
+                        ? t('admin.certificates.recipientsDialog.noEmail')
+                        : recipient.sentAt
+                          ? t('admin.certificates.recipientsDialog.sentOn', {
+                              date: formatDate(recipient.sentAt),
+                            })
+                          : t('admin.certificates.recipientsDialog.notSent')}
                   </span>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -144,7 +146,7 @@ const CertificateRecipientsDialog = ({ certificate, onClose, onChanged }) => {
                     >
                       {t('admin.certificates.recipientsDialog.open')}
                     </a>
-                    {!revoked && (
+                    {!revoked && recipient.email && (
                       <button
                         type="button"
                         className="btn btn-sm"

@@ -121,6 +121,17 @@ describe('CertificateSchema', () => {
     expect(data.recipients[0].email).toBe('maria@example.com');
   });
 
+  it('accepts recipients without an email', () => {
+    const data = CertificateSchema.parse({
+      ...validInput,
+      recipients: [{ name: 'Ohne Mail' }, { name: 'Leere Mail', email: '  ' }],
+    });
+    expect(data.recipients).toEqual([
+      { name: 'Ohne Mail', email: null },
+      { name: 'Leere Mail', email: null },
+    ]);
+  });
+
   it('defaults to German and green', () => {
     const { language: _l, color: _c, ...rest } = validInput;
     const data = CertificateSchema.parse(rest);
@@ -507,7 +518,7 @@ describe('POST /api/certificates/:id/send', () => {
     expect(db.certificateRecipient.updateMany).not.toHaveBeenCalled();
   });
 
-  it('by default sends to recipients not sent yet and not revoked', async () => {
+  it('by default sends to recipients with an email, not sent yet and not revoked', async () => {
     await send(
       jsonRequest(
         '/api/certificates/cert1/send',
@@ -521,6 +532,7 @@ describe('POST /api/certificates/:id/send', () => {
     expect(query.where).toEqual({ id: 'cert1', organizationId: 7 });
     expect(query.select.recipients.where).toEqual({
       revokedAt: null,
+      email: { not: null },
       sentAt: null,
     });
   });
@@ -537,7 +549,7 @@ describe('POST /api/certificates/:id/send', () => {
     );
     expect(
       db.certificate.findFirst.mock.calls[0][0].select.recipients.where
-    ).toEqual({ revokedAt: null, id: { in: ['r1'] } });
+    ).toEqual({ revokedAt: null, email: { not: null }, id: { in: ['r1'] } });
   });
 
   it('emails each link and marks only the sent ones', async () => {

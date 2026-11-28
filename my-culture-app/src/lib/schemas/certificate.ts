@@ -17,12 +17,17 @@ const SignatureSchema = z.object({
 
 const RecipientSchema = z.object({
   name: text(150).min(1, 'Every recipient needs a name'),
+  // Optional: without an email the link is passed on by hand.
   email: z
     .string()
     .trim()
     .max(255)
     .toLowerCase()
-    .pipe(z.email('Every recipient needs a valid email address')),
+    .optional()
+    .transform((value) => (value ? value : null))
+    .pipe(
+      z.email('Please enter a valid email address or leave it empty').nullable()
+    ),
 });
 
 export const CertificateSchema = z.object({

@@ -5,6 +5,7 @@ vi.mock('next/font/local', () => ({ default: () => ({ className: 'cmu' }) }));
 
 import CertificateDesign, {
   CERTIFICATE_COLORS,
+  FALLBACK_LOGO,
 } from '../../components/certificate/CertificateDesign';
 
 const base = {
@@ -73,7 +74,7 @@ describe('CertificateDesign', () => {
     expect(screen.queryByText('Signer Four', { exact: false })).toBeNull();
   });
 
-  it('leaves out logo, addition and signatures when not given', () => {
+  it('shows the grow logo and leaves out addition and signatures when not given', () => {
     render(
       <CertificateDesign
         {...base}
@@ -82,7 +83,8 @@ describe('CertificateDesign', () => {
         signatures={[]}
       />
     );
-    expect(document.querySelector('img')).toBeNull();
+    expect(document.querySelector('img')).toHaveAttribute('src', FALLBACK_LOGO);
+    expect(FALLBACK_LOGO).toBe('/logo/grow.png');
     expect(screen.queryByText('(120 Stunden)')).toBeNull();
     expect(screen.queryByText('Vorstand', { exact: false })).toBeNull();
   });

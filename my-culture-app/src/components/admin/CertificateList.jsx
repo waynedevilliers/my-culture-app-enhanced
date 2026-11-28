@@ -190,7 +190,8 @@ const CertificatesList = () => {
                         key={recipient.id}
                         className={recipient.revokedAt ? 'line-through' : ''}
                       >
-                        {recipient.name} ({recipient.email})
+                        {recipient.name}
+                        {recipient.email ? ` (${recipient.email})` : ''}
                       </li>
                     ))}
                   </ul>

@@ -1,7 +1,7 @@
 // /api/certificates/:id/send
 // POST dashboard: email each recipient their private link. Without
-//      `recipientIds`, all recipients not sent yet; revoked links are never
-//      sent. Without SMTP nothing is emailed and the answer says so, so the
+//      `recipientIds`, all recipients not sent yet; revoked links and
+//      recipients without an email are never sent. Without SMTP nothing is emailed and the answer says so, so the
 //      admin can copy the links instead.
 
 import { NextResponse } from 'next/server';
@@ -50,6 +50,7 @@ export async function POST(req: Request, context: Context) {
         recipients: {
           where: {
             revokedAt: null,
+            email: { not: null },
             ...(recipientIds ? { id: { in: recipientIds } } : { sentAt: null }),
           },
           select: { id: true, name: true, email: true, code: true },
@@ -66,7 +67,7 @@ export async function POST(req: Request, context: Context) {
       for (const recipient of certificate.recipients) {
         const sent = await sendMail(
           certificateMail({
-            to: recipient.email,
+            to: recipient.email!,
             recipientName: recipient.name,
             organizationName: certificate.organization.name,
             achievement: certificate.achievement,

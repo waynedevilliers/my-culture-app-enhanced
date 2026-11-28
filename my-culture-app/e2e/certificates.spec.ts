@@ -46,7 +46,12 @@ test('certificate: create -> private link -> print page -> revoke', async ({
   await page.getByLabel('Name 1', { exact: true }).fill('Petra Klang');
   await page.getByLabel('Funktion 1').fill('Intendanz');
   await page.getByLabel('Empfängername 1').fill('Kim Bühne');
-  await page.getByLabel('Empfänger-E-Mail 1').fill('kim@example.com');
+  await page
+    .getByLabel('Empfänger-E-Mail (optional) 1')
+    .fill('kim@example.com');
+  // A second recipient without email: the link is passed on by hand.
+  await page.getByRole('button', { name: '+ Empfänger hinzufügen' }).click();
+  await page.getByLabel('Empfängername 2').fill('Alex Ohnemail');
 
   const preview = page.locator('.certificate-design');
   await expect(preview.getByText(achievement)).toBeVisible();
@@ -70,6 +75,12 @@ test('certificate: create -> private link -> print page -> revoke', async ({
   await expect(
     page.getByText('E-Mail ist noch nicht eingerichtet')
   ).toBeVisible();
+  await expect(
+    page.getByText('Keine E-Mail: Link bitte selbst weitergeben')
+  ).toBeVisible();
+  await expect(page.getByLabel('Link für Alex Ohnemail')).toHaveValue(
+    /\/certificates\/[A-Za-z0-9_-]{32}$/
+  );
   const linkField = page.getByLabel('Link für Kim Bühne');
   await expect(linkField).toBeVisible();
   const link = await linkField.inputValue();
@@ -81,6 +92,11 @@ test('certificate: create -> private link -> print page -> revoke', async ({
   await guestPage.goto(link);
   await expect(guestPage.getByText('Kim Bühne')).toBeVisible();
   await expect(guestPage.getByText(organizationName)).toBeVisible();
+  // No logo of its own: the grow logo is shown.
+  await expect(guestPage.locator('.certificate-design img')).toHaveAttribute(
+    'src',
+    '/logo/grow.png'
+  );
   await expect(
     guestPage.getByRole('button', { name: 'Drucken oder als PDF speichern' })
   ).toBeVisible();
@@ -92,7 +108,7 @@ test('certificate: create -> private link -> print page -> revoke', async ({
   // 4. Turning the link off takes effect at once.
   page.once('dialog', (dialog) => dialog.accept());
   const revoked = page.waitForResponse((r) => r.url().includes('/recipients/'));
-  await page.getByRole('button', { name: 'Deaktivieren' }).click();
+  await page.getByRole('button', { name: 'Deaktivieren' }).first().click();
   expect((await revoked).status()).toBe(200);
   await expect(page.getByText('Link deaktiviert')).toBeVisible();
 
