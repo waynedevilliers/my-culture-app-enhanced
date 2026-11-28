@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import AdminLinkDialog from './AdminLinkDialog.jsx';
 import { FaCheck, FaXmark, FaEye, FaClock } from 'react-icons/fa6';
 
 const OrganizationApplicationsList = () => {
@@ -12,6 +13,7 @@ const OrganizationApplicationsList = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [adminResult, setAdminResult] = useState(null);
 
   const fetchApplications = async () => {
     try {
@@ -36,7 +38,7 @@ const OrganizationApplicationsList = () => {
   const handleApprove = async (applicationId) => {
     try {
       setLoading(true);
-      await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND ?? ''}/api/organizations/applications/${applicationId}/approve`,
         {},
         {
@@ -46,10 +48,14 @@ const OrganizationApplicationsList = () => {
         }
       );
       toast.success(t('admin.applications.approveSuccess'));
+      // With an admin of its own, show how the set-password link reaches them.
+      setAdminResult(response.data.data?.admin ?? null);
       fetchApplications();
     } catch (error) {
       console.error('Error approving application:', error);
-      toast.error(t('admin.applications.approveError'));
+      toast.error(
+        error.response?.data?.message || t('admin.applications.approveError')
+      );
     } finally {
       setLoading(false);
     }
@@ -261,6 +267,24 @@ const OrganizationApplicationsList = () => {
               <div>
                 <label className="label">
                   <span className="label-text font-semibold">
+                    {t('admin.adminAccess.address')}
+                  </span>
+                </label>
+                <p className="text-sm">
+                  {[
+                    selectedApplication.street,
+                    [selectedApplication.postalCode, selectedApplication.city]
+                      .filter(Boolean)
+                      .join(' '),
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}
+                </p>
+              </div>
+
+              <div>
+                <label className="label">
+                  <span className="label-text font-semibold">
                     {t('admin.applications.fields.contactEmail')}
                   </span>
                 </label>
@@ -345,6 +369,10 @@ const OrganizationApplicationsList = () => {
           </div>
         </dialog>
       )}
+      <AdminLinkDialog
+        result={adminResult}
+        onClose={() => setAdminResult(null)}
+      />
     </div>
   );
 };

@@ -18,7 +18,8 @@ test.describe('Public pages', () => {
       await page.goto(path);
 
       await expect(page.locator('nav').first()).toBeVisible();
-      await expect(page.locator('footer')).toBeVisible();
+      // The site footer (contentinfo); organisation cards have their own <footer>.
+      await expect(page.getByRole('contentinfo')).toBeVisible();
       if (heading) {
         await expect(
           page.getByRole('heading', { level: 1 }).first()

@@ -24,6 +24,15 @@ vi.mock('@/lib/storage', async (importOriginal) => ({
   storeImage: storage.storeImage,
 }));
 
+const mail = vi.hoisted(() => ({ sendMail: vi.fn() }));
+vi.mock('@/lib/email', () => mail);
+
+const admins = vi.hoisted(() => ({
+  adminEmailConflict: vi.fn(),
+  assignOrganizationAdmin: vi.fn(),
+}));
+vi.mock('@/lib/organization-admins', () => admins);
+
 import { GET as listPublished } from '@/app/api/organizations/published/route';
 import { GET as listAll, POST as create } from '@/app/api/organizations/route';
 import {
@@ -392,7 +401,10 @@ describe('POST /api/organizations/apply', () => {
     form.set('organizationName', 'Musikschule Mitte');
     form.set('organizationType', 'Music Academy');
     form.set('description', 'Wir unterrichten Kinder und Erwachsene.');
-    form.set('location', 'Berlin');
+    form.set('street', 'Kulturstraße 12');
+    form.set('postalCode', '10115');
+    form.set('city', 'Berlin');
+    form.set('hasOwnAdmin', 'true');
     form.set('adminName', 'Ada Admin');
     form.set('adminEmail', 'Ada@Example.com');
     form.set('establishedYear', '1999');
@@ -423,7 +435,6 @@ describe('POST /api/organizations/apply', () => {
       adminEmail: 'ada@example.com',
       applicationDetails: {
         organizationType: 'Music Academy',
-        location: 'Berlin',
         establishedYear: 1999,
       },
     });
@@ -480,7 +491,9 @@ describe('POST /api/organizations/apply', () => {
   it.each([
     ['organizationName', ''],
     ['adminEmail', 'not-an-email'],
-    ['location', ''],
+    ['city', ''],
+    ['street', ''],
+    ['postalCode', '!!'],
     ['website', 'ftp://example.com'],
     ['establishedYear', String(new Date().getFullYear() + 1)],
   ])('returns 400 when %s is %p', async (field, value) => {
@@ -508,6 +521,31 @@ describe('POST /api/organizations/apply', () => {
 });
 
 describe('applications (super admin only)', () => {
+  const pending = (overrides = {}) => ({
+    id: 4,
+    name: 'Musikschule',
+    email: 'info@musikschule.de',
+    adminName: null,
+    adminEmail: null,
+    approvalStatus: 'pending',
+    ...overrides,
+  });
+  const approveRequest = (role = 'SUPER_ADMIN' as const) =>
+    approve(
+      jsonRequest(
+        '/api/organizations/applications/4/approve',
+        'POST',
+        {},
+        asUser(role)
+      ),
+      params(4)
+    );
+
+  beforeEach(() => {
+    mail.sendMail.mockResolvedValue(false);
+    admins.adminEmailConflict.mockResolvedValue(null);
+  });
+
   it('lists pending applications for a super admin', async () => {
     db.organization.findMany.mockResolvedValue([
       { ...ORG, adminEmail: 'a@b.de' },
@@ -538,30 +576,17 @@ describe('applications (super admin only)', () => {
       )
     );
     expect(res.status).toBe(403);
-    const approveRes = await approve(
-      jsonRequest(
-        '/api/organizations/applications/1/approve',
-        'POST',
-        {},
-        asUser(role)
-      ),
-      params(1)
-    );
-    expect(approveRes.status).toBe(403);
+    expect((await approveRequest(role as never)).status).toBe(403);
     expect(db.organization.updateMany).not.toHaveBeenCalled();
   });
 
-  it('approves and publishes a pending application', async () => {
+  it('approves and publishes; without an own admin no account is created', async () => {
+    db.organization.findUnique.mockResolvedValue(pending());
     db.organization.updateMany.mockResolvedValue({ count: 1 });
-    const res = await approve(
-      jsonRequest(
-        '/api/organizations/applications/4/approve',
-        'POST',
-        {},
-        asUser('SUPER_ADMIN')
-      ),
-      params(4)
-    );
+
+    const res = await approveRequest();
+    const body = await res.json();
+
     expect(res.status).toBe(200);
     const call = db.organization.updateMany.mock.calls[0][0];
     expect(call.where).toEqual({ id: 4, approvalStatus: 'pending' });
@@ -569,11 +594,63 @@ describe('applications (super admin only)', () => {
       approvalStatus: 'approved',
       published: true,
     });
-    expect(call.data.approvedAt).toBeInstanceOf(Date);
+    expect(admins.assignOrganizationAdmin).not.toHaveBeenCalled();
+    expect(body.data).not.toHaveProperty('admin');
+    // The organisation is told (mail is attempted even if SMTP is missing).
+    expect(mail.sendMail.mock.calls[0][0].to).toBe('info@musikschule.de');
   });
 
-  it('rejects with notes and keeps it unpublished', async () => {
+  it('with an own admin: creates the admin and returns the link when not emailed', async () => {
+    db.organization.findUnique.mockResolvedValue(
+      pending({ adminName: 'Ada Admin', adminEmail: 'ada@example.com' })
+    );
     db.organization.updateMany.mockResolvedValue({ count: 1 });
+    admins.assignOrganizationAdmin.mockResolvedValue({
+      userId: 9,
+      email: 'ada@example.com',
+      emailed: false,
+      setPasswordUrl: 'http://localhost:3000/set-password?token=abc',
+    });
+
+    const res = await approveRequest();
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(admins.assignOrganizationAdmin.mock.calls[0][2]).toEqual({
+      name: 'Ada Admin',
+      email: 'ada@example.com',
+    });
+    expect(body.data.admin).toEqual({
+      email: 'ada@example.com',
+      emailed: false,
+      setPasswordUrl: 'http://localhost:3000/set-password?token=abc',
+    });
+  });
+
+  it('refuses before approving when the admin email is taken', async () => {
+    db.organization.findUnique.mockResolvedValue(
+      pending({ adminName: 'Ada', adminEmail: 'boss@grow.de' })
+    );
+    admins.adminEmailConflict.mockResolvedValue(
+      'This email belongs to a super admin'
+    );
+
+    const res = await approveRequest();
+
+    expect(res.status).toBe(409);
+    expect((await res.json()).message).toBe(
+      'This email belongs to a super admin'
+    );
+    expect(db.organization.updateMany).not.toHaveBeenCalled();
+    expect(admins.assignOrganizationAdmin).not.toHaveBeenCalled();
+  });
+
+  it('rejects with notes, keeps it unpublished and tells the organisation', async () => {
+    db.organization.findUnique.mockResolvedValue(
+      pending({ adminEmail: 'ada@example.com' })
+    );
+    db.organization.updateMany.mockResolvedValue({ count: 1 });
+
     const res = await reject(
       jsonRequest(
         '/api/organizations/applications/4/reject',
@@ -583,34 +660,35 @@ describe('applications (super admin only)', () => {
       ),
       params(4)
     );
+
     expect(res.status).toBe(200);
     expect(db.organization.updateMany.mock.calls[0][0].data).toMatchObject({
       approvalStatus: 'rejected',
       rejectionNotes: 'Keine Kulturorganisation',
       published: false,
     });
+    expect(admins.assignOrganizationAdmin).not.toHaveBeenCalled();
+    expect(mail.sendMail.mock.calls[0][0].text).toContain(
+      'Keine Kulturorganisation'
+    );
   });
 
   it('returns 409 when the application was already decided', async () => {
-    db.organization.updateMany.mockResolvedValue({ count: 0 });
-    db.organization.findUnique.mockResolvedValue({
-      approvalStatus: 'approved',
-    });
-    const res = await approve(
-      jsonRequest(
-        '/api/organizations/applications/4/approve',
-        'POST',
-        {},
-        asUser('SUPER_ADMIN')
-      ),
-      params(4)
+    db.organization.findUnique.mockResolvedValue(
+      pending({ approvalStatus: 'approved' })
     );
+    const res = await approveRequest();
     expect(res.status).toBe(409);
     expect((await res.json()).message).toBe('Application was already approved');
   });
 
-  it('returns 404 for an unknown application', async () => {
+  it('returns 409 when it was decided in the meantime', async () => {
+    db.organization.findUnique.mockResolvedValue(pending());
     db.organization.updateMany.mockResolvedValue({ count: 0 });
+    expect((await approveRequest()).status).toBe(409);
+  });
+
+  it('returns 404 for an unknown application', async () => {
     db.organization.findUnique.mockResolvedValue(null);
     const res = await reject(
       jsonRequest(
@@ -622,6 +700,46 @@ describe('applications (super admin only)', () => {
       params(4)
     );
     expect(res.status).toBe(404);
+  });
+});
+
+describe('POST /api/organizations/apply: admin is optional', () => {
+  const baseForm = () => {
+    const form = new FormData();
+    form.set('organizationName', 'Musikschule Mitte');
+    form.set('organizationType', 'Music Academy');
+    form.set('description', 'Wir unterrichten Kinder und Erwachsene.');
+    form.set('street', 'Kulturstraße 12');
+    form.set('postalCode', '10115');
+    form.set('city', 'Berlin');
+    return form;
+  };
+
+  it('accepts an application without an own admin and stores none', async () => {
+    db.organization.create.mockResolvedValue({ id: 3, name: 'x' });
+    const form = baseForm();
+    form.set('adminName', 'Ignored');
+    form.set('adminEmail', 'ignored@example.com');
+
+    const res = await apply(formRequest('/api/organizations/apply', form));
+
+    expect(res.status).toBe(201);
+    const data = db.organization.create.mock.calls[0][0].data;
+    expect(data).toMatchObject({
+      street: 'Kulturstraße 12',
+      postalCode: '10115',
+      city: 'Berlin',
+    });
+    expect(data.adminName).toBeNull();
+    expect(data.adminEmail).toBeNull();
+  });
+
+  it('requires admin name and email when the box is ticked', async () => {
+    const form = baseForm();
+    form.set('hasOwnAdmin', 'true');
+    const res = await apply(formRequest('/api/organizations/apply', form));
+    expect(res.status).toBe(400);
+    expect(db.organization.create).not.toHaveBeenCalled();
   });
 });
 

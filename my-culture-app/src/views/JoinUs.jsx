@@ -26,12 +26,15 @@ const JoinUs = () => {
     email: '',
     phone: '',
     contactPerson: '',
-    location: '',
+    street: '',
+    postalCode: '',
+    city: '',
     establishedYear: '',
     memberCount: '',
     programs: '',
     goals: '',
     additionalInfo: '',
+    hasOwnAdmin: false,
     adminName: '',
     adminEmail: '',
   });
@@ -141,8 +144,14 @@ const JoinUs = () => {
 
       // Add all form fields
       Object.keys(formData).forEach((key) => {
+        if (
+          !formData.hasOwnAdmin &&
+          (key === 'adminName' || key === 'adminEmail')
+        ) {
+          return;
+        }
         if (formData[key]) {
-          formDataToSend.append(key, formData[key]);
+          formDataToSend.append(key, String(formData[key]));
         }
       });
 
@@ -173,12 +182,15 @@ const JoinUs = () => {
           email: '',
           phone: '',
           contactPerson: '',
-          location: '',
+          street: '',
+          postalCode: '',
+          city: '',
           establishedYear: '',
           memberCount: '',
           programs: '',
           goals: '',
           additionalInfo: '',
+          hasOwnAdmin: false,
           adminName: '',
           adminEmail: '',
         });
@@ -486,23 +498,71 @@ const JoinUs = () => {
                 </div>
               </div>
 
-              {/* Organization Details */}
+              {/* Postal address */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    {t('joinUs.form.location')} *
+                  <label
+                    htmlFor="street"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    {t('joinUs.form.street')} *
                   </label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
+                    id="street"
+                    name="street"
+                    value={formData.street}
                     onChange={handleChange}
                     required
+                    autoComplete="street-address"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder={t('joinUs.form.locationPlaceholder')}
+                    placeholder={t('joinUs.form.streetPlaceholder')}
                   />
                 </div>
 
+                <div>
+                  <label
+                    htmlFor="postalCode"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    {t('joinUs.form.postalCode')} *
+                  </label>
+                  <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    required
+                    autoComplete="postal-code"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="10115"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="city"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    {t('joinUs.form.city')} *
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    autoComplete="address-level2"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder={t('joinUs.form.cityPlaceholder')}
+                  />
+                </div>
+              </div>
+
+              {/* Organization Details */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     {t('joinUs.form.establishedYear')}
@@ -512,8 +572,8 @@ const JoinUs = () => {
                     name="establishedYear"
                     value={formData.establishedYear}
                     onChange={handleChange}
-                    min="1900"
-                    max="2025"
+                    min="1800"
+                    max={new Date().getFullYear()}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="2020"
                   />
@@ -591,44 +651,72 @@ const JoinUs = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t('joinUs.form.adminName')} *
-                    </label>
-                    <input
-                      type="text"
-                      name="adminName"
-                      value={formData.adminName}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder={t('joinUs.form.adminNamePlaceholder')}
-                    />
-                  </div>
+                <label className="flex items-center gap-3 mb-6 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="hasOwnAdmin"
+                    checked={formData.hasOwnAdmin}
+                    onChange={(e) =>
+                      setFormData((previous) => ({
+                        ...previous,
+                        hasOwnAdmin: e.target.checked,
+                      }))
+                    }
+                    className="checkbox checkbox-primary"
+                  />
+                  <span className="text-gray-700 font-semibold">
+                    {t('joinUs.form.hasOwnAdmin')}
+                  </span>
+                </label>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t('joinUs.form.adminEmail')} *
-                    </label>
-                    <input
-                      type="email"
-                      name="adminEmail"
-                      value={formData.adminEmail}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder={t('joinUs.form.adminEmailPlaceholder')}
-                    />
-                  </div>
-                </div>
+                {formData.hasOwnAdmin ? (
+                  <>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          {t('joinUs.form.adminName')} *
+                        </label>
+                        <input
+                          type="text"
+                          name="adminName"
+                          value={formData.adminName}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                          placeholder={t('joinUs.form.adminNamePlaceholder')}
+                        />
+                      </div>
 
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    <strong>{t('joinUs.form.required')}:</strong>{' '}
-                    {t('joinUs.form.adminNote')}
-                  </p>
-                </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          {t('joinUs.form.adminEmail')} *
+                        </label>
+                        <input
+                          type="email"
+                          name="adminEmail"
+                          value={formData.adminEmail}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                          placeholder={t('joinUs.form.adminEmailPlaceholder')}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        <strong>{t('joinUs.form.required')}:</strong>{' '}
+                        {t('joinUs.form.adminNote')}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      {t('joinUs.form.noOwnAdminNote')}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Submit Button */}
