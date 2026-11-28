@@ -1,7 +1,8 @@
-// Build command on Vercel (npm runs "vercel-build" instead of "build" there).
+// `npm run build`, also on Vercel (its Build Command is "npm run build").
 // Production deployments first bring the database schema up to date with
-// `prisma db push`. Preview deployments never touch the database, so an
-// unmerged branch cannot change production data.
+// `prisma db push`. Preview deployments, CI and local builds never touch
+// the database through this step, so an unmerged branch cannot change
+// production data.
 //
 // No --accept-data-loss: if a change would delete data, Prisma stops, the
 // build fails and the live version keeps running. Such a change needs a
@@ -20,7 +21,8 @@ export function buildSteps(env = process.env) {
   if (env.VERCEL_ENV === 'production') {
     steps.push(['npx', ['prisma', 'db', 'push', '--skip-generate']]);
   }
-  steps.push(['npm', ['run', 'build']]);
+  steps.push(['npx', ['prisma', 'generate']]);
+  steps.push(['npx', ['next', 'build']]);
   return steps;
 }
 
