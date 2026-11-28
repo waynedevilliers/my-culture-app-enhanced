@@ -12,11 +12,11 @@ yarn-error.log*
 .env.production.local
 
 # Build outputs
-my-culture-frontend/dist/
-my-culture-backend/coverage/
+legacy/my-culture-frontend/dist/
+legacy/my-culture-backend/coverage/
 
 # Logs
-my-culture-backend/logs/
+legacy/my-culture-backend/logs/
 *.log
 
 # Database
@@ -39,7 +39,7 @@ Thumbs.db
 *.swo
 
 # Certificates (generated files)
-my-culture-backend/public/certificates/*.html
+legacy/my-culture-backend/public/certificates/*.html
 
 # Test coverage
 coverage/
@@ -54,6 +54,6 @@ temp/
 # Documentation files (exclude from remote repo except README.md)
 *.md
 !README.md
-!my-culture-backend/README.md
-!my-culture-frontend/README.md
+!legacy/my-culture-backend/README.md
+!legacy/my-culture-frontend/README.md
 .aider*

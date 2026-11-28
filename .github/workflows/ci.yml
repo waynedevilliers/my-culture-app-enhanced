@@ -1,7 +1,7 @@
 name: CI
 
-# Checks the Next.js app in my-culture-app/. The old my-culture-backend and
-# my-culture-frontend folders are kept as reference and are not checked.
+# Checks the Next.js app in my-culture-app/. The old projects in legacy/
+# are kept as reference and are not checked.
 # Runs once per change: on pull requests, and on pushes to main.
 on:
   push:
