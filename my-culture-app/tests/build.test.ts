@@ -1,20 +1,24 @@
-// The Vercel build pushes the schema only for production deployments.
+// The build pushes the schema only for production deployments.
 
 import { describe, expect, it } from 'vitest';
-import { buildSteps } from '../scripts/vercel-build.mjs';
+import { buildSteps } from '../scripts/build.mjs';
 
-describe('vercel-build', () => {
+describe('build', () => {
   it('pushes the schema before building in production', () => {
     expect(buildSteps({ VERCEL_ENV: 'production' })).toEqual([
       ['npx', ['prisma', 'db', 'push', '--skip-generate']],
-      ['npm', ['run', 'build']],
+      ['npx', ['prisma', 'generate']],
+      ['npx', ['next', 'build']],
     ]);
   });
 
   it.each([{ VERCEL_ENV: 'preview' }, { VERCEL_ENV: 'development' }, {}])(
     'only builds for %j',
     (env) => {
-      expect(buildSteps(env)).toEqual([['npm', ['run', 'build']]]);
+      expect(buildSteps(env)).toEqual([
+        ['npx', ['prisma', 'generate']],
+        ['npx', ['next', 'build']],
+      ]);
     }
   );
 
