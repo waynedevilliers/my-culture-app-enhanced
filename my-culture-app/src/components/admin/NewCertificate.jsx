@@ -82,7 +82,7 @@ const NewCertificate = () => {
       toast.error(t('admin.certificates.create.signaturesError'));
       return;
     }
-    if (recipients.some((r) => !r.name.trim() || !r.email.trim())) {
+    if (recipients.some((r) => !r.name.trim())) {
       toast.error(t('admin.certificates.create.recipientsError'));
       return;
     }
@@ -366,7 +366,6 @@ const NewCertificate = () => {
                 handleRecipientChange(index, 'email', e.target.value)
               }
               className="input input-bordered w-full sm:w-1/2"
-              required
             />
             {recipients.length > 1 && (
               <button

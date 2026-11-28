@@ -336,7 +336,8 @@
         "restore": "Wieder aktivieren",
         "revokeConfirm": "Link für {{name}} deaktivieren? Das Zertifikat ist dann über diesen Link nicht mehr erreichbar. Sie können ihn später wieder aktivieren.",
         "updateError": "Der Link konnte nicht geändert werden.",
-        "close": "Schließen"
+        "close": "Schließen",
+        "noEmail": "Keine E-Mail: Link bitte selbst weitergeben"
       },
       "create": {
         "issuedFrom": "Ausgestellt von",
@@ -370,14 +371,14 @@
         "previewName": "Max Mustermann",
         "recipients": "Empfänger",
         "recipientName": "Empfängername",
-        "recipientEmail": "Empfänger-E-Mail",
+        "recipientEmail": "Empfänger-E-Mail (optional)",
         "addRecipient": "+ Empfänger hinzufügen",
         "remove": "Entfernen",
         "saving": "Speichern...",
         "save": "Speichern",
         "organizationsError": "Fehler beim Laden der Organisationen",
         "signaturesError": "Mindestens eine Unterschrift mit Namen ist nötig.",
-        "recipientsError": "Alle Empfänger müssen einen Namen und eine gültige E-Mail-Adresse haben.",
+        "recipientsError": "Alle Empfänger brauchen einen Namen.",
         "success": "Zertifikat erfolgreich erstellt!",
         "error": "Ein Fehler ist aufgetreten."
       }

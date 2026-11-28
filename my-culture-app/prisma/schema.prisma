@@ -220,7 +220,8 @@ model Certificate {
 model CertificateRecipient {
   id              String  @id @default(cuid())
   name            String
-  email           String
+  // Optional: without an email the link is passed on by hand.
+  email           String?
   code            String  @unique
   sentAt          DateTime?
   revokedAt       DateTime?

@@ -336,7 +336,8 @@
         "restore": "Turn on again",
         "revokeConfirm": "Turn off the link for {{name}}? The certificate can then no longer be opened with this link. You can turn it on again later.",
         "updateError": "The link could not be changed.",
-        "close": "Close"
+        "close": "Close",
+        "noEmail": "No email: please pass the link on yourself"
       },
       "create": {
         "issuedFrom": "Issued From",
@@ -370,14 +371,14 @@
         "previewName": "Jane Doe",
         "recipients": "Recipients",
         "recipientName": "Recipient Name",
-        "recipientEmail": "Recipient Email",
+        "recipientEmail": "Recipient Email (optional)",
         "addRecipient": "+ Add Recipient",
         "remove": "Remove",
         "saving": "Saving...",
         "save": "Save",
         "organizationsError": "Failed to load organizations",
         "signaturesError": "At least one signature with a name is required.",
-        "recipientsError": "All recipients must have a name and valid email.",
+        "recipientsError": "All recipients need a name.",
         "success": "Certificate created successfully!",
         "error": "An error occurred."
       }

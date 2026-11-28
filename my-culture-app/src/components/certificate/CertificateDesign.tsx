@@ -39,6 +39,9 @@ const TILE = {
 
 const DATE_LOCALES = { de: 'de-DE', en: 'en-GB' } as const;
 
+/** Shown when the organisation has no logo of its own. */
+export const FALLBACK_LOGO = '/logo/grow.png';
+
 type CertificateColor = keyof typeof CERTIFICATE_COLORS;
 type CertificateLanguage = 'de' | 'en';
 
@@ -57,6 +60,7 @@ interface CertificateSignature {
 
 export interface CertificateDesignProps {
   organizationName: string;
+  /** The organisation's logo; without one the grow logo is shown. */
   logoUrl?: string | null;
   introText: string;
   achievement: string;
@@ -170,23 +174,21 @@ export default function CertificateDesign({
           }}
         />
 
-        {logoUrl && (
-          <img
-            src={logoUrl}
-            alt=""
-            style={{
-              position: 'absolute',
-              // Same height and centre as Christian's logo; wide logos may
-              // be up to about twice as wide as high.
-              left: '50%',
-              transform: 'translateX(-50%)',
-              top: u(56.461),
-              maxWidth: u(200),
-              height: u(93.54),
-              objectFit: 'contain',
-            }}
-          />
-        )}
+        <img
+          src={logoUrl || FALLBACK_LOGO}
+          alt=""
+          style={{
+            position: 'absolute',
+            // Same height and centre as Christian's logo; wide logos may
+            // be up to about twice as wide as high.
+            left: '50%',
+            transform: 'translateX(-50%)',
+            top: u(56.461),
+            maxWidth: u(200),
+            height: u(93.54),
+            objectFit: 'contain',
+          }}
+        />
 
         <div style={{ ...line(181.3, 27), color: '#301919' }}>
           {organizationName}

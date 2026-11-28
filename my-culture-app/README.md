@@ -117,16 +117,18 @@ Comparison with his PDF and examples: `docs/certificate-design/`. His
 
 - **Create** (Zertifikate > Neues Zertifikat): organisation (super admins
   choose one; organisation admins always issue for their own), language,
-  colour, the texts, 1 to 3 signatures, issue date and the recipients. The
-  preview shows the certificate as it will look.
+  colour, the texts, 1 to 3 signatures, issue date and the recipients (name;
+  email optional). The preview shows the certificate as it will look.
+  Organisations without a logo get the grow logo on their certificates.
 - **Private links:** every recipient gets their own link
   `/certificates/<code>`, with 24 random bytes as the code. It is never built
   from ids, names or organisations, so links cannot be guessed or listed.
   Links do not expire. The page is not indexed by search engines and offers
   "Drucken oder als PDF speichern" (one A4 landscape page).
 - **Send:** emails each recipient their link in the certificate's language
-  (recipients not sent yet; single recipients can be sent again). Without
-  SMTP nothing is sent and the dashboard shows the links to copy.
+  (recipients not sent yet; single recipients can be sent again). Recipients
+  without an email, and every recipient when SMTP is not set up, get their
+  link from the admin: the dashboard shows the links to copy.
 - **Revoke:** "Deaktivieren" turns one recipient's link off at once; it can
   be turned on again. Deleting a certificate turns off all its links.
 - **Scope:** organisation admins only see and change their organisation's
