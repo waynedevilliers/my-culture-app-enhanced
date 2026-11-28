@@ -2,8 +2,8 @@
 
 The replacement for `my-culture-backend` (Express) and `my-culture-frontend`
 (Vite + React): one Next.js 16 project with pages and API together. The old
-folders stay in the repository as a reference until every page and route has
-been moved here.
+projects are kept for reference in `legacy/` at the repository root; nothing
+here depends on them.
 
 ## Status
 
