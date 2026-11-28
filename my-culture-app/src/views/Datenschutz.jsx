@@ -21,7 +21,7 @@ const Datenschutz = () => {
       id="datenschutz"
       className="flex flex-col justify-center items-center text-gray-800"
     >
-      <article className="max-w-screen-xl mt-48 flex flex-col gap-2 text-pretty px-4 mb-10">
+      <article className="max-w-screen-xl mt-12 flex flex-col gap-2 text-pretty px-4 mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-primary">
           Datenschutzerklärung
         </h1>

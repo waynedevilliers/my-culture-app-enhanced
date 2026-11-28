@@ -44,7 +44,7 @@ const OrganizationDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+      <div className="min-h-screen pt-12 pb-16 flex items-center justify-center">
         <div className="loading loading-spinner loading-lg text-primary"></div>
       </div>
     );
@@ -52,7 +52,7 @@ const OrganizationDetails = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+      <div className="min-h-screen pt-12 pb-16 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
             {t('organizationDetails.notFound')}
@@ -68,7 +68,7 @@ const OrganizationDetails = () => {
 
   if (!organization) {
     return (
-      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+      <div className="min-h-screen pt-12 pb-16 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
             {t('organizationDetails.notFound')}
@@ -82,7 +82,7 @@ const OrganizationDetails = () => {
   }
 
   return (
-    <main className="min-h-screen pt-24 pb-16">
+    <main className="min-h-screen pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-4">
         {/* Back Button */}
         <nav aria-label="Breadcrumb">

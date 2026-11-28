@@ -211,8 +211,8 @@ const JoinUs = () => {
   };
 
   return (
-    <main className="relative scroll-mt-24 pt-24">
-      <div className="max-w-7xl mx-auto pt-24 pb-16 min-h-screen px-4">
+    <main className="relative scroll-mt-24">
+      <div className="max-w-7xl mx-auto pt-12 pb-16 min-h-screen px-4">
         {/* Hero Section */}
         <section aria-labelledby="hero-title">
           <motion.div
