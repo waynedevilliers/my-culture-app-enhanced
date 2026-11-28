@@ -49,6 +49,14 @@ test('footer links lead to Impressum and Datenschutz', async ({ page }) => {
   await expect(page).toHaveURL(/\/datenschutz$/);
 });
 
+test('old /privacy link redirects to /datenschutz', async ({ page }) => {
+  await page.goto('/privacy');
+  await expect(page).toHaveURL(/\/datenschutz$/);
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Datenschutzerklärung' })
+  ).toBeVisible();
+});
+
 test('favicon and touch icon are served', async ({ request }) => {
   for (const path of ['/logo/favicon.ico', '/logo/apple-touch-icon.png']) {
     expect((await request.get(path)).status()).toBe(200);

@@ -14,7 +14,7 @@ const Datenschutz = () => {
   return (
     <main
       id="datenschutz"
-      className="flex flex-col justify-center items-center bg-neutral text-gray-200"
+      className="flex flex-col justify-center items-center text-gray-800"
     >
       <article className="max-w-screen-xl mt-32 flex flex-col gap-2 text-pretty px-4 mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-primary">
@@ -205,7 +205,7 @@ const Datenschutz = () => {
           <br />
           <a
             href="mailto:live-in-lu@gmx.de"
-            className="text-primary hover:text-gray-200 hover:underline"
+            className="text-primary hover:underline"
           >
             live-in-lu@gmx.de
           </a>
@@ -250,7 +250,7 @@ const Datenschutz = () => {
         <p>
           <a
             href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html"
-            className="text-xs sm:text-lg text-primary hover:text-gray-200 hover:underline"
+            className="text-xs sm:text-lg text-primary hover:underline"
           >
             www.bfdi.bund.de/.../anschriften_links-node.html
           </a>

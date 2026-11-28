@@ -16,7 +16,7 @@ const Impressum = () => {
   return (
     <main
       id="impressum"
-      className="flex flex-col justify-center items-center bg-neutral text-gray-200"
+      className="flex flex-col justify-center items-center text-gray-800"
     >
       <article className="max-w-screen-xl w-full mt-32 flex flex-col gap-2 text-pretty px-4 mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-primary">
@@ -34,7 +34,7 @@ const Impressum = () => {
           E-Mail:{' '}
           <a
             href="mailto:live-in-lu@gmx.de"
-            className="text-primary hover:text-gray-200 hover:underline"
+            className="text-primary hover:underline"
           >
             live-in-lu@gmx.de
           </a>
@@ -46,7 +46,7 @@ const Impressum = () => {
           Wie wir mit Ihren Daten umgehen, lesen Sie in unserer{' '}
           <Link
             to="/datenschutz"
-            className="text-primary hover:text-gray-200 hover:underline"
+            className="text-primary underline hover:no-underline"
           >
             Datenschutzerklärung
           </Link>
